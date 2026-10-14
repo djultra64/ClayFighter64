@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "author": "djultra64",
+  "enabled_by_default": true,
+  "status": "Sixteen native selector slots and authentic donor portraits integrated with original63 CPU/audio. All four IDs confirmed in hidden Windows player-started70second fights; independentP1HighFive6/P2LadyLiberty11 selector+combat passed onLinux/Windows. NativeDisplay/Remap/persistence passed; originalHPdamage,KO,combatcleanup and continuedgraphics/input verified in200second runs. Final packaged launcher verification in progress.",
+  "base_rules_and_executable": "ClayFighter63\u2153 USA; no donor CPU executable or rules imported",
+  "donor_asset_ids": [
+    6,
+    11,
+    12,
+    16
+  ],
+  "candidate_integration": {
+    "resource_dma": "Use only the hash-verified private extended asset image for cartridge DMA, retaining original 63\u2153 CPU text and original payload ranges. Isolated original loader supports all four donor records; runtime use additionally requires the explicit registered-definition version gate and donor header adapter.",
+    "character_start_table_rom": "0xD9580",
+    "character_end_table_rom": "0xD95C4",
+    "menu_roster_table_vram": "0x800DAC18",
+    "existing_menu_capacity": 12,
+    "requested_total_after_integration": 16,
+    "filter_function": "func_8005D484",
+    "filter_changes_needed": "Implemented scoped extra-ID acceptance via original5D484; HOBO7 rejection preserved.",
+    "filter_skip_sites": [
+      "0x8005D4F4",
+      "0x8005D514",
+      "0x8005D554"
+    ],
+    "remaining_work": [],
+    "integrated_menu_capacity": 16
+  },
+  "tests": [
+    "python3 tools/sc_probe.py",
+    "SC_PROBE_STEPS=512 python3 tools/sc_loader_probe.py",
+    "python3 tools/sc_roster_test.py",
+    "python3 tools/sc_roster_mesh_test.py",
+    "python3 tools/verify_interpolation.py",
+    "python3 tools/verify_options.py"
+  ],
+  "asset_builder": "python3 tools/port_assets.py",
+  "evidence": [
+    "analysis/sc_decode_evidence.json",
+    "analysis/sc_loader_evidence.json",
+    "analysis/sc_assets/asset-image.manifest.json",
+    "analysis/sc_version_gates.json",
+    "analysis/combat_sc_original_equivalence.json",
+    "analysis/hidden-integrated-grid/report.json",
+    "analysis/sc_sound_bank_evidence.json",
+    "analysis/sc_sound_dispatch_evidence.json",
+    "analysis/rt64_interpolation_evidence.json",
+    "analysis/hidden-highfive-rounds.json",
+    "analysis/hidden-two-player-native.json",
+    "analysis/port_options_validation.json",
+    "analysis/final-linux-launcher.json"
+  ],
+  "integration_recipe": "config/sc_native_hooks.json",
+  "runtime_module": [
+    "host/sc_assets.h",
+    "host/sc_assets.cpp"
+  ],
+  "prior_evidence_correction": "The initial isolated fixture incorrectly returned from func_800B9154. In the actual game its CharDef 5.21 version diagnostic stops through the fatal pause path. Earlier fixture loader/parser success did not establish runtime bootstrap. Corrected fixtures throw on every fatal diagnostic and explicitly adapt the verified donor version branch.",
+  "version_acceptance_scope": {
+    "function": "func_80072FE8",
+    "instruction_vram": "0x800731B0",
+    "expected_rom_word": "1321000b",
+    "acceptance": "Original 5.20 remains accepted by the original branch. Alternative acceptance requires enabled hash-verified asset image, exact registered definition begin, live 0x0521 version and type1. Original major-version and endian-type checks remain active. No metadata version relabeling or global fatal suppression.",
+    "negative_native_cases": 28,
+    "baseline_red": "Unadapted original branch rejects valid High Five 5.21 at fatal diagnostic (exit86).",
+    "adapted_green": "Original parser adds zero diagnostics for all four registered donor definitions; invalid5.22,6.21,type,unregistered/interior/unloaded definitions retain original fatal paths."
+  },
+  "runtime_observations": {
+    "vs_screen": "High Five visibly appeared in actual original63 VS screen.",
+    "prior_battle": "Battle loaded Bad Mr. Frosty because preview-only override did not change separate combat config.",
+    "corrected_transfer": "Normal16-slot play transfers actual selected IDs through original combat config; shared3C740 demo override only runs with explicit --sc-demo-character.",
+    "native_regression": "All three original wrappers and original3C740 CAB8..CB5B actor load/parser block passIDs6/11/12/16; P2ID3 retained; disabled default preserves everyconfigbyte. Earlier stage setup remains a fixture.",
+    "visible_battle": "2026-10-13: player-started High Five combat observed; genuine hand fighter atP1, originalFrosty HUDportraitstilldisplayed. Actual nativeguest inputs record Right,Primary,Secondary and graphics/input continue progressing.",
+    "current_hidden_battle": "High Five selected through fourth column, P1ID6 confirmed nonattract; real inputs, pause/resume and70-second native process exit0. Portrait builder cache expanded to139frames."
+  },
+  "sound_mapping": "Identity mapping verified: all reachable SC voice/combat/menu records and samplebytes identical to original63 banks (117/28/27). Original relocated soundselector validates152regularIDs and rejects invalid bounds."
+}

@@ -1,0 +1,159 @@
+{
+  "author": "djultra64",
+  "update": {
+    "function": "0x80067980",
+    "insertion_pc": "0x80067994",
+    "original_word": "0x3c0e8012",
+    "after": "func_800A0CA8(rdram, ctx); and after_0 label",
+    "code": "if (clay::port::update_native_options(rdram, ctx)) goto L_8006B004;",
+    "reason": "original native controller poll occurs exactly once; original function epilogue restores stack"
+  },
+  "draw": {
+    "function": "0x80066DC0",
+    "original_word": "0x27bdff50",
+    "code": "if (clay::port::draw_native_options(rdram, ctx)) goto L_8006796C;",
+    "scope": "Native Controls/Display body including incoming/outgoing transitions; original animated category prefix preserved",
+    "insertion_pc": "0x80066E68"
+  },
+  "native_state": {
+    "pointer": "0x800DDD3C",
+    "menu": 12,
+    "transition_target": 16,
+    "selected": 24,
+    "animation_count": 6756
+  },
+  "legacy_display": {
+    "pointer": "0x800DDD58",
+    "halfwords": [
+      32,
+      34,
+      36,
+      38
+    ],
+    "original_toggle_pcs": [
+      "0x80068690",
+      "0x800686B4",
+      "0x800686D8",
+      "0x800686FC"
+    ]
+  },
+  "scratch_cpu_only": {
+    "start": "0x80810000",
+    "end_exclusive": "0x80820000",
+    "allocated_ram_bytes": 9437184,
+    "reported_guest_ram_bytes": 8388608,
+    "gpu_texture_memory": "original native font glyph allocations in first8MiB"
+  },
+  "native_font": [
+    "0x80071738",
+    "0x8007191C"
+  ],
+  "tests": "python3 tools/verify_options.py",
+  "remaining_verification": [
+    "Hidden real native game screenshot/readback of layout",
+    "Real controller remap plus fixed-menu behavior",
+    "Windows full build/run owned by root"
+  ],
+  "native_controls": {
+    "config_pointer": "0x800DDD58",
+    "physical_mask_table": "0x800DDD64",
+    "rom_table_offset": "0xDE964",
+    "masks": [
+      "0x8",
+      "0x2",
+      "0x4000",
+      "0x1",
+      "0x4",
+      "0x8000"
+    ],
+    "p1_config_halfwords": [
+      8,
+      12,
+      16,
+      20,
+      24,
+      28
+    ],
+    "p2_config_halfwords": [
+      10,
+      14,
+      18,
+      22,
+      26,
+      30
+    ],
+    "move_index_names": [
+      "Wobbly Punch",
+      "Fair Punch",
+      "Brutal Punch",
+      "Wobbly Kick",
+      "Fair Kick",
+      "Brutal Kick"
+    ],
+    "proof_function": "0x8005A2A0",
+    "loop_pc": "0x8005A6BC",
+    "p1_output_halfwords": [
+      300,
+      302,
+      304,
+      306,
+      308,
+      310
+    ],
+    "p2_output_halfwords": [
+      312,
+      314,
+      316,
+      318,
+      320,
+      322
+    ],
+    "labels_follow_current_p1_configuration": true
+  },
+  "category_label": {
+    "entry_hook": "0x8006B014",
+    "original_word": "0x27bdffa8",
+    "code": "clay::port::prepare_native_options_labels(rdram);",
+    "text_pointer_entry": "0x800DB254",
+    "original_pointer": "0x800F1880",
+    "replacement": "button remap",
+    "scratch_string": "0x8081F100",
+    "renderer": "Original animated native 3D clay letter builder (not overlay)"
+  },
+  "layout": {
+    "columns": 2,
+    "controls_rows_per_column": 8,
+    "display_rows_per_column": 5,
+    "native_vertical_scale": 2,
+    "column_centers": [
+      -170,
+      170
+    ],
+    "row_spacing": 32,
+    "transitions": "Original first row displacement atstate+0x24; native epilogue",
+    "maximum_column_width": 290,
+    "ordering": "Display: six port settings in top three rows plus Game display access; child: four original HUD toggles",
+    "navigation": "Up/Down move one grid row; Left/Right switch column; Select changes/captures; Back exits",
+    "subpage": {
+      "title": "GAME DISPLAY",
+      "native_menu_id": 3,
+      "main_rows": 7,
+      "child_rows": 4,
+      "back": "child to Display; Display to Options",
+      "transition_seconds": 0.3,
+      "input_during_transition": "consumed"
+    }
+  },
+  "native_pool": {
+    "call_pcs": [
+      "0x8006FBE4",
+      "0x800705F0",
+      "0x80070AA8",
+      "0x80070C20"
+    ],
+    "display_list_capacity": 12288,
+    "vertex_capacity": 4096,
+    "original_matrix_capacity": 64,
+    "scope": "Only four verified native Options initializers"
+  }
+}

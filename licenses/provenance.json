@@ -1,0 +1,6 @@
+{
+  "Microsoft_CRT": "https://visualstudio.microsoft.com/license-terms/vs2022-cruntime/",
+  "Microsoft_CRT_binaries": "Unmodified installed VS2022 BuildTools VC/Redist/MSVC/14.44.35112/x64/Microsoft.VC143.CRT; no debug or OneCore DLLs",
+  "DXC_license": "https://raw.githubusercontent.com/microsoft/DirectXShaderCompiler/v1.8.2407/LICENSE.TXT",
+  "third_party": "Unmodified installed/read-only matching SDK license notices"
+}

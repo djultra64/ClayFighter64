@@ -1,0 +1,72 @@
+{
+  "author": "djultra64",
+  "sound": {
+    "loaded_bank_global": "0x800FF10C",
+    "ctl_rom": "0xB2F060",
+    "sample_table_rom": "0xB30620",
+    "bank": 0,
+    "instrument": 0,
+    "sound_count": 27,
+    "first_original_sound": {
+      "id": 0,
+      "wave_rom": "0xB30620",
+      "bytes": 7750,
+      "encoded_rate": 8820
+    },
+    "second_original_sound": {
+      "id": 4,
+      "wave_rom": "0xB39528",
+      "bytes": 10890,
+      "encoded_rate": 8820
+    },
+    "original_wave_type": "N64 ADPCM",
+    "native_master_volume": "0x800DE164",
+    "native_requested_volume": "entry_sp+0x10"
+  },
+  "asset": {
+    "path": "local/audio/title64.s16le",
+    "private": true,
+    "encoding": "mono signed16 littleendian",
+    "sample_rate": 32000,
+    "frames": 364180,
+    "duration_seconds": 11.380625,
+    "sha256": "17cf36858a2a9d5b32d38a1bc09138895143bc049dd62a51034e65818d9fb8b4",
+    "source": "Latest user-provided clayfighter2.mp3 (supersedes every earlier MP3)",
+    "source_sha256": "9cd6625531e8432728731fdd8c325de01c959c69d7462430c65cedd8e7eb7705",
+    "bytes": 673736
+  },
+  "main_hooks": [
+    "load_title_audio(path,error) before guest threads; report error and retain original announcement on failure",
+    "title_audio_frequency(hz) after successful audio device initialization",
+    "mix_title_audio(pcm) after existing endian/channel conversion, before SDL_QueueAudio"
+  ],
+  "behavior": "Whole provided recording starts once at original first intro voice event65D74; original second voice event66488 is suppressed only when first replacement succeeded in this intro cycle. All other banks/instruments/sounds/callers remain original, including intro SFX8/13/11/14 and Claytality26. Equal-power center/saturating16bit addition preserves music/SFX and nativeSFXvolume; active duplicate events cannot stack/restart. Missing/invalid assets/metadata retain original calls.",
+  "capture": "Optional CLAY_CAPTURE_AUDIO=private.wav writes mixed stereo PCM WAV without a playback device; diagnostic capture capped128MiB and fixed initial frequency.",
+  "tests": [
+    "tests/title_audio.cpp",
+    "tests/title_audio_native.cpp",
+    "tools/verify_title_audio.py"
+  ],
+  "native_rng": "If original title pitch-random flag entry_sp+0x20 is nonzero, invoke ORIGINAL func_800C1520 once on local context. This preserves guest RNG progression without changing the supplied recording.",
+  "hooks": [
+    {
+      "function": "func_800657DC",
+      "call_pc": "0x80065D74",
+      "delay_slot_pc": "0x80065D78",
+      "original_rom_word": "0c026dad",
+      "original": "func_8009B6B4",
+      "replacement": "clay::audio::play_title_announcement(rdram, ctx, &func_8009B6B4)",
+      "sound": 0
+    },
+    {
+      "function": "func_800657DC",
+      "call_pc": "0x80066488",
+      "delay_slot_pc": "0x8006648C",
+      "original_rom_word": "0c026dad",
+      "original": "func_8009B6B4",
+      "replacement": "clay::audio::finish_title_announcement(rdram, ctx, &func_8009B6B4)",
+      "sound": 4
+    }
+  ],
+  "correction": "40728/sound26 is the Claytality combat effect and is NOT a title hook. Both correct intro calls observed in actual35sec empty-input boot trace."
+}

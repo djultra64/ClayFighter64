@@ -1,0 +1,78 @@
+{
+  "author": "djultra64",
+  "scope": "Original selector8005E37C only; original 4:3 coordinates unchanged",
+  "hooks": [
+    {
+      "pc": "0x8005e448",
+      "original_word": "0c02c277",
+      "scope": "mechanism gear side derived nativeindex"
+    },
+    {
+      "pc": "0x8005e584",
+      "original_word": "0c02c277",
+      "scope": "Native negative sliding direction; P1/P2 from original slotindex"
+    },
+    {
+      "pc": "0x8005e5c8",
+      "original_word": "0c02c277",
+      "scope": "Native positive sliding direction; P1/P2 from original slotindex"
+    },
+    {
+      "pc": "0x8005e9ac",
+      "original_word": "0c029948",
+      "scope": "left original name bitmap"
+    },
+    {
+      "pc": "0x8005eb24",
+      "original_word": "0c029948",
+      "scope": "right original name bitmap"
+    },
+    {
+      "pc": "0x8005f4fc",
+      "original_word": "0c0176c9",
+      "scope": "left actor preview"
+    },
+    {
+      "pc": "0x8005f8c0",
+      "original_word": "0c0176c9",
+      "scope": "right actor preview"
+    },
+    {
+      "pc": "0x8005f6b0",
+      "original_word": "0c029948",
+      "scope": "left fallback preview"
+    },
+    {
+      "pc": "0x8005fa78",
+      "original_word": "0c029948",
+      "scope": "right fallback preview"
+    }
+  ],
+  "native_geometry": {
+    "frame_x_extents": [
+      -346,
+      346
+    ],
+    "black_box_abs_x": [
+      104,
+      303
+    ],
+    "native_name_flags": 4,
+    "name_horizontal_basis": "Negative original sp18 vector X; nativeflag4 skips hotspot",
+    "grid": "Unchanged centered original/sc_roster geometry",
+    "door_local_x": [
+      -58,
+      58
+    ],
+    "left_door_base_x": [
+      -344,
+      -92
+    ],
+    "door_open_phase": 0,
+    "door_closed_phase": 70,
+    "original_open_aperture": 136,
+    "original_closed_overlap": 4,
+    "additional_aperture": "Perpanel186*aspectExpansion*max(0,1-nativePhase/70); CLOSED endpoint unchanged"
+  },
+  "validation": "Native288originalgeometrycasesPASS, original51widebitmapanchorsRED; private16:9 actual2PHighFive6/Lockjaw12 selector\u2192VS\u2192combat38secPASS exit0 gfx2221/polls4040. Seeanalysis/selector_layout_evidence.json"
+}

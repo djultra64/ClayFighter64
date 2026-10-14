@@ -1,0 +1,28 @@
+*.zip
+*.z64
+*.n64
+*.v64
+probe-output/
+__pycache__/
+generated/
+build/
+local/
+*.log
+analysis/*rdram*.bin
+analysis/unlock_filter_native.cpp
+analysis/unlock_selection_test
+analysis/sc_assets/
+analysis/sc_loader/
+analysis/sc_sequences/
+analysis/font_private/
+
+analysis/**/rdram*.bin
+
+# Private investigation evidence, user ROMs, assets and runtime state.
+analysis/*
+!analysis/sdk_matches.json
+imgui.ini
+AGENTS.md
+LEEME.txt
+Probar High Five.sh
+tools/windows_remote.py

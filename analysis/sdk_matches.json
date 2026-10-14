@@ -1,0 +1,963 @@
+[
+  {
+    "name": "osCreateMesgQueue",
+    "source_address": "0x800d0d00",
+    "source_size": "0x30",
+    "matched_instructions": 11,
+    "addresses": [
+      "0x800c1fc0"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osCreateViManager",
+    "source_address": "0x800d0d30",
+    "source_size": "0x188",
+    "matched_instructions": 97,
+    "addresses": [
+      "0x800c31f0"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osViSetMode",
+    "source_address": "0x800d1090",
+    "source_size": "0x70",
+    "matched_instructions": 25,
+    "addresses": [
+      "0x800c3550"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osViBlack",
+    "source_address": "0x800d1100",
+    "source_size": "0x70",
+    "matched_instructions": 27,
+    "addresses": [
+      "0x800c35c0"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osSetEventMesg",
+    "source_address": "0x800d1170",
+    "source_size": "0x70",
+    "matched_instructions": 25,
+    "addresses": [
+      "0x800c3920"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osViSetEvent",
+    "source_address": "0x800d11e0",
+    "source_size": "0x70",
+    "matched_instructions": 26,
+    "addresses": [
+      "0x800c3840"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osCreateThread",
+    "source_address": "0x800d1250",
+    "source_size": "0x150",
+    "matched_instructions": 80,
+    "addresses": [
+      "0x800c1130"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osStartThread",
+    "source_address": "0x800d13a0",
+    "source_size": "0x150",
+    "matched_instructions": 84,
+    "addresses": [
+      "0x800c1280"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osSetIntMask",
+    "source_address": "0x800d14f0",
+    "source_size": "0xa0",
+    "matched_instructions": 39,
+    "addresses": [
+      "0x800cc470"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osRecvMesg",
+    "source_address": "0x800d1590",
+    "source_size": "0x140",
+    "matched_instructions": 78,
+    "addresses": [
+      "0x800c2010"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osSendMesg",
+    "source_address": "0x800d16d0",
+    "source_size": "0x150",
+    "matched_instructions": 83,
+    "addresses": [
+      "0x800c2150"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osSpTaskYielded",
+    "source_address": "0x800d1820",
+    "source_size": "0x80",
+    "matched_instructions": 31,
+    "addresses": [
+      "0x800c3ca0"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osViGetNextFramebuffer",
+    "source_address": "0x800d18a0",
+    "source_size": "0x40",
+    "matched_instructions": 16,
+    "addresses": [],
+    "confidence": "ambiguous",
+    "evidence": "Tetrisphere source name is reversed; target getter uses current global 0x800EF420, whereas ViSwapBuffer writes next global 0x800EF424. Next framebuffer getter not found."
+  },
+  {
+    "name": "osViGetCurrentFramebuffer",
+    "source_address": "0x800d18e0",
+    "source_size": "0x40",
+    "matched_instructions": 16,
+    "addresses": [
+      "0x800c38e0"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained. Target loads current context global 0x800EF420; ViSwapBuffer and ViSetMode write next context global 0x800EF424."
+  },
+  {
+    "name": "osViSwapBuffer",
+    "source_address": "0x800d1920",
+    "source_size": "0x50",
+    "matched_instructions": 19,
+    "addresses": [
+      "0x800c37f0"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osWritebackDCacheAll",
+    "source_address": "0x800d1970",
+    "source_size": "0x30",
+    "matched_instructions": 9,
+    "addresses": [
+      "0x800c38b0"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osSpTaskLoad",
+    "source_address": "0x800d1abc",
+    "source_size": "0x190",
+    "matched_instructions": 99,
+    "addresses": [
+      "0x800c3acc"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osSpTaskStartGo",
+    "source_address": "0x800d1c4c",
+    "source_size": "0x44",
+    "matched_instructions": 15,
+    "addresses": [
+      "0x800c3c5c"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osDpSetNextBuffer",
+    "source_address": "0x800d1c90",
+    "source_size": "0xb0",
+    "matched_instructions": 41,
+    "addresses": [],
+    "confidence": "ambiguous",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osSpTaskYield",
+    "source_address": "0x800d1d40",
+    "source_size": "0x80",
+    "matched_instructions": 7,
+    "addresses": [
+      "0x800c3990"
+    ],
+    "confidence": "high",
+    "evidence": "Entire seven-instruction body matches; explicit A0=0x400 yield bit passed to __osSpSetStatus."
+  },
+  {
+    "name": "osInitialize",
+    "source_address": "0x800d1dc0",
+    "source_size": "0x290",
+    "matched_instructions": 162,
+    "addresses": [
+      "0x800c0ea0"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osPiRawReadIo",
+    "source_address": "0x800d2050",
+    "source_size": "0x60",
+    "matched_instructions": 21,
+    "addresses": [
+      "0x800c8620"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osCreatePiManager",
+    "source_address": "0x800d20c0",
+    "source_size": "0x190",
+    "matched_instructions": 97,
+    "addresses": [
+      "0x800c2d90"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osSetThreadPri",
+    "source_address": "0x800d2250",
+    "source_size": "0xe0",
+    "matched_instructions": 55,
+    "addresses": [
+      "0x800c13d0"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osEepromWrite",
+    "source_address": "0x800d2330",
+    "source_size": "0x1b0",
+    "matched_instructions": 107,
+    "addresses": [],
+    "confidence": "ambiguous",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osEepromRead",
+    "source_address": "0x800d2810",
+    "source_size": "0x1f0",
+    "matched_instructions": 123,
+    "addresses": [],
+    "confidence": "ambiguous",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osContStartReadData",
+    "source_address": "0x800d2b10",
+    "source_size": "0xc4",
+    "matched_instructions": 48,
+    "addresses": [
+      "0x800c73f0"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osContGetReadData",
+    "source_address": "0x800d2bd4",
+    "source_size": "0xa8",
+    "matched_instructions": 42,
+    "addresses": [
+      "0x800c74b4"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osEepromProbe",
+    "source_address": "0x800d2d70",
+    "source_size": "0x70",
+    "matched_instructions": 26,
+    "addresses": [],
+    "confidence": "ambiguous",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osInvalDCache",
+    "source_address": "0x800d2de0",
+    "source_size": "0xb0",
+    "matched_instructions": 42,
+    "addresses": [
+      "0x800c30b0"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osPiStartDma",
+    "source_address": "0x800d2e90",
+    "source_size": "0x110",
+    "matched_instructions": 67,
+    "addresses": [
+      "0x800c2fa0"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osViSetSpecialFeatures",
+    "source_address": "0x800d2fa0",
+    "source_size": "0x1c0",
+    "matched_instructions": 109,
+    "addresses": [
+      "0x800c3630"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osContInit",
+    "source_address": "0x800d31e0",
+    "source_size": "0x1f8",
+    "matched_instructions": 125,
+    "addresses": [
+      "0x800c7030"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osStopThread",
+    "source_address": "0x800d3680",
+    "source_size": "0xc0",
+    "matched_instructions": 48,
+    "addresses": [
+      "0x800c2c30"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osSetTime",
+    "source_address": "0x800d3a00",
+    "source_size": "0x30",
+    "matched_instructions": 9,
+    "addresses": [],
+    "confidence": "ambiguous",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osJamMesg",
+    "source_address": "0x800d5410",
+    "source_size": "0x150",
+    "matched_instructions": 84,
+    "addresses": [
+      "0x800c9530"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osAiSetFrequency",
+    "source_address": "0x800d5770",
+    "source_size": "0x160",
+    "matched_instructions": 88,
+    "addresses": [
+      "0x800c3d60"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osAiSetNextBuffer",
+    "source_address": "0x800d5930",
+    "source_size": "0xb0",
+    "matched_instructions": 41,
+    "addresses": [
+      "0x800c67b0"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osAiGetLength",
+    "source_address": "0x800d59e0",
+    "source_size": "0x10",
+    "matched_instructions": 3,
+    "addresses": [],
+    "confidence": "ambiguous",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osWritebackDCache",
+    "source_address": "0x800d5d60",
+    "source_size": "0x80",
+    "matched_instructions": 28,
+    "addresses": [
+      "0x800c2f20"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osGetTime",
+    "source_address": "0x800d5de0",
+    "source_size": "0x90",
+    "matched_instructions": 33,
+    "addresses": [
+      "0x800c3160"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osGetThreadPri",
+    "source_address": "0x800d71e0",
+    "source_size": "0x20",
+    "matched_instructions": 6,
+    "addresses": [
+      "0x800c8d70"
+    ],
+    "confidence": "high",
+    "evidence": "Entire six-instruction body matches; explicit OSThread priority load offset0x4 and fallback to current thread global."
+  },
+  {
+    "name": "osGetCount",
+    "source_address": "0x800d76f0",
+    "source_size": "0x10",
+    "matched_instructions": 2,
+    "addresses": [
+      "0x800c96b0"
+    ],
+    "confidence": "high",
+    "evidence": "Unique two-instruction assembly function reading COP0 Count and returning it."
+  },
+  {
+    "name": "osInvalICache",
+    "source_address": "0x800d8540",
+    "source_size": "0x80",
+    "matched_instructions": 28,
+    "addresses": [
+      "0x800c8540"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "osSetTimer",
+    "source_address": "0x800d9ed0",
+    "source_size": "0xe0",
+    "matched_instructions": 52,
+    "addresses": [
+      "0x800ceca0"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "__osAiDeviceBusy",
+    "source_address": "0x800da040",
+    "source_size": "0x30",
+    "matched_instructions": 12,
+    "addresses": [
+      "0x800cc5a0"
+    ],
+    "confidence": "high",
+    "evidence": "Complete Tetrisphere NTPE function body matches after masking J/JAL targets and data addresses tracked from LUI; branch offsets, opcodes, registers, constants, stack and structure offsets retained."
+  },
+  {
+    "name": "__osGetSR",
+    "source_address": "0x800cc5e0",
+    "source_size": "0x10",
+    "matched_instructions": 2,
+    "addresses": [
+      "0x800c7b70"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained. Tiny assembly body verified by hardware register or thread/context field semantics."
+  },
+  {
+    "name": "__osSetSR",
+    "source_address": "0x800cc5d0",
+    "source_size": "0x10",
+    "matched_instructions": 3,
+    "addresses": [
+      "0x800c7b60"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained. Tiny assembly body verified by hardware register or thread/context field semantics."
+  },
+  {
+    "name": "bcopy",
+    "source_address": "0x800cba80",
+    "source_size": "0x310",
+    "matched_instructions": 193,
+    "addresses": [
+      "0x800c15f0"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained."
+  },
+  {
+    "name": "bzero",
+    "source_address": "0x800ca500",
+    "source_size": "0xa0",
+    "matched_instructions": 38,
+    "addresses": [
+      "0x800c1550"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained."
+  },
+  {
+    "name": "__osExceptionPreamble",
+    "source_address": "0x800cab50",
+    "source_size": "0x10",
+    "matched_instructions": 3,
+    "addresses": [
+      "0x800c7c30"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained. Tiny assembly body verified by hardware register or thread/context field semantics."
+  },
+  {
+    "name": "__osEnqueueThread",
+    "source_address": "0x800cb220",
+    "source_size": "0x48",
+    "matched_instructions": 18,
+    "addresses": [
+      "0x800c835c"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained."
+  },
+  {
+    "name": "__osPopThread",
+    "source_address": "0x800cb268",
+    "source_size": "0x10",
+    "matched_instructions": 4,
+    "addresses": [
+      "0x800c83a4"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained. Tiny assembly body verified by hardware register or thread/context field semantics."
+  },
+  {
+    "name": "__osDisableInt",
+    "source_address": "0x800caad0",
+    "source_size": "0x20",
+    "matched_instructions": 7,
+    "addresses": [
+      "0x800c8680"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained. Tiny assembly body verified by hardware register or thread/context field semantics."
+  },
+  {
+    "name": "__osRestoreInt",
+    "source_address": "0x800caaf0",
+    "source_size": "0x20",
+    "matched_instructions": 6,
+    "addresses": [
+      "0x800c86a0"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained. Tiny assembly body verified by hardware register or thread/context field semantics."
+  },
+  {
+    "name": "osMapTLBRdb",
+    "source_address": "0x800cc6a0",
+    "source_size": "0x60",
+    "matched_instructions": 21,
+    "addresses": [
+      "0x800c85c0"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained."
+  },
+  {
+    "name": "__osProbeTLB",
+    "source_address": "0x800caa10",
+    "source_size": "0xc0",
+    "matched_instructions": 45,
+    "addresses": [
+      "0x800cebe0"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained."
+  },
+  {
+    "name": "__osSetCompare",
+    "source_address": "0x800d0e20",
+    "source_size": "0x10",
+    "matched_instructions": 2,
+    "addresses": [
+      "0x800d0700"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained. Tiny assembly body verified by hardware register or thread/context field semantics."
+  },
+  {
+    "name": "__osSetFpcCsr",
+    "source_address": "0x800cc5f0",
+    "source_size": "0x10",
+    "matched_instructions": 3,
+    "addresses": [
+      "0x800c7b80"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained. Tiny assembly body verified by hardware register or thread/context field semantics."
+  },
+  {
+    "name": "memcpy",
+    "source_address": "0x800d04c0",
+    "source_size": "0x2c",
+    "matched_instructions": 11,
+    "addresses": [
+      "0x800c2cf0"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained."
+  },
+  {
+    "name": "__osPiCreateAccessQueue",
+    "source_address": "0x800cc2b0",
+    "source_size": "0x50",
+    "matched_instructions": 19,
+    "addresses": [
+      "0x800c8cb0"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained. PI access routines called by osPiStartDma; SI access routines called by osContStartReadData, resolving identical global-relocated bodies."
+  },
+  {
+    "name": "__osPiGetAccess",
+    "source_address": "0x800cc300",
+    "source_size": "0x44",
+    "matched_instructions": 16,
+    "addresses": [
+      "0x800c8d00"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained. PI access routines called by osPiStartDma; SI access routines called by osContStartReadData, resolving identical global-relocated bodies."
+  },
+  {
+    "name": "__osPiRelAccess",
+    "source_address": "0x800cc344",
+    "source_size": "0x2c",
+    "matched_instructions": 10,
+    "addresses": [
+      "0x800c8d44"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained. PI access routines called by osPiStartDma; SI access routines called by osContStartReadData, resolving identical global-relocated bodies."
+  },
+  {
+    "name": "__osSiDeviceBusy",
+    "source_address": "0x800d0e30",
+    "source_size": "0x30",
+    "matched_instructions": 11,
+    "addresses": [
+      "0x800cfbb0"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained."
+  },
+  {
+    "name": "__osSiCreateAccessQueue",
+    "source_address": "0x800cb900",
+    "source_size": "0x50",
+    "matched_instructions": 19,
+    "addresses": [
+      "0x800cee30"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained. PI access routines called by osPiStartDma; SI access routines called by osContStartReadData, resolving identical global-relocated bodies."
+  },
+  {
+    "name": "__osSiGetAccess",
+    "source_address": "0x800cb950",
+    "source_size": "0x44",
+    "matched_instructions": 16,
+    "addresses": [
+      "0x800cee80"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained. PI access routines called by osPiStartDma; SI access routines called by osContStartReadData, resolving identical global-relocated bodies."
+  },
+  {
+    "name": "__osSiRelAccess",
+    "source_address": "0x800cb994",
+    "source_size": "0x2c",
+    "matched_instructions": 10,
+    "addresses": [
+      "0x800ceec4"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained. PI access routines called by osPiStartDma; SI access routines called by osContStartReadData, resolving identical global-relocated bodies."
+  },
+  {
+    "name": "__osSiRawStartDma",
+    "source_address": "0x800cb9c0",
+    "source_size": "0xb0",
+    "matched_instructions": 42,
+    "addresses": [
+      "0x800ced80"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained."
+  },
+  {
+    "name": "__osSiRawReadIo",
+    "source_address": "0x800cc600",
+    "source_size": "0x50",
+    "matched_instructions": 19,
+    "addresses": [
+      "0x800c7b90"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained."
+  },
+  {
+    "name": "__osSiRawWriteIo",
+    "source_address": "0x800cc650",
+    "source_size": "0x50",
+    "matched_instructions": 18,
+    "addresses": [
+      "0x800c7be0"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained."
+  },
+  {
+    "name": "__osSpGetStatus",
+    "source_address": "0x800cbf10",
+    "source_size": "0x10",
+    "matched_instructions": 3,
+    "addresses": [
+      "0x800ca080"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained. Tiny assembly body verified by hardware register or thread/context field semantics."
+  },
+  {
+    "name": "__osSpRawStartDma",
+    "source_address": "0x800cbe50",
+    "source_size": "0x90",
+    "matched_instructions": 34,
+    "addresses": [
+      "0x800c9fc0"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained."
+  },
+  {
+    "name": "__osSpSetPc",
+    "source_address": "0x800cbe10",
+    "source_size": "0x40",
+    "matched_instructions": 13,
+    "addresses": [
+      "0x800c9f80"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained."
+  },
+  {
+    "name": "__osSpSetStatus",
+    "source_address": "0x800cba70",
+    "source_size": "0x10",
+    "matched_instructions": 3,
+    "addresses": [
+      "0x800c9f70"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained. Tiny assembly body verified by hardware register or thread/context field semantics."
+  },
+  {
+    "name": "__osViGetCurrentContext",
+    "source_address": "0x800cbf40",
+    "source_size": "0x10",
+    "matched_instructions": 3,
+    "addresses": [
+      "0x800c9c00"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained. Tiny assembly body verified by hardware register or thread/context field semantics."
+  },
+  {
+    "name": "__osViSwapContext",
+    "source_address": "0x800cbf50",
+    "source_size": "0x360",
+    "matched_instructions": 215,
+    "addresses": [
+      "0x800c9c10"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained."
+  },
+  {
+    "name": "__osSpDeviceBusy",
+    "source_address": "0x800cbee0",
+    "source_size": "0x30",
+    "matched_instructions": 11,
+    "addresses": [
+      "0x800ca050"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained."
+  },
+  {
+    "name": "__osPackReadData",
+    "source_address": "0x800c5b6c",
+    "source_size": "0xf4",
+    "matched_instructions": 59,
+    "addresses": [
+      "0x800c755c"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained."
+  },
+  {
+    "name": "osDestroyThread",
+    "source_address": "0x800d0d20",
+    "source_size": "0x100",
+    "matched_instructions": 62,
+    "addresses": [
+      "0x800d0460"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained."
+  },
+  {
+    "name": "osPiGetCmdQueue",
+    "source_address": "0x800d06b0",
+    "source_size": "0x30",
+    "matched_instructions": 9,
+    "addresses": [
+      "0x800c9680"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained."
+  },
+  {
+    "name": "osPiRawStartDma",
+    "source_address": "0x800cc370",
+    "source_size": "0xe0",
+    "matched_instructions": 56,
+    "addresses": [
+      "0x800c8d90"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained."
+  },
+  {
+    "name": "__osDequeueThread",
+    "source_address": "0x800cab10",
+    "source_size": "0x40",
+    "matched_instructions": 16,
+    "addresses": [
+      "0x800c86c0"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained."
+  },
+  {
+    "name": "__osTimerServicesInit",
+    "source_address": "0x800cb3d0",
+    "source_size": "0x8c",
+    "matched_instructions": 35,
+    "addresses": [
+      "0x800c96c0"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained."
+  },
+  {
+    "name": "__osTimerInterrupt",
+    "source_address": "0x800cb45c",
+    "source_size": "0x178",
+    "matched_instructions": 93,
+    "addresses": [
+      "0x800c974c"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained."
+  },
+  {
+    "name": "__osSetTimerIntr",
+    "source_address": "0x800cb5d4",
+    "source_size": "0x74",
+    "matched_instructions": 28,
+    "addresses": [
+      "0x800c98c4"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained."
+  },
+  {
+    "name": "__osInsertTimer",
+    "source_address": "0x800cb648",
+    "source_size": "0x188",
+    "matched_instructions": 98,
+    "addresses": [
+      "0x800c9938"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained."
+  },
+  {
+    "name": "osVirtualToPhysical",
+    "source_address": "0x800c5720",
+    "source_size": "0x80",
+    "matched_instructions": 30,
+    "addresses": [
+      "0x800c6f40"
+    ],
+    "confidence": "high",
+    "evidence": "Full Wave Race USA rev A libultra disassembly body match after masking J/JAL and data addresses tracked from LUI; hardware constants, branches and structure offsets retained."
+  },
+  {
+    "name": "osGetThreadId",
+    "addresses": [
+      "0x800c1ff0"
+    ],
+    "confidence": "high",
+    "matched_instructions": 6,
+    "evidence": "Verified complete leaf OSThread ID getter: if A0 null reads current OSThread global0x800EF390, returns field offset0x14 (ID), unlike osGetThreadPri at800C8D70 returning offset0x4."
+  },
+  {
+    "name": "osViGetCurrentLine",
+    "addresses": [
+      "0x800c1510"
+    ],
+    "confidence": "high",
+    "matched_instructions": 3,
+    "evidence": "Verified complete leaf reads VI_CURRENT_REG physical0x04400010 through uncached0xA4400010 then returns."
+  }
+]

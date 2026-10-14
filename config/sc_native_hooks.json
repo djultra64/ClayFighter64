@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "author": "djultra64",
+  "module": [
+    "host/sc_assets.h",
+    "host/sc_assets.cpp"
+  ],
+  "include_for_generated_guest": "Add sc_assets.h to host/guest_support.h; CMake add only host/sc_assets.cpp. No SC CPU functions generated.",
+  "private_image": {
+    "path": "analysis/sc_assets/asset-image.z64",
+    "size": 15368752,
+    "sha256": "05f3d63f8c413520e4ee5fecd0ec400361a5dc11df4a651ef06ad22431c733da",
+    "native_dma_policy": "Allow this exact extended image only after configure_asset_image validation; existing hostDMA bounds againstclay_rom.size() already support its appended ranges. Keep ordinary--rom12MiB path unchanged.",
+    "builder": "python3 tools/sc_import_assets.py"
+  },
+  "cli_recipe": "Optional --sc-assets PATH loads verified asset image and callsclay_sc::configure_asset_image(image,demo_id). Optional--sc-demo-character mustbe6/11/12/16andrequires--sc-assets. Defaultdemo_id=-1 keeps originalroster/UIselection unchanged.",
+  "hooks": [
+    {
+      "function": "func_80072FE8",
+      "instruction_vram": "0x800731B0",
+      "expected_rom_word": "1321000b",
+      "old_statement": "if (ctx->r25 == ctx->r1) {",
+      "new_statement": "if (ctx->r25 == ctx->r1 || clay_sc_definition_supported(rdram, ctx->r15)) {",
+      "reason": "Accept only the verified, registered and adapted donor 5.21 definition. Preserve the original high-byte, type and all unsupported-format fatal checks. The original version mismatch is fatal, not a warning."
+    },
+    {
+      "function": "func_80091A8C",
+      "instruction_vram": "0x80091B44",
+      "expected_rom_word": "252a000e",
+      "old_statement": "ctx->r10 = ADD32(ctx->r9, 0XE);",
+      "new_statement": "ctx->r10 = ADD32(ctx->r9, clay_sc_sequence_header_bytes(rdram, ctx->r9));",
+      "reason": "ImportedCharDef5.21 sequencebody starts16bytes from header; original5.20 starts14."
+    },
+    {
+      "function": "func_80091A8C",
+      "instruction_vram": "0x80091B68",
+      "expected_rom_word": "25ae000e",
+      "old_statement": "ctx->r14 = ADD32(ctx->r13, 0XE);",
+      "new_statement": "ctx->r14 = ADD32(ctx->r13, clay_sc_sequence_header_bytes(rdram, ctx->r13));",
+      "reason": "Preserve alternate/restartbodypointer alongsideinitialpointer."
+    },
+    {
+      "function": "func_80001008",
+      "instruction_vram": "0x80001AA0",
+      "expected_rom_word": "03e00008",
+      "insertion": "Before its solefinalreturn (after originaldelay slot), callclay_sc_register_model(rdram,ctx->r2);",
+      "reason": "Register live importedCharDefbyteinterval onlyafter actualoriginal63loader completes."
+    },
+    {
+      "function": "func_80001AA8",
+      "instruction_vram": "0x80001AA8",
+      "expected_rom_word": "27bdffe0",
+      "insertion": "Atfunctionentry before firstinstruction, callclay_sc_unregister_model(rdram,ctx->r4);",
+      "reason": "Drop formatintervalbefore characterresources freed/reused; prevents futureoriginalcharacters inheriting16byteheaders."
+    },
+    {
+      "function": "func_8005D334",
+      "instruction_vram": "0x8005D334",
+      "expected_rom_word": "27bdffe0",
+      "insertion": "Atfunctionentry callclay_sc_demo_selection(rdram);",
+      "reason": "Explicitexperimentalpreviewselectiononly: set originalplayer1choice state*(u32*)800DDD40 offsetC toselecteddonorID,paletteoffset18zero. Module returnsimmediately whenoptin/demooff."
+    },
+    {
+      "function": "func_8003C740",
+      "instruction_vram": "0x8003C740",
+      "expected_rom_word": "27bdffc0",
+      "insertion": "At function entry before original first instruction, call clay_sc_demo_combat_selection(rdram,ctx->r4);",
+      "reason": "Shared combat loader covers normal, demo and alternate wrappers 3C650/3C6B4/3C70C. Overwrite only explicit demo P1 ID/palette before original actor loading; preserve P2, stage, mode and all defaults. The prior wrapper-only hook missed normal play."
+    }
+  ],
+  "must_not_patch": "Do not change opcode0x93 hurtboxstride at80092DE8: its14byteoperandstructure is shared acrossbothgames. Do not copy donorSC sequencecontextlayout (+8bytefields),global rules orwholeCPUengine. Do not relabel5.21metadata as5.20.",
+  "verified_native_scope": "687 original+donor animations,512 original interpreter steps each; allocation, SHA mutation and registry-unload guards tested. Sixteen native selector slots and139-frame authentic portrait cache integrated. Hidden native High Five70second nonattract combat, pause/resume and original RT64 vertex matching observed. Remaining actual donor/whole-round validation recorded separately.",
+  "full16_roster_status": "Not implemented. Original12slot roster remains intact; experimentaldemo selects realimportedcharacterwithout inventingmenuentries."
+}

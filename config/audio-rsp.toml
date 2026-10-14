@@ -1,0 +1,16 @@
+# Original ClayFighter 63 1/3 (USA) aspMain microcode.
+# CPU OSTask initializer at 0x8009A7DC selects 0x800D29F0 (ROM 0xD35F0).
+# Code ends before the next microcode at ROM 0xD4410.
+text_offset = 0xD35F0
+text_size = 0xE20
+text_address = 0x1080
+rom_file_path = "../probe-output/base.z64"
+output_file_path = "../generated/audio.cpp"
+output_function_name = "clayfighter_audio_rsp"
+# 16 command dispatch addresses from ROM 0xF76D0 (audio data +0x10).
+extra_indirect_branch_targets = [
+    0x1118, 0x1470, 0x11DC, 0x1B38,
+    0x1214, 0x187C, 0x1254, 0x12D0,
+    0x12EC, 0x1328, 0x140C, 0x1294,
+    0x1E24, 0x138C, 0x170C, 0x144C,
+]

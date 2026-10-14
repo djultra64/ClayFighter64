@@ -1,0 +1,143 @@
+{
+  "author": "djultra64",
+  "scope": "ONLY original main fighter body sprite draw; original60Hz simulation unchanged",
+  "hooks": [
+    {
+      "pc": "0x8009db18",
+      "original_word": "0x27bdffe0",
+      "position": "function entry beforeprologue",
+      "code": "clay::reserve_actor_interpolation_pool(ctx);"
+    },
+    {
+      "pc": "0x8003C740",
+      "original_word": "0x27bdffc0",
+      "position": "function entry",
+      "code": "clay::reset_actor_interpolation();"
+    },
+    {
+      "pc": "0x8003e20c",
+      "original_word": "0x3c048011",
+      "position": "aftermainbodyidentityload at3E204, before A45BC/43718 mainbodypass",
+      "code": "clay::begin_actor_interpolation_frame(rdram);"
+    },
+    {
+      "pc": "0x8004491C",
+      "original_word": "0xc02a1f1",
+      "position": "immediately before func_800A87C4 after original delay-slot store",
+      "code": "clay::begin_actor_piece(rdram, ctx);"
+    },
+    {
+      "pc": "0x80044924",
+      "original_word": "0x8faa00fc",
+      "position": "after originalA87C4 returns",
+      "code": "clay::end_actor_piece(rdram);"
+    }
+  ],
+  "actor_pointers": [
+    "0x801028B8",
+    "0x801028BC"
+  ],
+  "draw_stack_offsets": {
+    "actor": 256,
+    "piece_index": 252
+  },
+  "identity_matrix_capture": "*(0x8011089C)-64 aftermainbody3E204LOAD; full64byte nativefixedidentity guard",
+  "rt64_commands": {
+    "enable": [
+      "0x00525464",
+      "0x10000064"
+    ],
+    "matrix_group": [
+      "0x6400000C",
+      "stable_id",
+      "0x00002001",
+      "0"
+    ],
+    "repeat_modelview_load": [
+      "0x01020040",
+      "originalmatrixphysicaladdress"
+    ],
+    "pop": [
+      "0x6400000D",
+      "1"
+    ],
+    "bytes_added_per_piece": 48
+  },
+  "matching_guards": [
+    "ValidP1/P2actor only",
+    "No menu/HUD/generic spritehook",
+    "Max128pieces",
+    "Stableactor/definition/spritepointer",
+    "Finitepositions",
+    "Positionjumpgreaterthan64invalidatesID",
+    "NewcombatinvocationinvalidatesallIDs",
+    "Original/60Hz presentation bypass",
+    "RepeatoriginalidentityLOADafterpopisolatesfollowingdraws",
+    "FNV1a64 of ENTIREdescriptor/palette/pixels protectsagainstsameaddressposebufferreuse"
+  ],
+  "limitations": [
+    "No additional bitmap poses generated; only stable image geometry/motion interpolation.",
+    "Actual120Hz monitor presentation not available on the60Hz Windows monitor."
+  ],
+  "primary_source": "LocalRT64src/hle/rt64_rsp.cpp setVertexCommon andsrc/hle/rt64_game_frame.cpp matchTransform; rt64_extended_gbi.h MIT copyright preserved",
+  "hidden_test": "python3 tools/verify_interpolation.py",
+  "native_pool": {
+    "configure": "0x8009DB18",
+    "verified_combat_original_request": {
+      "displaylist_commands": 10240,
+      "matrix_count": 128,
+      "vertex_count": 4000
+    },
+    "extended_displaylist_commands": 11776,
+    "bytes_reserved_per_buffer": 12288,
+    "buffer_count": "*(0x801108CC)",
+    "buffer_index": "*(0x800DE174)",
+    "displaylist_start_table": "*(0x801108DC)",
+    "matrix_start_table": "*(0x801108E0)",
+    "vertex_start_table": "*(0x801108E4)",
+    "displaylist_limit": "selectedstart+*(0x80110880)*8",
+    "matrix_limit": "selectedstart+*(0x80110888)*64",
+    "vertex_limit": "selectedstart+*(0x80110890)*16",
+    "allocation_proof_pcs": [
+      "0x8009DC58",
+      "0x8009DC68",
+      "0x8009DC84",
+      "0x8009DD30",
+      "0x8009E000"
+    ],
+    "frame_added_byte_limit": 12288,
+    "other_native_pool_requests": "unaltered"
+  },
+  "sprite_bound": {
+    "routine": "0x800A87C4",
+    "setup_commands_upper_bound": 64,
+    "commands_per_TMEM_slice_upper_bound": 32,
+    "vertex_bytes_per_slice": 64,
+    "TMEM_minimum_bytes": 2048,
+    "CI8_slice_division_pc": "0x800A9444",
+    "other_format_slice_division_pc": "0x800A94A8",
+    "slice_loop": [
+      "0x800A96F8",
+      "0x800AA980"
+    ],
+    "strict_guard": "48tagsbytes+verifiedoriginalpayload must fitactualpool beforeanytags; vertexcapacitycheckedseparately",
+    "native_cases_executed": 3780,
+    "max_observed_DL_bytes": 20576,
+    "actual_fighter_descriptor_verified": {
+      "format": "0x43",
+      "width": 126,
+      "height": 78,
+      "stride_bytes": 504,
+      "pixel_offset": 16,
+      "source": "analysis/hidden-interpolation-diagnosis.log",
+      "test": "OriginalA87C4 format43 tested including actual126x78 and observed144/146 widths; unchanged bound"
+    },
+    "red_before_format43_fix": "Actualdescriptor guard fixture rejectedformat43; expectedassertionfailure",
+    "actual_fighter_format": "0x43 RGBA32; native stride width*4, fullybounded byoriginalA87C4"
+  },
+  "verification": {
+    "actual_gpu": "HiddenHighFive nativeGPU combat, scopedactor tags and up to264 nonzerovertexvelocities observed. Windows4K nativeGPU alsoobserved actualtags/velocities.",
+    "fractional": "ActualRT64GameFrame matching plus exactRSPWorldCS/RSPProcessCS expressions verified weights0/.5/1; see analysis/rt64_interpolation_evidence.json",
+    "physical_monitor_limit": "Windowsrequested120/effective60/display60; noactual120presentationclaim"
+  }
+}

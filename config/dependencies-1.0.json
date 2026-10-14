@@ -1,0 +1,227 @@
+{
+  "project": "ClayFighter 64",
+  "version": "1.0",
+  "author": "djultra64",
+  "dependencies": {
+    "N64ModernRuntime": {
+      "commit": "cdf5abbd5026fef5c364c676e4667c45e42b6863",
+      "repositories": [
+        {
+          "commit": "cdf5abbd5026fef5c364c676e4667c45e42b6863",
+          "path": "",
+          "repository": "https://github.com/N64Recomp/N64ModernRuntime"
+        },
+        {
+          "commit": "81213c1831fab2521a6a5459c67b63437d67e253",
+          "path": "N64Recomp",
+          "repository": "https://github.com/N64Recomp/N64Recomp"
+        },
+        {
+          "commit": "ad8b641f9682b6091ba8b9f7c8152255c1a2c803",
+          "path": "N64Recomp/lib/ELFIO",
+          "repository": "https://github.com/serge1/ELFIO"
+        },
+        {
+          "commit": "407c905e45ad75fc29bf0f9bb7c5c2fd3475976f",
+          "path": "N64Recomp/lib/fmt",
+          "repository": "https://github.com/fmtlib/fmt"
+        },
+        {
+          "commit": "e0d8003047938e2ec3697eaf8d61a84d11d17b43",
+          "path": "N64Recomp/lib/rabbitizer",
+          "repository": "https://github.com/Decompollaborate/rabbitizer"
+        },
+        {
+          "commit": "f6326087b3404efb07c6d3deed97b3c3b8098c0c",
+          "path": "N64Recomp/lib/sljit",
+          "repository": "https://github.com/zherczeg/sljit"
+        },
+        {
+          "commit": "1f7884e59165e517462f922e7b6de131bd9844f3",
+          "path": "N64Recomp/lib/tomlplusplus",
+          "repository": "https://github.com/marzer/tomlplusplus"
+        },
+        {
+          "commit": "8573fd7cd6f49b262a0ccc447f3c6acfc415e556",
+          "path": "thirdparty/miniz",
+          "repository": "https://github.com/richgel999/miniz"
+        },
+        {
+          "commit": "a124b850791db2a33f7354d2b0aa7da821cef6f5",
+          "path": "thirdparty/o1heap",
+          "repository": "https://github.com/N64Recomp/o1heap"
+        },
+        {
+          "commit": "ac3a25da3d957d9ef3e4114d9f8332d34ce83a46",
+          "path": "thirdparty/xxHash",
+          "repository": "https://github.com/Cyan4973/xxHash.git"
+        }
+      ],
+      "repository": "https://github.com/N64Recomp/N64ModernRuntime"
+    },
+    "N64Recomp": {
+      "commit": "ffb39cdad1da5de07eaaa48bd1db4a89a7986771",
+      "repositories": [
+        {
+          "commit": "ffb39cdad1da5de07eaaa48bd1db4a89a7986771",
+          "path": "",
+          "repository": "https://github.com/N64Recomp/N64Recomp"
+        },
+        {
+          "commit": "ad8b641f9682b6091ba8b9f7c8152255c1a2c803",
+          "path": "lib/ELFIO",
+          "repository": "https://github.com/serge1/ELFIO"
+        },
+        {
+          "commit": "407c905e45ad75fc29bf0f9bb7c5c2fd3475976f",
+          "path": "lib/fmt",
+          "repository": "https://github.com/fmtlib/fmt"
+        },
+        {
+          "commit": "e0d8003047938e2ec3697eaf8d61a84d11d17b43",
+          "path": "lib/rabbitizer",
+          "repository": "https://github.com/Decompollaborate/rabbitizer"
+        },
+        {
+          "commit": "f6326087b3404efb07c6d3deed97b3c3b8098c0c",
+          "path": "lib/sljit",
+          "repository": "https://github.com/zherczeg/sljit"
+        },
+        {
+          "commit": "1f7884e59165e517462f922e7b6de131bd9844f3",
+          "path": "lib/tomlplusplus",
+          "repository": "https://github.com/marzer/tomlplusplus"
+        }
+      ],
+      "repository": "https://github.com/N64Recomp/N64Recomp"
+    },
+    "rt64": {
+      "commit": "43373749dac9bbc1b653e6a02aed40a9e1783bed",
+      "repositories": [
+        {
+          "commit": "43373749dac9bbc1b653e6a02aed40a9e1783bed",
+          "path": "",
+          "repository": "https://github.com/rt64/rt64"
+        },
+        {
+          "commit": "21ca0c4319dfd5a161c5f2a0c406e8f60194ea6c",
+          "path": "src/contrib/ddspp",
+          "repository": "https://github.com/redorav/ddspp.git"
+        },
+        {
+          "commit": "cc15e715ee378a4f675b335bd1071ff105873fc8",
+          "path": "src/contrib/dxc",
+          "repository": "https://github.com/rt64/dxc-bin"
+        },
+        {
+          "commit": "6f5274c66132e8f951c400103d897582b8f21491",
+          "path": "src/contrib/hlslpp",
+          "repository": "https://github.com/redorav/hlslpp"
+        },
+        {
+          "commit": "d03941725fd0bd08c78c46e3e5b0265526e9d060",
+          "path": "src/contrib/im3d",
+          "repository": "https://github.com/john-chapman/im3d"
+        },
+        {
+          "commit": "277ae93c41314ba5f4c7444f37c4319cdf07e8cf",
+          "path": "src/contrib/imgui",
+          "repository": "https://github.com/ocornut/imgui"
+        },
+        {
+          "commit": "f156599faefe316f7dd20fe6c783bf87c8bb6fd9",
+          "path": "src/contrib/implot",
+          "repository": "https://github.com/epezent/implot"
+        },
+        {
+          "commit": "860fac3fbae94194a392c1d9857e185eda6d083e",
+          "path": "src/contrib/mupen64plus-core",
+          "repository": "https://github.com/mupen64plus/mupen64plus-core"
+        },
+        {
+          "commit": "de8111fdcb89144abc16c85650ce4e21e028bfb5",
+          "path": "src/contrib/mupen64plus-win32-deps",
+          "repository": "https://github.com/mupen64plus/mupen64plus-win32-deps"
+        },
+        {
+          "commit": "17b6e8ce219c0677f94b63636abb9296b28841ca",
+          "path": "src/contrib/nativefiledialog-extended",
+          "repository": "https://github.com/btzy/nativefiledialog-extended"
+        },
+        {
+          "commit": "d890ac899e505fb30040e037a4037cdeca68f033",
+          "path": "src/contrib/plume",
+          "repository": "https://github.com/renderbag/plume.git"
+        },
+        {
+          "commit": "9ef66bc14edd10dee0de3a545b98578363552f66",
+          "path": "src/contrib/plume/contrib/D3D12MemoryAllocator",
+          "repository": "https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator"
+        },
+        {
+          "commit": "2fa203425eb4af9dfc6b03f97ef72b0b5bcb8350",
+          "path": "src/contrib/plume/contrib/Vulkan-Headers",
+          "repository": "https://github.com/KhronosGroup/Vulkan-Headers"
+        },
+        {
+          "commit": "29b35ea4232688c0f42cdff0c10848290760a417",
+          "path": "src/contrib/plume/contrib/VulkanMemoryAllocator",
+          "repository": "https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator"
+        },
+        {
+          "commit": "be3dbd49bf77052665e96b6c7484af855e7e5f67",
+          "path": "src/contrib/plume/contrib/volk",
+          "repository": "https://github.com/zeux/volk"
+        },
+        {
+          "commit": "5d6b756ee62760f71b65d37e41a0b5a3dab90507",
+          "path": "src/contrib/re-spirv",
+          "repository": "https://github.com/rt64/re-spirv"
+        },
+        {
+          "commit": "f013f08e4455bcc1f0eed8e3dd5e2009682656d9",
+          "path": "src/contrib/re-spirv/external/SPIRV-Headers",
+          "repository": "https://github.com/KhronosGroup/SPIRV-Headers"
+        },
+        {
+          "commit": "6173e24b31f09a0c3217103a130e74c4ddec14a6",
+          "path": "src/contrib/spirv-cross",
+          "repository": "https://github.com/KhronosGroup/SPIRV-Cross.git"
+        },
+        {
+          "commit": "ae721c50eaf761660b4f90cc590453cdb0c2acd0",
+          "path": "src/contrib/stb",
+          "repository": "https://github.com/nothings/stb"
+        },
+        {
+          "commit": "1864a50c9b5cf8500d8e9e61ed92aa0dd3772750",
+          "path": "src/contrib/xxHash",
+          "repository": "https://github.com/Cyan4973/xxHash"
+        },
+        {
+          "commit": "0ff651dd876823b99fa5c5f53292be28381aee9b",
+          "path": "src/contrib/zstd",
+          "repository": "https://github.com/facebook/zstd"
+        }
+      ],
+      "repository": "https://github.com/rt64/rt64"
+    },
+    "spimdisasm": {
+      "commit": "4b5d4c68eeb9f9eae14b3bb713971433ae2c3c43",
+      "repositories": [
+        {
+          "commit": "4b5d4c68eeb9f9eae14b3bb713971433ae2c3c43",
+          "path": "",
+          "repository": "https://github.com/Decompollaborate/spimdisasm"
+        }
+      ],
+      "repository": "https://github.com/Decompollaborate/spimdisasm"
+    }
+  },
+  "linux_shared": {
+    "SDL2-compat": "2.32.70",
+    "SDL3": "3.4.12",
+    "dbus": "1.16.2"
+  },
+  "windows_python": "3.13.9"
+}

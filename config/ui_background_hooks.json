@@ -1,0 +1,93 @@
+{
+  "author": "djultra64",
+  "hooks": [
+    {
+      "pc": "0x800a45bc",
+      "original_word": "8c8e0000",
+      "function": "func_800A45BC",
+      "code": "entry: saved_dl=clay::ui::display_list_cursor(rdram); return: clay::ui::fix_scissor(rdram,saved_dl);"
+    },
+    {
+      "pc": "0x80059cf0",
+      "original_word": "0c029367",
+      "function": "func_80059B68",
+      "code": "clay::ui::draw_fullscreen_fill(rdram,ctx,&func_800A4D9C);"
+    },
+    {
+      "pc": "0x8003983c",
+      "original_word": "0c029367",
+      "function": "func_800396C4",
+      "code": "clay::ui::draw_fullscreen_fill(rdram,ctx,&func_800A4D9C);"
+    },
+    {
+      "pc": "0x80039b04",
+      "original_word": "0c0292fc",
+      "function": "func_800396C4",
+      "code": "clay::ui::draw_transition_band(rdram,ctx,&func_800A4BF0);"
+    },
+    {
+      "pc": "0x80039b7c",
+      "original_word": "0c0292fc",
+      "function": "func_800396C4",
+      "code": "clay::ui::draw_transition_band(rdram,ctx,&func_800A4BF0);"
+    },
+    {
+      "pc": "0x800396c4",
+      "original_word": "27bdfed0",
+      "function": "func_800396C4",
+      "code": "entry: saved_effect=uint32_t(ctx->r4); saved_vertices=clay::ui::vertex_cursor(rdram); return: clay::ui::extend_circle_mask(rdram,saved_effect,saved_vertices);"
+    },
+    {
+      "pc": "0x8005e688",
+      "original_word": "0c028c30",
+      "function": "func_8005E37C",
+      "code": "before existing clay_sc_roster_draw_grid: clay::ui::extend_selector_background_mesh(rdram,uint32_t(ctx->r5));"
+    }
+  ],
+  "scope": "Only native inset scissor, full-screen pause/fade, circle exterior mask anchors/bands and selector industrial wall vertices. Font, HUD, all aperture/rim vertices and all selector vertices with abs(x)<=160 remain original.",
+  "native_scissor": {
+    "original": [
+      "ED000010",
+      "005003AC"
+    ],
+    "wide": [
+      "ED000000",
+      "005003C0"
+    ],
+    "resolution_independent_native_size": [
+      320,
+      240
+    ]
+  },
+  "circle": {
+    "type": 2,
+    "vertex_count": 192,
+    "layout": "64 triples: inner transparent aperture, original opaque rim, opaque x-boundary anchor",
+    "modified": "Only each triple finalX: +/-160 becomes +/-ceil(120*aspect); at16:9 +/-214",
+    "unchanged": "All128 aperture/rim vertices and remaining14bytes ofall64outeranchors; original60Hz transitionprogress"
+  },
+  "selector": {
+    "source_rom": "0xB9B230",
+    "part_size": "0x6148",
+    "native_header": [
+      "halfword0=3",
+      "halfword18=AC"
+    ],
+    "dl_offset": "0xE0",
+    "dl_end": "0x2C60",
+    "vertex_range": [
+      "0x2C68",
+      "0x6148"
+    ],
+    "unique_vertices": 846,
+    "outer_vertices": 428,
+    "original_x_bounds": [
+      -346,
+      346
+    ],
+    "scope": "abs(originalX)>160 only; ramp extended industrialouteredge tooriginal346*aspect/(4/3), inner grid and textureUV unchanged; restore4:3 and idempotent"
+  },
+  "commands_added_per_fill": 48,
+  "capacity": "Decorate original completed payload only after checking actual native buffer end and internal targets; no allocation guesses oroutof8MiB commandbuffers",
+  "test": "tools/verify_ui_background.py runsactualoriginalA45BC,A4D9C,A4BF0,statewriters,original396C4circle plusactualoriginalB23F0/B1FF0/B2154 math; circlefixtureA3F88/A561C state-only isolated; privateoriginal846vertexmeshfixture; no GPU/window claims"
+}

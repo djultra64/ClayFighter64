@@ -1,0 +1,1385 @@
+{
+  "author": "djultra64",
+  "status": "Native resource/cache/state,128 P1/P2 navigation+confirmation cases and actual mesh/codecs pass; root owns generator integration and actual GPU verification",
+  "module": [
+    "host/sc_roster.h",
+    "host/sc_roster.cpp"
+  ],
+  "private_image": "local/sc_roster/asset-image-roster.z64",
+  "image_sha256": "26ccae86b452d4bacadf429e0b241751aeef58a41d676e7d6173974414dafd7d",
+  "layout": [
+    [
+      0,
+      1,
+      2,
+      6
+    ],
+    [
+      10,
+      15,
+      8,
+      11
+    ],
+    [
+      14,
+      5,
+      9,
+      12
+    ],
+    [
+      13,
+      4,
+      3,
+      16
+    ]
+  ],
+  "selector_allocation": {
+    "function": "func_8005DDCC",
+    "instruction_vram": "0x8005DDF4",
+    "expected_rom_word": "240500b8",
+    "new_statement": "ctx->r5 = clay_sc_roster_state_bytes();",
+    "original_bytes": 184,
+    "expanded_bytes": 280,
+    "flags_offset": 184,
+    "coordinates_offset": 216
+  },
+  "install": {
+    "function": "func_8005DDCC",
+    "location": "Before final return after original epilogue",
+    "call": "clay_sc_roster_install(rdram,ctx);"
+  },
+  "portrait_shared_posthook": {
+    "function": "func_800AFFE0",
+    "entry": "const gpr portrait_source=ctx->r4;",
+    "every_return": "clay_sc_roster_augment_portraits(rdram,ctx,portrait_source);",
+    "scope": "Only verifiedroster mode and sourceROMB6BA90; bothselector and genuinecachedHUD builder5AC38 reloadthisbank"
+  },
+  "verified_hooks": [
+    {
+      "function": "func_8005D56C",
+      "instruction_vram": "0x8005d61c",
+      "expected_rom_word": "9484ac18",
+      "category": "slot_lookup",
+      "new_statement": "ctx->r4 = clay_sc_roster_id_from_slot((uint32_t(ADD32(ctx->r4, -0x53E8)) - 0x800DAC18u) / 2);",
+      "reason": "Read mapped characterID without overwriting adjacent ROMfloat data",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005DDCC",
+      "instruction_vram": "0x8005dfb8",
+      "expected_rom_word": "2484002c",
+      "category": "flags_address",
+      "new_statement": "ctx->r4 = ADD32(ctx->r4, clay_sc_roster_flag_offset());",
+      "reason": "Address of packed per-slot selector flags; redirect to appended sidecar in16 mode",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005E37C",
+      "instruction_vram": "0x8005e6a8",
+      "expected_rom_word": "012b6821",
+      "category": "row_stride",
+      "new_statement": "ctx->r13 = clay_sc_roster_row_stride(ctx->r11);",
+      "reason": "Original row*3 index becomes row*4, leaving four rows intact",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005E37C",
+      "instruction_vram": "0x8005e6cc",
+      "expected_rom_word": "014e4021",
+      "category": "row_stride",
+      "new_statement": "ctx->r8 = clay_sc_roster_row_stride(ctx->r14);",
+      "reason": "Original row*3 index becomes row*4, leaving four rows intact",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005E37C",
+      "instruction_vram": "0x8005e6e0",
+      "expected_rom_word": "2718abe8",
+      "category": "coordinates_base",
+      "new_statement": "ctx->r24 = clay_sc_roster_coordinates(rdram);",
+      "reason": "Original12-coordinate array at800DABE8 needs16 coordinates in selector sidecar",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005E37C",
+      "instruction_vram": "0x8005e744",
+      "expected_rom_word": "958a002c",
+      "category": "flags_read",
+      "new_statement": "ctx->r10 = MEM_HU(clay_sc_roster_flag_offset(), ctx->r12);",
+      "reason": "Per-slot flags from selector global800DDD30; preserve other scalarfields",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005E37C",
+      "instruction_vram": "0x8005e760",
+      "expected_rom_word": "9739ac18",
+      "category": "slot_lookup",
+      "new_statement": "ctx->r25 = clay_sc_roster_id_from_slot((uint32_t(ADD32(ctx->r25, -0x53E8)) - 0x800DAC18u) / 2);",
+      "reason": "Read mapped characterID without overwriting adjacent ROMfloat data",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005E37C",
+      "instruction_vram": "0x8005e790",
+      "expected_rom_word": "954aac18",
+      "category": "slot_lookup",
+      "new_statement": "ctx->r10 = clay_sc_roster_id_from_slot((uint32_t(ADD32(ctx->r10, -0x53E8)) - 0x800DAC18u) / 2);",
+      "reason": "Read mapped characterID without overwriting adjacent ROMfloat data",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005E37C",
+      "instruction_vram": "0x8005e7c4",
+      "expected_rom_word": "958a002c",
+      "category": "flags_read",
+      "new_statement": "ctx->r10 = MEM_HU(clay_sc_roster_flag_offset(), ctx->r12);",
+      "reason": "Per-slot flags from selector global800DDD30; preserve other scalarfields",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005E37C",
+      "instruction_vram": "0x8005e7d8",
+      "expected_rom_word": "9599002c",
+      "category": "flags_read",
+      "new_statement": "ctx->r25 = MEM_HU(clay_sc_roster_flag_offset(), ctx->r12);",
+      "reason": "Per-slot flags from selector global800DDD30; preserve other scalarfields",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005E37C",
+      "instruction_vram": "0x8005ec48",
+      "expected_rom_word": "25efabe8",
+      "category": "coordinates_base",
+      "new_statement": "ctx->r15 = clay_sc_roster_coordinates(rdram);",
+      "reason": "Original12-coordinate array at800DABE8 needs16 coordinates in selector sidecar",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005E37C",
+      "instruction_vram": "0x8005f1bc",
+      "expected_rom_word": "25adabe8",
+      "category": "coordinates_base",
+      "new_statement": "ctx->r13 = clay_sc_roster_coordinates(rdram);",
+      "reason": "Original12-coordinate array at800DABE8 needs16 coordinates in selector sidecar",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x8005ffd8",
+      "expected_rom_word": "854f0020",
+      "category": "navigation_unlock_flags",
+      "new_statement": "ctx->r15 = clay_sc_roster_unlock_flags(MEM_H(0X20, ctx->r10));",
+      "reason": "Only native selector navigation reads exposelogicalfourth-column bit8 forZappa; stored originalmask unchanged",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x80060098",
+      "expected_rom_word": "85180020",
+      "category": "navigation_unlock_flags",
+      "new_statement": "ctx->r24 = clay_sc_roster_unlock_flags(MEM_H(0X20, ctx->r8));",
+      "reason": "Only native selector navigation reads exposelogicalfourth-column bit8 forZappa; stored originalmask unchanged",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x80060158",
+      "expected_rom_word": "85c90020",
+      "category": "navigation_unlock_flags",
+      "new_statement": "ctx->r9 = clay_sc_roster_unlock_flags(MEM_H(0X20, ctx->r14));",
+      "reason": "Only native selector navigation reads exposelogicalfourth-column bit8 forZappa; stored originalmask unchanged",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x8006019c",
+      "expected_rom_word": "85cf0020",
+      "category": "navigation_unlock_flags",
+      "new_statement": "ctx->r15 = clay_sc_roster_unlock_flags(MEM_H(0X20, ctx->r14));",
+      "reason": "Only native selector navigation reads exposelogicalfourth-column bit8 forZappa; stored originalmask unchanged",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x800601cc",
+      "expected_rom_word": "852c0020",
+      "category": "navigation_unlock_flags",
+      "new_statement": "ctx->r12 = clay_sc_roster_unlock_flags(MEM_H(0X20, ctx->r9));",
+      "reason": "Only native selector navigation reads exposelogicalfourth-column bit8 forZappa; stored originalmask unchanged",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x800601e8",
+      "expected_rom_word": "240b0002",
+      "category": "column_wrap_constant",
+      "new_statement": "ctx->r11 = clay_sc_roster_columns() - 1;",
+      "reason": "Original col2 wrap destination becomes col3 in4-column selector",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x8006021c",
+      "expected_rom_word": "85e80020",
+      "category": "navigation_unlock_flags",
+      "new_statement": "ctx->r8 = clay_sc_roster_unlock_flags(MEM_H(0X20, ctx->r15));",
+      "reason": "Only native selector navigation reads exposelogicalfourth-column bit8 forZappa; stored originalmask unchanged",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x80060238",
+      "expected_rom_word": "24090002",
+      "category": "column_wrap_constant",
+      "new_statement": "ctx->r9 = clay_sc_roster_columns() - 1;",
+      "reason": "Original col2 wrap destination becomes col3 in4-column selector",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x80060250",
+      "expected_rom_word": "854b0020",
+      "category": "navigation_unlock_flags",
+      "new_statement": "ctx->r11 = clay_sc_roster_unlock_flags(MEM_H(0X20, ctx->r10));",
+      "reason": "Only native selector navigation reads exposelogicalfourth-column bit8 forZappa; stored originalmask unchanged",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x80060284",
+      "expected_rom_word": "85e80020",
+      "category": "navigation_unlock_flags",
+      "new_statement": "ctx->r8 = clay_sc_roster_unlock_flags(MEM_H(0X20, ctx->r15));",
+      "reason": "Only native selector navigation reads exposelogicalfourth-column bit8 forZappa; stored originalmask unchanged",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x80060300",
+      "expected_rom_word": "24010002",
+      "category": "column_bound_constant",
+      "new_statement": "ctx->r1 = clay_sc_roster_columns() - 1;",
+      "reason": "Native branch compares lastcol2; scoped4-column bound becomes3",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x80060330",
+      "expected_rom_word": "850d0020",
+      "category": "navigation_unlock_flags",
+      "new_statement": "ctx->r13 = clay_sc_roster_unlock_flags(MEM_H(0X20, ctx->r8));",
+      "reason": "Only native selector navigation reads exposelogicalfourth-column bit8 forZappa; stored originalmask unchanged",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x80060374",
+      "expected_rom_word": "850e0020",
+      "category": "navigation_unlock_flags",
+      "new_statement": "ctx->r14 = clay_sc_roster_unlock_flags(MEM_H(0X20, ctx->r8));",
+      "reason": "Only native selector navigation reads exposelogicalfourth-column bit8 forZappa; stored originalmask unchanged",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x80060390",
+      "expected_rom_word": "24090002",
+      "category": "column_wrap_constant",
+      "new_statement": "ctx->r9 = clay_sc_roster_columns() - 1;",
+      "reason": "Original col2 wrap destination becomes col3 in4-column selector",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x800603a8",
+      "expected_rom_word": "854b0020",
+      "category": "navigation_unlock_flags",
+      "new_statement": "ctx->r11 = clay_sc_roster_unlock_flags(MEM_H(0X20, ctx->r10));",
+      "reason": "Only native selector navigation reads exposelogicalfourth-column bit8 forZappa; stored originalmask unchanged",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x800603f4",
+      "expected_rom_word": "85cc0020",
+      "category": "navigation_unlock_flags",
+      "new_statement": "ctx->r12 = clay_sc_roster_unlock_flags(MEM_H(0X20, ctx->r14));",
+      "reason": "Only native selector navigation reads exposelogicalfourth-column bit8 forZappa; stored originalmask unchanged",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x80060424",
+      "expected_rom_word": "854b0020",
+      "category": "navigation_unlock_flags",
+      "new_statement": "ctx->r11 = clay_sc_roster_unlock_flags(MEM_H(0X20, ctx->r10));",
+      "reason": "Only native selector navigation reads exposelogicalfourth-column bit8 forZappa; stored originalmask unchanged",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x80060458",
+      "expected_rom_word": "850e0020",
+      "category": "navigation_unlock_flags",
+      "new_statement": "ctx->r14 = clay_sc_roster_unlock_flags(MEM_H(0X20, ctx->r8));",
+      "reason": "Only native selector navigation reads exposelogicalfourth-column bit8 forZappa; stored originalmask unchanged",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x80060474",
+      "expected_rom_word": "24090002",
+      "category": "column_wrap_constant",
+      "new_statement": "ctx->r9 = clay_sc_roster_columns() - 1;",
+      "reason": "Original col2 wrap destination becomes col3 in4-column selector",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x80060590",
+      "expected_rom_word": "012e6821",
+      "category": "row_stride",
+      "new_statement": "ctx->r13 = clay_sc_roster_row_stride(ctx->r14);",
+      "reason": "Original row*3 index becomes row*4, leaving four rows intact",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x800605a8",
+      "expected_rom_word": "954aac18",
+      "category": "slot_lookup",
+      "new_statement": "ctx->r10 = clay_sc_roster_id_from_slot((uint32_t(ADD32(ctx->r10, -0x53E8)) - 0x800DAC18u) / 2);",
+      "reason": "Read mapped characterID without overwriting adjacent ROMfloat data",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x80060b5c",
+      "expected_rom_word": "854b0020",
+      "category": "navigation_unlock_flags",
+      "new_statement": "ctx->r11 = clay_sc_roster_unlock_flags(MEM_H(0X20, ctx->r10));",
+      "reason": "Only native selector navigation reads exposelogicalfourth-column bit8 forZappa; stored originalmask unchanged",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x80060c1c",
+      "expected_rom_word": "85d90020",
+      "category": "navigation_unlock_flags",
+      "new_statement": "ctx->r25 = clay_sc_roster_unlock_flags(MEM_H(0X20, ctx->r14));",
+      "reason": "Only native selector navigation reads exposelogicalfourth-column bit8 forZappa; stored originalmask unchanged",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x80060cdc",
+      "expected_rom_word": "85980020",
+      "category": "navigation_unlock_flags",
+      "new_statement": "ctx->r24 = clay_sc_roster_unlock_flags(MEM_H(0X20, ctx->r12));",
+      "reason": "Only native selector navigation reads exposelogicalfourth-column bit8 forZappa; stored originalmask unchanged",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x80060d20",
+      "expected_rom_word": "858b0020",
+      "category": "navigation_unlock_flags",
+      "new_statement": "ctx->r11 = clay_sc_roster_unlock_flags(MEM_H(0X20, ctx->r12));",
+      "reason": "Only native selector navigation reads exposelogicalfourth-column bit8 forZappa; stored originalmask unchanged",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x80060d50",
+      "expected_rom_word": "870d0020",
+      "category": "navigation_unlock_flags",
+      "new_statement": "ctx->r13 = clay_sc_roster_unlock_flags(MEM_H(0X20, ctx->r24));",
+      "reason": "Only native selector navigation reads exposelogicalfourth-column bit8 forZappa; stored originalmask unchanged",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x80060d6c",
+      "expected_rom_word": "240f0002",
+      "category": "column_wrap_constant",
+      "new_statement": "ctx->r15 = clay_sc_roster_columns() - 1;",
+      "reason": "Original col2 wrap destination becomes col3 in4-column selector",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x80060da0",
+      "expected_rom_word": "856e0020",
+      "category": "navigation_unlock_flags",
+      "new_statement": "ctx->r14 = clay_sc_roster_unlock_flags(MEM_H(0X20, ctx->r11));",
+      "reason": "Only native selector navigation reads exposelogicalfourth-column bit8 forZappa; stored originalmask unchanged",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x80060dbc",
+      "expected_rom_word": "24180002",
+      "category": "column_wrap_constant",
+      "new_statement": "ctx->r24 = clay_sc_roster_columns() - 1;",
+      "reason": "Original col2 wrap destination becomes col3 in4-column selector",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x80060dd4",
+      "expected_rom_word": "854f0020",
+      "category": "navigation_unlock_flags",
+      "new_statement": "ctx->r15 = clay_sc_roster_unlock_flags(MEM_H(0X20, ctx->r10));",
+      "reason": "Only native selector navigation reads exposelogicalfourth-column bit8 forZappa; stored originalmask unchanged",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x80060e08",
+      "expected_rom_word": "856e0020",
+      "category": "navigation_unlock_flags",
+      "new_statement": "ctx->r14 = clay_sc_roster_unlock_flags(MEM_H(0X20, ctx->r11));",
+      "reason": "Only native selector navigation reads exposelogicalfourth-column bit8 forZappa; stored originalmask unchanged",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x80060e84",
+      "expected_rom_word": "24010002",
+      "category": "column_bound_constant",
+      "new_statement": "ctx->r1 = clay_sc_roster_columns() - 1;",
+      "reason": "Native branch compares lastcol2; scoped4-column bound becomes3",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x80060eb4",
+      "expected_rom_word": "85c80020",
+      "category": "navigation_unlock_flags",
+      "new_statement": "ctx->r8 = clay_sc_roster_unlock_flags(MEM_H(0X20, ctx->r14));",
+      "reason": "Only native selector navigation reads exposelogicalfourth-column bit8 forZappa; stored originalmask unchanged",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x80060ef8",
+      "expected_rom_word": "85cc0020",
+      "category": "navigation_unlock_flags",
+      "new_statement": "ctx->r12 = clay_sc_roster_unlock_flags(MEM_H(0X20, ctx->r14));",
+      "reason": "Only native selector navigation reads exposelogicalfourth-column bit8 forZappa; stored originalmask unchanged",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x80060f14",
+      "expected_rom_word": "24180002",
+      "category": "column_wrap_constant",
+      "new_statement": "ctx->r24 = clay_sc_roster_columns() - 1;",
+      "reason": "Original col2 wrap destination becomes col3 in4-column selector",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x80060f2c",
+      "expected_rom_word": "854f0020",
+      "category": "navigation_unlock_flags",
+      "new_statement": "ctx->r15 = clay_sc_roster_unlock_flags(MEM_H(0X20, ctx->r10));",
+      "reason": "Only native selector navigation reads exposelogicalfourth-column bit8 forZappa; stored originalmask unchanged",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x80060f78",
+      "expected_rom_word": "858d0020",
+      "category": "navigation_unlock_flags",
+      "new_statement": "ctx->r13 = clay_sc_roster_unlock_flags(MEM_H(0X20, ctx->r12));",
+      "reason": "Only native selector navigation reads exposelogicalfourth-column bit8 forZappa; stored originalmask unchanged",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x80060fa8",
+      "expected_rom_word": "854f0020",
+      "category": "navigation_unlock_flags",
+      "new_statement": "ctx->r15 = clay_sc_roster_unlock_flags(MEM_H(0X20, ctx->r10));",
+      "reason": "Only native selector navigation reads exposelogicalfourth-column bit8 forZappa; stored originalmask unchanged",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x80060fdc",
+      "expected_rom_word": "85cc0020",
+      "category": "navigation_unlock_flags",
+      "new_statement": "ctx->r12 = clay_sc_roster_unlock_flags(MEM_H(0X20, ctx->r14));",
+      "reason": "Only native selector navigation reads exposelogicalfourth-column bit8 forZappa; stored originalmask unchanged",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x80060ff8",
+      "expected_rom_word": "24180002",
+      "category": "column_wrap_constant",
+      "new_statement": "ctx->r24 = clay_sc_roster_columns() - 1;",
+      "reason": "Original col2 wrap destination becomes col3 in4-column selector",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x80061114",
+      "expected_rom_word": "030c4021",
+      "category": "row_stride",
+      "new_statement": "ctx->r8 = clay_sc_roster_row_stride(ctx->r12);",
+      "reason": "Original row*3 index becomes row*4, leaving four rows intact",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005FC68",
+      "instruction_vram": "0x8006112c",
+      "expected_rom_word": "954aac18",
+      "category": "slot_lookup",
+      "new_statement": "ctx->r10 = clay_sc_roster_id_from_slot((uint32_t(ADD32(ctx->r10, -0x53E8)) - 0x800DAC18u) / 2);",
+      "reason": "Read mapped characterID without overwriting adjacent ROMfloat data",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x800617ec",
+      "expected_rom_word": "24010002",
+      "category": "column_bound_constant",
+      "new_statement": "ctx->r1 = clay_sc_roster_columns() - 1;",
+      "reason": "Native branch compares lastcol2; scoped4-column bound becomes3",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x8006183c",
+      "expected_rom_word": "030f4021",
+      "category": "row_stride",
+      "new_statement": "ctx->r8 = clay_sc_roster_row_stride(ctx->r15);",
+      "reason": "Original row*3 index becomes row*4, leaving four rows intact",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80061854",
+      "expected_rom_word": "956bac18",
+      "category": "slot_lookup",
+      "new_statement": "ctx->r11 = clay_sc_roster_id_from_slot((uint32_t(ADD32(ctx->r11, -0x53E8)) - 0x800DAC18u) / 2);",
+      "reason": "Read mapped characterID without overwriting adjacent ROMfloat data",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x800618bc",
+      "expected_rom_word": "01886821",
+      "category": "row_stride",
+      "new_statement": "ctx->r13 = clay_sc_roster_row_stride(ctx->r8);",
+      "reason": "Original row*3 index becomes row*4, leaving four rows intact",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x800618d4",
+      "expected_rom_word": "9718ac18",
+      "category": "slot_lookup",
+      "new_statement": "ctx->r24 = clay_sc_roster_id_from_slot((uint32_t(ADD32(ctx->r24, -0x53E8)) - 0x800DAC18u) / 2);",
+      "reason": "Read mapped characterID without overwriting adjacent ROMfloat data",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80061a04",
+      "expected_rom_word": "24010002",
+      "category": "column_bound_constant",
+      "new_statement": "ctx->r1 = clay_sc_roster_columns() - 1;",
+      "reason": "Native branch compares lastcol2; scoped4-column bound becomes3",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80061a54",
+      "expected_rom_word": "01cc6821",
+      "category": "row_stride",
+      "new_statement": "ctx->r13 = clay_sc_roster_row_stride(ctx->r12);",
+      "reason": "Original row*3 index becomes row*4, leaving four rows intact",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80061a6c",
+      "expected_rom_word": "956bac18",
+      "category": "slot_lookup",
+      "new_statement": "ctx->r11 = clay_sc_roster_id_from_slot((uint32_t(ADD32(ctx->r11, -0x53E8)) - 0x800DAC18u) / 2);",
+      "reason": "Read mapped characterID without overwriting adjacent ROMfloat data",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80061ad4",
+      "expected_rom_word": "012d5021",
+      "category": "row_stride",
+      "new_statement": "ctx->r10 = clay_sc_roster_row_stride(ctx->r13);",
+      "reason": "Original row*3 index becomes row*4, leaving four rows intact",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80061aec",
+      "expected_rom_word": "95ceac18",
+      "category": "slot_lookup",
+      "new_statement": "ctx->r14 = clay_sc_roster_id_from_slot((uint32_t(ADD32(ctx->r14, -0x53E8)) - 0x800DAC18u) / 2);",
+      "reason": "Read mapped characterID without overwriting adjacent ROMfloat data",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80061cb0",
+      "expected_rom_word": "9484ac18",
+      "category": "slot_lookup",
+      "new_statement": "ctx->r4 = clay_sc_roster_id_from_slot((uint32_t(ADD32(ctx->r4, -0x53E8)) - 0x800DAC18u) / 2);",
+      "reason": "Read mapped characterID without overwriting adjacent ROMfloat data",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80061ccc",
+      "expected_rom_word": "956bac18",
+      "category": "slot_lookup",
+      "new_statement": "ctx->r11 = clay_sc_roster_id_from_slot((uint32_t(ADD32(ctx->r11, -0x53E8)) - 0x800DAC18u) / 2);",
+      "reason": "Read mapped characterID without overwriting adjacent ROMfloat data",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80061d40",
+      "expected_rom_word": "24010002",
+      "category": "column_bound_constant",
+      "new_statement": "ctx->r1 = clay_sc_roster_columns() - 1;",
+      "reason": "Native branch compares lastcol2; scoped4-column bound becomes3",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80061dc4",
+      "expected_rom_word": "01ebc021",
+      "category": "row_stride",
+      "new_statement": "ctx->r24 = clay_sc_roster_row_stride(ctx->r11);",
+      "reason": "Original row*3 index becomes row*4, leaving four rows intact",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80061ddc",
+      "expected_rom_word": "954aac18",
+      "category": "slot_lookup",
+      "new_statement": "ctx->r10 = clay_sc_roster_id_from_slot((uint32_t(ADD32(ctx->r10, -0x53E8)) - 0x800DAC18u) / 2);",
+      "reason": "Read mapped characterID without overwriting adjacent ROMfloat data",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80061fb0",
+      "expected_rom_word": "9484ac18",
+      "category": "slot_lookup",
+      "new_statement": "ctx->r4 = clay_sc_roster_id_from_slot((uint32_t(ADD32(ctx->r4, -0x53E8)) - 0x800DAC18u) / 2);",
+      "reason": "Read mapped characterID without overwriting adjacent ROMfloat data",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80061fcc",
+      "expected_rom_word": "956bac18",
+      "category": "slot_lookup",
+      "new_statement": "ctx->r11 = clay_sc_roster_id_from_slot((uint32_t(ADD32(ctx->r11, -0x53E8)) - 0x800DAC18u) / 2);",
+      "reason": "Read mapped characterID without overwriting adjacent ROMfloat data",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80062040",
+      "expected_rom_word": "24010002",
+      "category": "column_bound_constant",
+      "new_statement": "ctx->r1 = clay_sc_roster_columns() - 1;",
+      "reason": "Native branch compares lastcol2; scoped4-column bound becomes3",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x800620c4",
+      "expected_rom_word": "014bc021",
+      "category": "row_stride",
+      "new_statement": "ctx->r24 = clay_sc_roster_row_stride(ctx->r11);",
+      "reason": "Original row*3 index becomes row*4, leaving four rows intact",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x800620dc",
+      "expected_rom_word": "95adac18",
+      "category": "slot_lookup",
+      "new_statement": "ctx->r13 = clay_sc_roster_id_from_slot((uint32_t(ADD32(ctx->r13, -0x53E8)) - 0x800DAC18u) / 2);",
+      "reason": "Read mapped characterID without overwriting adjacent ROMfloat data",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80062518",
+      "expected_rom_word": "032a6821",
+      "category": "row_stride",
+      "new_statement": "ctx->r13 = clay_sc_roster_row_stride(ctx->r10);",
+      "reason": "Original row*3 index becomes row*4, leaving four rows intact",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80062530",
+      "expected_rom_word": "9508ac18",
+      "category": "slot_lookup",
+      "new_statement": "ctx->r8 = clay_sc_roster_id_from_slot((uint32_t(ADD32(ctx->r8, -0x53E8)) - 0x800DAC18u) / 2);",
+      "reason": "Read mapped characterID without overwriting adjacent ROMfloat data",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80062554",
+      "expected_rom_word": "0159c021",
+      "category": "row_stride",
+      "new_statement": "ctx->r24 = clay_sc_roster_row_stride(ctx->r25);",
+      "reason": "Original row*3 index becomes row*4, leaving four rows intact",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x8006256c",
+      "expected_rom_word": "958cac18",
+      "category": "slot_lookup",
+      "new_statement": "ctx->r12 = clay_sc_roster_id_from_slot((uint32_t(ADD32(ctx->r12, -0x53E8)) - 0x800DAC18u) / 2);",
+      "reason": "Read mapped characterID without overwriting adjacent ROMfloat data",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80062584",
+      "expected_rom_word": "2718abe8",
+      "category": "coordinates_base",
+      "new_statement": "ctx->r24 = clay_sc_roster_coordinates(rdram);",
+      "reason": "Original12-coordinate array at800DABE8 needs16 coordinates in selector sidecar",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x800625b4",
+      "expected_rom_word": "9590002c",
+      "category": "flags_read",
+      "new_statement": "ctx->r16 = MEM_HU(clay_sc_roster_flag_offset(), ctx->r12);",
+      "reason": "Per-slot flags from selector global800DDD30; preserve other scalarfields",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x800625fc",
+      "expected_rom_word": "9739ac18",
+      "category": "slot_lookup",
+      "new_statement": "ctx->r25 = clay_sc_roster_id_from_slot((uint32_t(ADD32(ctx->r25, -0x53E8)) - 0x800DAC18u) / 2);",
+      "reason": "Read mapped characterID without overwriting adjacent ROMfloat data",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80062624",
+      "expected_rom_word": "9588002c",
+      "category": "flags_read",
+      "new_statement": "ctx->r8 = MEM_HU(clay_sc_roster_flag_offset(), ctx->r12);",
+      "reason": "Per-slot flags from selector global800DDD30; preserve other scalarfields",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80062630",
+      "expected_rom_word": "a58f002c",
+      "category": "flags_write",
+      "new_statement": "MEM_H(clay_sc_roster_flag_offset(), ctx->r12) = ctx->r15;",
+      "reason": "Per-slot flag write must target expanded32byte sidecar",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80062650",
+      "expected_rom_word": "956d002c",
+      "category": "flags_read",
+      "new_statement": "ctx->r13 = MEM_HU(clay_sc_roster_flag_offset(), ctx->r11);",
+      "reason": "Per-slot flags from selector global800DDD30; preserve other scalarfields",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80062670",
+      "expected_rom_word": "a579002c",
+      "category": "flags_write",
+      "new_statement": "MEM_H(clay_sc_roster_flag_offset(), ctx->r11) = ctx->r25;",
+      "reason": "Per-slot flag write must target expanded32byte sidecar",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x8006267c",
+      "expected_rom_word": "254aabe8",
+      "category": "coordinates_base",
+      "new_statement": "ctx->r10 = clay_sc_roster_coordinates(rdram);",
+      "reason": "Original12-coordinate array at800DABE8 needs16 coordinates in selector sidecar",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x800626c8",
+      "expected_rom_word": "256babe8",
+      "category": "coordinates_base",
+      "new_statement": "ctx->r11 = clay_sc_roster_coordinates(rdram);",
+      "reason": "Original12-coordinate array at800DABE8 needs16 coordinates in selector sidecar",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80062738",
+      "expected_rom_word": "9548002c",
+      "category": "flags_read",
+      "new_statement": "ctx->r8 = MEM_HU(clay_sc_roster_flag_offset(), ctx->r10);",
+      "reason": "Per-slot flags from selector global800DDD30; preserve other scalarfields",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x8006274c",
+      "expected_rom_word": "a54f002c",
+      "category": "flags_write",
+      "new_statement": "MEM_H(clay_sc_roster_flag_offset(), ctx->r10) = ctx->r15;",
+      "reason": "Per-slot flag write must target expanded32byte sidecar",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80062760",
+      "expected_rom_word": "95adac18",
+      "category": "slot_lookup",
+      "new_statement": "ctx->r13 = clay_sc_roster_id_from_slot((uint32_t(ADD32(ctx->r13, -0x53E8)) - 0x800DAC18u) / 2);",
+      "reason": "Read mapped characterID without overwriting adjacent ROMfloat data",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x8006278c",
+      "expected_rom_word": "9549002c",
+      "category": "flags_read",
+      "new_statement": "ctx->r9 = MEM_HU(clay_sc_roster_flag_offset(), ctx->r10);",
+      "reason": "Per-slot flags from selector global800DDD30; preserve other scalarfields",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80062798",
+      "expected_rom_word": "a54d002c",
+      "category": "flags_write",
+      "new_statement": "MEM_H(clay_sc_roster_flag_offset(), ctx->r10) = ctx->r13;",
+      "reason": "Per-slot flag write must target expanded32byte sidecar",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x800627ac",
+      "expected_rom_word": "950c002c",
+      "category": "flags_read",
+      "new_statement": "ctx->r12 = MEM_HU(clay_sc_roster_flag_offset(), ctx->r8);",
+      "reason": "Per-slot flags from selector global800DDD30; preserve other scalarfields",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x800627c8",
+      "expected_rom_word": "a509002c",
+      "category": "flags_write",
+      "new_statement": "MEM_H(clay_sc_roster_flag_offset(), ctx->r8) = ctx->r9;",
+      "reason": "Per-slot flag write must target expanded32byte sidecar",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x800627d4",
+      "expected_rom_word": "254aabe8",
+      "category": "coordinates_base",
+      "new_statement": "ctx->r10 = clay_sc_roster_coordinates(rdram);",
+      "reason": "Original12-coordinate array at800DABE8 needs16 coordinates in selector sidecar",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80062820",
+      "expected_rom_word": "2508abe8",
+      "category": "coordinates_base",
+      "new_statement": "ctx->r8 = clay_sc_roster_coordinates(rdram);",
+      "reason": "Original12-coordinate array at800DABE8 needs16 coordinates in selector sidecar",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80062878",
+      "expected_rom_word": "950d002c",
+      "category": "flags_read",
+      "new_statement": "ctx->r13 = MEM_HU(clay_sc_roster_flag_offset(), ctx->r8);",
+      "reason": "Per-slot flags from selector global800DDD30; preserve other scalarfields",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x8006288c",
+      "expected_rom_word": "a519002c",
+      "category": "flags_write",
+      "new_statement": "MEM_H(clay_sc_roster_flag_offset(), ctx->r8) = ctx->r25;",
+      "reason": "Per-slot flag write must target expanded32byte sidecar",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x800628a0",
+      "expected_rom_word": "958cac18",
+      "category": "slot_lookup",
+      "new_statement": "ctx->r12 = clay_sc_roster_id_from_slot((uint32_t(ADD32(ctx->r12, -0x53E8)) - 0x800DAC18u) / 2);",
+      "reason": "Read mapped characterID without overwriting adjacent ROMfloat data",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x800628cc",
+      "expected_rom_word": "9518002c",
+      "category": "flags_read",
+      "new_statement": "ctx->r24 = MEM_HU(clay_sc_roster_flag_offset(), ctx->r8);",
+      "reason": "Per-slot flags from selector global800DDD30; preserve other scalarfields",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x800628d8",
+      "expected_rom_word": "a50c002c",
+      "category": "flags_write",
+      "new_statement": "MEM_H(clay_sc_roster_flag_offset(), ctx->r8) = ctx->r12;",
+      "reason": "Per-slot flag write must target expanded32byte sidecar",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x800628ec",
+      "expected_rom_word": "95aa002c",
+      "category": "flags_read",
+      "new_statement": "ctx->r10 = MEM_HU(clay_sc_roster_flag_offset(), ctx->r13);",
+      "reason": "Per-slot flags from selector global800DDD30; preserve other scalarfields",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80062908",
+      "expected_rom_word": "a5ab002c",
+      "category": "flags_write",
+      "new_statement": "MEM_H(clay_sc_roster_flag_offset(), ctx->r13) = ctx->r11;",
+      "reason": "Per-slot flag write must target expanded32byte sidecar",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x8006291c",
+      "expected_rom_word": "9508ac18",
+      "category": "slot_lookup",
+      "new_statement": "ctx->r8 = clay_sc_roster_id_from_slot((uint32_t(ADD32(ctx->r8, -0x53E8)) - 0x800DAC18u) / 2);",
+      "reason": "Read mapped characterID without overwriting adjacent ROMfloat data",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80062948",
+      "expected_rom_word": "95b8002c",
+      "category": "flags_read",
+      "new_statement": "ctx->r24 = MEM_HU(clay_sc_roster_flag_offset(), ctx->r13);",
+      "reason": "Per-slot flags from selector global800DDD30; preserve other scalarfields",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80062954",
+      "expected_rom_word": "a5a8002c",
+      "category": "flags_write",
+      "new_statement": "MEM_H(clay_sc_roster_flag_offset(), ctx->r13) = ctx->r8;",
+      "reason": "Per-slot flag write must target expanded32byte sidecar",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80062968",
+      "expected_rom_word": "972a002c",
+      "category": "flags_read",
+      "new_statement": "ctx->r10 = MEM_HU(clay_sc_roster_flag_offset(), ctx->r25);",
+      "reason": "Per-slot flags from selector global800DDD30; preserve other scalarfields",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80062988",
+      "expected_rom_word": "a728002c",
+      "category": "flags_write",
+      "new_statement": "MEM_H(clay_sc_roster_flag_offset(), ctx->r25) = ctx->r8;",
+      "reason": "Per-slot flag write must target expanded32byte sidecar",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80062ac0",
+      "expected_rom_word": "9558002c",
+      "category": "flags_read",
+      "new_statement": "ctx->r24 = MEM_HU(clay_sc_roster_flag_offset(), ctx->r10);",
+      "reason": "Per-slot flags from selector global800DDD30; preserve other scalarfields",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80062adc",
+      "expected_rom_word": "958cac18",
+      "category": "slot_lookup",
+      "new_statement": "ctx->r12 = clay_sc_roster_id_from_slot((uint32_t(ADD32(ctx->r12, -0x53E8)) - 0x800DAC18u) / 2);",
+      "reason": "Read mapped characterID without overwriting adjacent ROMfloat data",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80062b08",
+      "expected_rom_word": "a54e002c",
+      "category": "flags_write",
+      "new_statement": "MEM_H(clay_sc_roster_flag_offset(), ctx->r10) = ctx->r14;",
+      "reason": "Per-slot flag write must target expanded32byte sidecar",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80062f6c",
+      "expected_rom_word": "24010002",
+      "category": "column_bound_constant",
+      "new_statement": "ctx->r1 = clay_sc_roster_columns() - 1;",
+      "reason": "Native branch compares lastcol2; scoped4-column bound becomes3",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80062fbc",
+      "expected_rom_word": "012d4021",
+      "category": "row_stride",
+      "new_statement": "ctx->r8 = clay_sc_roster_row_stride(ctx->r13);",
+      "reason": "Original row*3 index becomes row*4, leaving four rows intact",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80062fd4",
+      "expected_rom_word": "9718ac18",
+      "category": "slot_lookup",
+      "new_statement": "ctx->r24 = clay_sc_roster_id_from_slot((uint32_t(ADD32(ctx->r24, -0x53E8)) - 0x800DAC18u) / 2);",
+      "reason": "Read mapped characterID without overwriting adjacent ROMfloat data",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x8006341c",
+      "expected_rom_word": "24010002",
+      "category": "column_bound_constant",
+      "new_statement": "ctx->r1 = clay_sc_roster_columns() - 1;",
+      "reason": "Native branch compares lastcol2; scoped4-column bound becomes3",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x8006346c",
+      "expected_rom_word": "01387821",
+      "category": "row_stride",
+      "new_statement": "ctx->r15 = clay_sc_roster_row_stride(ctx->r24);",
+      "reason": "Original row*3 index becomes row*4, leaving four rows intact",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80063484",
+      "expected_rom_word": "956bac18",
+      "category": "slot_lookup",
+      "new_statement": "ctx->r11 = clay_sc_roster_id_from_slot((uint32_t(ADD32(ctx->r11, -0x53E8)) - 0x800DAC18u) / 2);",
+      "reason": "Read mapped characterID without overwriting adjacent ROMfloat data",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_800636E4",
+      "instruction_vram": "0x800637a4",
+      "expected_rom_word": "956bac18",
+      "category": "slot_lookup",
+      "new_statement": "ctx->r11 = clay_sc_roster_id_from_slot((uint32_t(ADD32(ctx->r11, -0x53E8)) - 0x800DAC18u) / 2);",
+      "reason": "Read mapped characterID without overwriting adjacent ROMfloat data",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_800636E4",
+      "instruction_vram": "0x800637e0",
+      "expected_rom_word": "24010003",
+      "category": "inverse_columns",
+      "new_statement": "ctx->r1 = clay_sc_roster_columns();",
+      "reason": "Inverse IDlookup computes cursor row and column by division/modulo3",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_800636E4",
+      "instruction_vram": "0x8006385c",
+      "expected_rom_word": "954aac18",
+      "category": "slot_lookup",
+      "new_statement": "ctx->r10 = clay_sc_roster_id_from_slot((uint32_t(ADD32(ctx->r10, -0x53E8)) - 0x800DAC18u) / 2);",
+      "reason": "Read mapped characterID without overwriting adjacent ROMfloat data",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_800636E4",
+      "instruction_vram": "0x80063898",
+      "expected_rom_word": "24010003",
+      "category": "inverse_columns",
+      "new_statement": "ctx->r1 = clay_sc_roster_columns();",
+      "reason": "Inverse IDlookup computes cursor row and column by division/modulo3",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_800636E4",
+      "instruction_vram": "0x80063a54",
+      "expected_rom_word": "24010003",
+      "category": "inverse_columns",
+      "new_statement": "ctx->r1 = clay_sc_roster_columns();",
+      "reason": "Inverse IDlookup computes cursor row and column by division/modulo3",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_800636E4",
+      "instruction_vram": "0x80063a64",
+      "expected_rom_word": "24010003",
+      "category": "inverse_columns",
+      "new_statement": "ctx->r1 = clay_sc_roster_columns();",
+      "reason": "Inverse IDlookup computes cursor row and column by division/modulo3",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_800636E4",
+      "instruction_vram": "0x80063a94",
+      "expected_rom_word": "24010003",
+      "category": "inverse_columns",
+      "new_statement": "ctx->r1 = clay_sc_roster_columns();",
+      "reason": "Inverse IDlookup computes cursor row and column by division/modulo3",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_800636E4",
+      "instruction_vram": "0x80063bf8",
+      "expected_rom_word": "24010003",
+      "category": "inverse_columns",
+      "new_statement": "ctx->r1 = clay_sc_roster_columns();",
+      "reason": "Inverse IDlookup computes cursor row and column by division/modulo3",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8006FBD0",
+      "instruction_vram": "0x800704e4",
+      "expected_rom_word": "9484ac18",
+      "category": "slot_lookup",
+      "new_statement": "ctx->r4 = clay_sc_roster_id_from_slot((uint32_t(ADD32(ctx->r4, -0x53E8)) - 0x800DAC18u) / 2);",
+      "reason": "Read mapped characterID without overwriting adjacent ROMfloat data",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8006FBD0",
+      "instruction_vram": "0x800709c8",
+      "expected_rom_word": "9484ac18",
+      "category": "slot_lookup",
+      "new_statement": "ctx->r4 = clay_sc_roster_id_from_slot((uint32_t(ADD32(ctx->r4, -0x53E8)) - 0x800DAC18u) / 2);",
+      "reason": "Read mapped characterID without overwriting adjacent ROMfloat data",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8006FBD0",
+      "instruction_vram": "0x80070c9c",
+      "expected_rom_word": "9484ac18",
+      "category": "slot_lookup",
+      "new_statement": "ctx->r4 = clay_sc_roster_id_from_slot((uint32_t(ADD32(ctx->r4, -0x53E8)) - 0x800DAC18u) / 2);",
+      "reason": "Read mapped characterID without overwriting adjacent ROMfloat data",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005D56C",
+      "instruction_vram": "0x8005d604",
+      "expected_rom_word": "2401000c",
+      "category": "slot_count",
+      "new_statement": "ctx->r1 = clay_sc_roster_count();",
+      "reason": "Reviewed draw loop, inverseIDsearch, per-slot animation counter or random eligible-slot modulus",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005E37C",
+      "instruction_vram": "0x8005e90c",
+      "expected_rom_word": "2401000c",
+      "category": "slot_count",
+      "new_statement": "ctx->r1 = clay_sc_roster_count();",
+      "reason": "Reviewed draw loop, inverseIDsearch, per-slot animation counter or random eligible-slot modulus",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80061c18",
+      "expected_rom_word": "2401000c",
+      "category": "slot_count",
+      "new_statement": "ctx->r1 = clay_sc_roster_count();",
+      "reason": "Reviewed draw loop, inverseIDsearch, per-slot animation counter or random eligible-slot modulus",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80061f18",
+      "expected_rom_word": "2401000c",
+      "category": "slot_count",
+      "new_statement": "ctx->r1 = clay_sc_roster_count();",
+      "reason": "Reviewed draw loop, inverseIDsearch, per-slot animation counter or random eligible-slot modulus",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80062994",
+      "expected_rom_word": "2401000c",
+      "category": "slot_count",
+      "new_statement": "ctx->r1 = clay_sc_roster_count();",
+      "reason": "Reviewed draw loop, inverseIDsearch, per-slot animation counter or random eligible-slot modulus",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80062a10",
+      "expected_rom_word": "2401000c",
+      "category": "slot_count",
+      "new_statement": "ctx->r1 = clay_sc_roster_count();",
+      "reason": "Reviewed draw loop, inverseIDsearch, per-slot animation counter or random eligible-slot modulus",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80062a98",
+      "expected_rom_word": "2401000c",
+      "category": "slot_count",
+      "new_statement": "ctx->r1 = clay_sc_roster_count();",
+      "reason": "Reviewed draw loop, inverseIDsearch, per-slot animation counter or random eligible-slot modulus",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_800636E4",
+      "instruction_vram": "0x800637b4",
+      "expected_rom_word": "2b01000c",
+      "category": "slot_count",
+      "new_statement": "ctx->r1 = SIGNED(ctx->r24) < clay_sc_roster_count() ? 1 : 0;",
+      "reason": "Reviewed draw loop, inverseIDsearch, per-slot animation counter or random eligible-slot modulus",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_800636E4",
+      "instruction_vram": "0x800637c4",
+      "expected_rom_word": "2401000c",
+      "category": "slot_count",
+      "new_statement": "ctx->r1 = clay_sc_roster_count();",
+      "reason": "Reviewed draw loop, inverseIDsearch, per-slot animation counter or random eligible-slot modulus",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_800636E4",
+      "instruction_vram": "0x8006386c",
+      "expected_rom_word": "2b21000c",
+      "category": "slot_count",
+      "new_statement": "ctx->r1 = SIGNED(ctx->r25) < clay_sc_roster_count() ? 1 : 0;",
+      "reason": "Reviewed draw loop, inverseIDsearch, per-slot animation counter or random eligible-slot modulus",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_800636E4",
+      "instruction_vram": "0x8006387c",
+      "expected_rom_word": "2401000c",
+      "category": "slot_count",
+      "new_statement": "ctx->r1 = clay_sc_roster_count();",
+      "reason": "Reviewed draw loop, inverseIDsearch, per-slot animation counter or random eligible-slot modulus",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8006FBD0",
+      "instruction_vram": "0x800709b0",
+      "expected_rom_word": "2401000c",
+      "category": "slot_count",
+      "new_statement": "ctx->r1 = clay_sc_roster_count();",
+      "reason": "Reviewed draw loop, inverseIDsearch, per-slot animation counter or random eligible-slot modulus",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8006FBD0",
+      "instruction_vram": "0x80070c84",
+      "expected_rom_word": "2401000c",
+      "category": "slot_count",
+      "new_statement": "ctx->r1 = clay_sc_roster_count();",
+      "reason": "Reviewed draw loop, inverseIDsearch, per-slot animation counter or random eligible-slot modulus",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005E37C",
+      "instruction_vram": "0x8005e700",
+      "expected_rom_word": "29810009",
+      "category": "slot_unlock_predicate",
+      "new_statement": "ctx->r1 = clay_sc_roster_slot_unlocked(rdram, ctx->r12);",
+      "reason": "Original first9 cutoff cannot classify preservedoriginal secretcharacters shifted toindices12..14; use actual ID/unlockbits",
+      "confidence": "verified"
+    },
+    {
+      "function": "func_8005E37C",
+      "instruction_vram": "0x8005e714",
+      "expected_rom_word": "258f0017",
+      "category": "secret_bit_shift",
+      "new_statement": "ctx->r15 = clay_sc_roster_secret_shift(ctx->r12);",
+      "reason": "Original(slot+23)%32 mapsold9..11 tobits0..2; preservedSCpositions needID-based mapping",
+      "confidence": "verified"
+    }
+  ],
+  "review_candidates": [
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80062258",
+      "expected_rom_word": "2407000c",
+      "category": "slot_count_candidate",
+      "new_statement": "ctx->r7 = clay_sc_roster_count();",
+      "reason": "Review native12-slot loop/search/random modulus; never blanketchange campaignround limits",
+      "confidence": "review"
+    },
+    {
+      "function": "func_80061474",
+      "instruction_vram": "0x80062360",
+      "expected_rom_word": "2407000c",
+      "category": "slot_count_candidate",
+      "new_statement": "ctx->r7 = clay_sc_roster_count();",
+      "reason": "Review native12-slot loop/search/random modulus; never blanketchange campaignround limits",
+      "confidence": "review"
+    }
+  ],
+  "missing_required_hooks": [
+    "Root integrate native_grid_draw wrapper and verify genuine rendered fourth-column borders"
+  ],
+  "native_grid_draw": {
+    "function": "func_8005E37C",
+    "instruction_vram": "0x8005E688",
+    "expected_rom_word": "0c028c30",
+    "old_call": "func_800A30C0(rdram, ctx);",
+    "new_call": "clay_sc_roster_draw_grid(rdram, ctx);",
+    "scope": "Only original central B9B230 part0 call; native source geometry74 grid triangles, authentic rightmost column28 triangles; shifted only packed grid vertices by-38, clone+38, four newpanel/wallbackings. CPU/header/texture/architecture unchanged; strict topology checks and native allocator bounds. Hidden GPU proof still required."
+  },
+  "native_grid_release": {
+    "function": "func_8005E2CC",
+    "location": "entry before original source bank free",
+    "instruction_vram": "0x8005E2CC",
+    "expected_rom_word": "3c0e800e",
+    "call": "clay_sc_roster_release_grid(rdram,ctx);",
+    "reason": "Release native cloned mesh and reset cache lifetime before original destructor frees source; actual same-address selector reuse regression passes"
+  }
+}

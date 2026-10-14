@@ -1,0 +1,44 @@
+{
+  "author": "djultra64",
+  "source": "Original USA ClayFighter63\u2153",
+  "function": "func_80066DC0",
+  "instruction_vram": "0x80066E48",
+  "rom_offset": "0x67A48",
+  "expected_rom_word": "0c016c7a",
+  "old_statement": "func_8005B1E8(rdram, ctx);",
+  "new_statement": "clay_native_options_border(rdram, ctx);",
+  "include": "host/options_border.h",
+  "module": "host/options_border.cpp",
+  "rectangles": {
+    "2": {
+      "original": [
+        30,
+        67,
+        290,
+        207
+      ],
+      "replacement": [
+        17,
+        67,
+        303,
+        207
+      ]
+    },
+    "3": {
+      "original": [
+        17,
+        87,
+        302,
+        149
+      ],
+      "replacement": [
+        17,
+        67,
+        303,
+        169
+      ]
+    }
+  },
+  "preservation": "Original native5B1E8 blackfill+fourRGB200outlineedges with originalfadealpha; originalrectangleROMtable unchanged; othermenus directoriginalpath; zeroheapallocation",
+  "test": "python tools/native_options_border_test.py"
+}

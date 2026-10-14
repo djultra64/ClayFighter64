@@ -1,0 +1,27 @@
+{
+  "author": "djultra64",
+  "label": "Exit game",
+  "menu_id": 0,
+  "native_range": "800DADEC inclusive, title0/GameStart1/Options2/Exit3",
+  "native_methods": {
+    "initializer": "80066B6C",
+    "draw": "80066DC0",
+    "update": "8006B014",
+    "input": "80067980",
+    "confirm_site": "800681D4",
+    "idle_demo_original": "8006B148..8006B19C"
+  },
+  "shadow_cpu_region": "80840000..80840070 reserved within9MiB host RAM, original8MiB game allocator unaffected",
+  "table_scope": [
+    "800DAE04 placement",
+    "800DB22C labels",
+    "800DB158 auxiliary"
+  ],
+  "other_menus": "Original table addresses, ranges, actions and glyph prompts preserved",
+  "layout": "Original50/42 row step; first2 rows shift up1step; third occupies originalOptions location. Original DAD80 frame top170->144, bottom219 unchanged. Native border and font animation preserved.",
+  "exit": "Fresh80118D74&9000 atconfirmednativeactiondispatch, stablemain0 cursor3; atomic release/acquire polled by main SDL loop",
+  "tests": {
+    "original_navigation_red_exit": 14,
+    "green": "Actual original67980 navigation wrapping1..3 and original GameStart/Options actions. Actual500frame idle block preservesattract, Back/unstable/nonmain excluded. A/Z andStart confirmtested inseparateprocesses."
+  }
+}

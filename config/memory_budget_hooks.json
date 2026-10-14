@@ -1,0 +1,9 @@
+{
+  "author": "djultra64",
+  "hook": {"after_call_pc": "0x800B32AC", "resume_pc": "0x800B32B4", "original": "func_800B34C4", "helper": "clay::extend_native_main_heap(rdram, ctx)"},
+  "main_manager": "0x800EE4B0",
+  "reservation": {"begin": "0x80400000", "end": "0x80600000", "bytes": 2097152},
+  "protocol": "Original func_800B3770 AddMemory inserts disjoint sorted chunks and original func_800B8038 coalesces adjacent free blocks. No metadata forgery or fatal suppression.",
+  "guards": "8MiB boot report; initialized original manager/functions/alignment; bounded ordered chunk traversal/signatures/back-links/tail; no overlaps; zero unused reservation; startup stack validity",
+  "scope": "CPU and GPU native allocation below 8MiB. CPU-only prompt scratch at >=0x80800000 is excluded. Separate invalid-FreePtr failure is not solved by budget growth."
+}

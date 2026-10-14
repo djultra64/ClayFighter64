@@ -1,0 +1,23 @@
+{
+  "author": "djultra64",
+  "hooks": [
+    {
+      "function": "func_80072C4C",
+      "instruction_vram": "0x80072c4c",
+      "rom_offset": "0x7384c",
+      "expected_rom_word": "27bdffd8",
+      "entry_statement": "clay::input::restore_native_prompt_font(rdram,ctx->r4);"
+    },
+    {
+      "function": "func_8007145C",
+      "instruction_vram": "0x8007145c",
+      "rom_offset": "0x7205c",
+      "expected_rom_word": "27bdffe8",
+      "entry_statement": "clay::input::restore_native_prompt_font(rdram,ctx->r4);"
+    }
+  ],
+  "header": "host/native_prompts.h",
+  "api": "void clay::input::restore_native_prompt_font(uint8_t* rdram,uint64_t font)",
+  "causal_evidence": "Native72C4C frees nonnull variantmap entries that differ from basemap. Borrowedicon aliases changedbase whileother variants retainedoriginalrawbank interiors; originalrawinteriors incorrectlyfreed. RestoreBOTHbaseandmodifiedvariants beforecomparison; never suppress originalfree.",
+  "test": "python tools/verify_native_prompts.py"
+}

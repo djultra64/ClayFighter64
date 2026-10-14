@@ -1,0 +1,798 @@
+{
+  "integration_author": "djultra64",
+  "asset_author": "Kenney",
+  "license": "CC0",
+  "source": "https://kenney.nl/assets/input-prompts-pixel",
+  "tile_size": 16,
+  "native_glyph_size": 15,
+  "composition": "Layers use identical 16x16 coordinates; final transparent row/column removed without resampling. PS symbols require two layers.",
+  "families": {
+    "xbox": {
+      "south": {
+        "name": "A",
+        "tiles": [
+          4
+        ]
+      },
+      "east": {
+        "name": "B",
+        "tiles": [
+          5
+        ]
+      },
+      "west": {
+        "name": "X",
+        "tiles": [
+          6
+        ]
+      },
+      "north": {
+        "name": "Y",
+        "tiles": [
+          7
+        ]
+      },
+      "start": {
+        "name": "Menu",
+        "tiles": [
+          617
+        ]
+      },
+      "back": {
+        "name": "View",
+        "tiles": [
+          616
+        ]
+      },
+      "left_shoulder": {
+        "name": "LB",
+        "tiles": [
+          553
+        ]
+      },
+      "right_shoulder": {
+        "name": "RB",
+        "tiles": [
+          554
+        ]
+      },
+      "left_trigger": {
+        "name": "LT",
+        "tiles": [
+          551
+        ]
+      },
+      "right_trigger": {
+        "name": "RT",
+        "tiles": [
+          552
+        ]
+      },
+      "dpad_up": {
+        "name": "D-pad up",
+        "tiles": [
+          757
+        ]
+      },
+      "dpad_down": {
+        "name": "D-pad down",
+        "tiles": [
+          759
+        ]
+      },
+      "dpad_left": {
+        "name": "D-pad left",
+        "tiles": [
+          760
+        ]
+      },
+      "dpad_right": {
+        "name": "D-pad right",
+        "tiles": [
+          758
+        ]
+      }
+    },
+    "playstation": {
+      "south": {
+        "name": "Cross",
+        "tiles": [
+          567,
+          568
+        ]
+      },
+      "east": {
+        "name": "Circle",
+        "tiles": [
+          563,
+          564
+        ]
+      },
+      "west": {
+        "name": "Square",
+        "tiles": [
+          565,
+          566
+        ]
+      },
+      "north": {
+        "name": "Triangle",
+        "tiles": [
+          561,
+          562
+        ]
+      },
+      "start": {
+        "name": "Options",
+        "tiles": [
+          617
+        ]
+      },
+      "back": {
+        "name": "Share",
+        "tiles": [
+          616
+        ]
+      },
+      "left_shoulder": {
+        "name": "L1",
+        "tiles": [
+          635
+        ]
+      },
+      "right_shoulder": {
+        "name": "R1",
+        "tiles": [
+          636
+        ]
+      },
+      "left_trigger": {
+        "name": "L2",
+        "tiles": [
+          633
+        ]
+      },
+      "right_trigger": {
+        "name": "R2",
+        "tiles": [
+          634
+        ]
+      },
+      "dpad_up": {
+        "name": "D-pad up",
+        "tiles": [
+          757
+        ]
+      },
+      "dpad_down": {
+        "name": "D-pad down",
+        "tiles": [
+          759
+        ]
+      },
+      "dpad_left": {
+        "name": "D-pad left",
+        "tiles": [
+          760
+        ]
+      },
+      "dpad_right": {
+        "name": "D-pad right",
+        "tiles": [
+          758
+        ]
+      }
+    },
+    "switch": {
+      "south": {
+        "name": "B",
+        "tiles": [
+          14
+        ]
+      },
+      "east": {
+        "name": "A",
+        "tiles": [
+          13
+        ]
+      },
+      "west": {
+        "name": "Y",
+        "tiles": [
+          16
+        ]
+      },
+      "north": {
+        "name": "X",
+        "tiles": [
+          15
+        ]
+      },
+      "start": {
+        "name": "+",
+        "tiles": [
+          694
+        ]
+      },
+      "back": {
+        "name": "-",
+        "tiles": [
+          693
+        ]
+      },
+      "left_shoulder": {
+        "name": "L",
+        "tiles": [
+          627
+        ]
+      },
+      "right_shoulder": {
+        "name": "R",
+        "tiles": [
+          628
+        ]
+      },
+      "left_trigger": {
+        "name": "ZL",
+        "tiles": [
+          625
+        ]
+      },
+      "right_trigger": {
+        "name": "ZR",
+        "tiles": [
+          626
+        ]
+      },
+      "dpad_up": {
+        "name": "D-pad up",
+        "tiles": [
+          757
+        ]
+      },
+      "dpad_down": {
+        "name": "D-pad down",
+        "tiles": [
+          759
+        ]
+      },
+      "dpad_left": {
+        "name": "D-pad left",
+        "tiles": [
+          760
+        ]
+      },
+      "dpad_right": {
+        "name": "D-pad right",
+        "tiles": [
+          758
+        ]
+      }
+    },
+    "keyboard": {
+      "Q": {
+        "name": "Q",
+        "tiles": [
+          85
+        ],
+        "layout": "horizontal"
+      },
+      "W": {
+        "name": "W",
+        "tiles": [
+          86
+        ],
+        "layout": "horizontal"
+      },
+      "E": {
+        "name": "E",
+        "tiles": [
+          87
+        ],
+        "layout": "horizontal"
+      },
+      "R": {
+        "name": "R",
+        "tiles": [
+          88
+        ],
+        "layout": "horizontal"
+      },
+      "T": {
+        "name": "T",
+        "tiles": [
+          89
+        ],
+        "layout": "horizontal"
+      },
+      "Y": {
+        "name": "Y",
+        "tiles": [
+          90
+        ],
+        "layout": "horizontal"
+      },
+      "U": {
+        "name": "U",
+        "tiles": [
+          91
+        ],
+        "layout": "horizontal"
+      },
+      "I": {
+        "name": "I",
+        "tiles": [
+          92
+        ],
+        "layout": "horizontal"
+      },
+      "O": {
+        "name": "O",
+        "tiles": [
+          93
+        ],
+        "layout": "horizontal"
+      },
+      "P": {
+        "name": "P",
+        "tiles": [
+          94
+        ],
+        "layout": "horizontal"
+      },
+      "A": {
+        "name": "A",
+        "tiles": [
+          120
+        ],
+        "layout": "horizontal"
+      },
+      "S": {
+        "name": "S",
+        "tiles": [
+          121
+        ],
+        "layout": "horizontal"
+      },
+      "D": {
+        "name": "D",
+        "tiles": [
+          122
+        ],
+        "layout": "horizontal"
+      },
+      "F": {
+        "name": "F",
+        "tiles": [
+          123
+        ],
+        "layout": "horizontal"
+      },
+      "G": {
+        "name": "G",
+        "tiles": [
+          124
+        ],
+        "layout": "horizontal"
+      },
+      "H": {
+        "name": "H",
+        "tiles": [
+          125
+        ],
+        "layout": "horizontal"
+      },
+      "J": {
+        "name": "J",
+        "tiles": [
+          126
+        ],
+        "layout": "horizontal"
+      },
+      "K": {
+        "name": "K",
+        "tiles": [
+          127
+        ],
+        "layout": "horizontal"
+      },
+      "L": {
+        "name": "L",
+        "tiles": [
+          128
+        ],
+        "layout": "horizontal"
+      },
+      "Z": {
+        "name": "Z",
+        "tiles": [
+          155
+        ],
+        "layout": "horizontal"
+      },
+      "X": {
+        "name": "X",
+        "tiles": [
+          156
+        ],
+        "layout": "horizontal"
+      },
+      "C": {
+        "name": "C",
+        "tiles": [
+          157
+        ],
+        "layout": "horizontal"
+      },
+      "V": {
+        "name": "V",
+        "tiles": [
+          158
+        ],
+        "layout": "horizontal"
+      },
+      "B": {
+        "name": "B",
+        "tiles": [
+          159
+        ],
+        "layout": "horizontal"
+      },
+      "N": {
+        "name": "N",
+        "tiles": [
+          160
+        ],
+        "layout": "horizontal"
+      },
+      "M": {
+        "name": "M",
+        "tiles": [
+          161
+        ],
+        "layout": "horizontal"
+      },
+      "1": {
+        "name": "1",
+        "tiles": [
+          51
+        ],
+        "layout": "horizontal"
+      },
+      "2": {
+        "name": "2",
+        "tiles": [
+          52
+        ],
+        "layout": "horizontal"
+      },
+      "3": {
+        "name": "3",
+        "tiles": [
+          53
+        ],
+        "layout": "horizontal"
+      },
+      "4": {
+        "name": "4",
+        "tiles": [
+          54
+        ],
+        "layout": "horizontal"
+      },
+      "5": {
+        "name": "5",
+        "tiles": [
+          55
+        ],
+        "layout": "horizontal"
+      },
+      "6": {
+        "name": "6",
+        "tiles": [
+          56
+        ],
+        "layout": "horizontal"
+      },
+      "7": {
+        "name": "7",
+        "tiles": [
+          57
+        ],
+        "layout": "horizontal"
+      },
+      "8": {
+        "name": "8",
+        "tiles": [
+          58
+        ],
+        "layout": "horizontal"
+      },
+      "9": {
+        "name": "9",
+        "tiles": [
+          59
+        ],
+        "layout": "horizontal"
+      },
+      "0": {
+        "name": "0",
+        "tiles": [
+          60
+        ],
+        "layout": "horizontal"
+      },
+      "F1": {
+        "name": "F1",
+        "tiles": [
+          18
+        ],
+        "layout": "horizontal"
+      },
+      "F2": {
+        "name": "F2",
+        "tiles": [
+          19
+        ],
+        "layout": "horizontal"
+      },
+      "F3": {
+        "name": "F3",
+        "tiles": [
+          20
+        ],
+        "layout": "horizontal"
+      },
+      "F4": {
+        "name": "F4",
+        "tiles": [
+          21
+        ],
+        "layout": "horizontal"
+      },
+      "F5": {
+        "name": "F5",
+        "tiles": [
+          22
+        ],
+        "layout": "horizontal"
+      },
+      "F6": {
+        "name": "F6",
+        "tiles": [
+          23
+        ],
+        "layout": "horizontal"
+      },
+      "F7": {
+        "name": "F7",
+        "tiles": [
+          24
+        ],
+        "layout": "horizontal"
+      },
+      "F8": {
+        "name": "F8",
+        "tiles": [
+          25
+        ],
+        "layout": "horizontal"
+      },
+      "F9": {
+        "name": "F9",
+        "tiles": [
+          26
+        ],
+        "layout": "horizontal"
+      },
+      "F10": {
+        "name": "F10",
+        "tiles": [
+          27
+        ],
+        "layout": "horizontal"
+      },
+      "F11": {
+        "name": "F11",
+        "tiles": [
+          28
+        ],
+        "layout": "horizontal"
+      },
+      "F12": {
+        "name": "F12",
+        "tiles": [
+          29
+        ],
+        "layout": "horizontal"
+      },
+      "Escape": {
+        "name": "Escape",
+        "tiles": [
+          17
+        ],
+        "layout": "horizontal"
+      },
+      "Return": {
+        "name": "Return",
+        "tiles": [
+          134,
+          135
+        ],
+        "layout": "horizontal"
+      },
+      "Up": {
+        "name": "Up",
+        "tiles": [
+          166
+        ],
+        "layout": "horizontal"
+      },
+      "Right": {
+        "name": "Right",
+        "tiles": [
+          167
+        ],
+        "layout": "horizontal"
+      },
+      "Down": {
+        "name": "Down",
+        "tiles": [
+          168
+        ],
+        "layout": "horizontal"
+      },
+      "Left": {
+        "name": "Left",
+        "tiles": [
+          169
+        ],
+        "layout": "horizontal"
+      },
+      "Left Shift": {
+        "name": "Left Shift",
+        "tiles": [
+          255,
+          256
+        ],
+        "layout": "horizontal"
+      },
+      "Right Shift": {
+        "name": "Right Shift",
+        "tiles": [
+          255,
+          256
+        ],
+        "layout": "horizontal"
+      },
+      "Left Control": {
+        "name": "Left Control",
+        "tiles": [
+          221,
+          222
+        ],
+        "layout": "horizontal"
+      },
+      "Right Control": {
+        "name": "Right Control",
+        "tiles": [
+          221,
+          222
+        ],
+        "layout": "horizontal"
+      },
+      "Left Alt": {
+        "name": "Left Alt",
+        "tiles": [
+          187,
+          188
+        ],
+        "layout": "horizontal"
+      },
+      "Right Alt": {
+        "name": "Right Alt",
+        "tiles": [
+          187,
+          188
+        ],
+        "layout": "horizontal"
+      },
+      "Tab": {
+        "name": "Tab",
+        "tiles": [
+          189,
+          190
+        ],
+        "layout": "horizontal"
+      },
+      "Backspace": {
+        "name": "Backspace",
+        "tiles": [
+          66,
+          67
+        ],
+        "layout": "horizontal"
+      },
+      "Space": {
+        "name": "Space",
+        "tiles": [
+          235,
+          236,
+          237
+        ],
+        "layout": "horizontal"
+      },
+      "-": {
+        "name": "-",
+        "tiles": [
+          61
+        ],
+        "layout": "horizontal"
+      },
+      "=": {
+        "name": "=",
+        "tiles": [
+          63
+        ],
+        "layout": "horizontal"
+      },
+      "[": {
+        "name": "[",
+        "tiles": [
+          95
+        ],
+        "layout": "horizontal"
+      },
+      "]": {
+        "name": "]",
+        "tiles": [
+          96
+        ],
+        "layout": "horizontal"
+      },
+      ";": {
+        "name": ";",
+        "tiles": [
+          129
+        ],
+        "layout": "horizontal"
+      },
+      "'": {
+        "name": "'",
+        "tiles": [
+          130
+        ],
+        "layout": "horizontal"
+      },
+      ",": {
+        "name": ",",
+        "tiles": [
+          162
+        ],
+        "layout": "horizontal"
+      },
+      ".": {
+        "name": ".",
+        "tiles": [
+          163
+        ],
+        "layout": "horizontal"
+      },
+      "/": {
+        "name": "/",
+        "tiles": [
+          165
+        ],
+        "layout": "horizontal"
+      },
+      "\\": {
+        "name": "\\",
+        "tiles": [
+          99
+        ],
+        "layout": "horizontal"
+      }
+    }
+  },
+  "keyboard_composition": "Authentic adjacent Kenney keycap pieces; transparent last column cropped once after horizontal composition, no resampling."
+}

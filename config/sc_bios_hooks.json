@@ -1,0 +1,38 @@
+{
+  "author": "djultra64",
+  "entry_hook": {
+    "function": "8006CC38",
+    "original_word": "27bdffd8",
+    "helper": "clay::bios::install(rdram, ctx)",
+    "timing": "entry before original prologue; only a0=0"
+  },
+  "table": "800DDBDC",
+  "record_bytes": 20,
+  "patched_fields": [
+    0,
+    8
+  ],
+  "ids": [
+    6,
+    11,
+    12,
+    16
+  ],
+  "private_asset": "local/sc_bios/bios.bin",
+  "cpu_text_range": [
+    "80830000",
+    "80834000"
+  ],
+  "unchanged": [
+    "all native timing and per-letter/font draw functions",
+    "all other roster rows",
+    "ending pointers and counts",
+    "unknown record field16"
+  ],
+  "source_offsets": {
+    "6": "CA730",
+    "11": "CA0F0",
+    "12": "C9F68",
+    "16": "C9900"
+  }
+}

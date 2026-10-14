@@ -1,0 +1,26 @@
+ClayFighter 64 1.0
+Original port work, project direction and playtesting: djultra64.
+Newly authored port code: GPL-3.0-or-later; see LICENSE.
+
+ClayFighter 63 1/3 and ClayFighter: Sculptor's Cut are original games by
+Interplay and their credited development teams. Their code, art, music,
+characters, names and trademarks remain the work/property of their creators
+and rights holders. This independent fan project claims no ownership of them.
+Original game data is extracted only from the player's own two supported ROMs.
+
+N64Recomp/RSPRecomp, N64ModernRuntime, RT64, SDL and all other upstream
+components retain their authentic authors, copyright notices and licenses.
+See CREDITS.md and licenses/ for the full preserved notice inventory.
+
+Controller artwork: Kenney Input Prompts Pixel, CC0.
+Branding: the horizontal and square images supplied by djultra64 for this release.
+Their inclusion does not transfer rights in the depicted original characters.
+Replacement title announcement: latest user-provided clayfighter2.mp3, decoded
+and resampled to mono signed 16-bit little-endian PCM, 32000 Hz. No voice
+synthesis, cloning, normalization, time stretching, or original-ROM audio
+extraction was used to produce this replacement. Attribution: djultra64.
+These media assets are outside the port-code license.
+
+Windows installer: unmodified CPython 3.13.9 embeddable runtime from python.org,
+with its PSF and third-party license notices. Windows DLL provenance is retained
+in licenses/provenance.json. Microsoft CRT and DXC retain their own terms.

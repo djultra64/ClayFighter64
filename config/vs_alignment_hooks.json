@@ -1,0 +1,84 @@
+{
+  "author": "djultra64",
+  "scope": "OriginalVS screen ONLY; nooriginalcast/combat/selector/animationchanges",
+  "hooks": [
+    {
+      "pc": "0x8006d208",
+      "original_word": "0c0176c9",
+      "position": "replace original5DB24 call AFTER native delay slot updatesa3",
+      "code": "clay::ui::draw_vs_actor(rdram,ctx,&func_8005DB24);"
+    },
+    {
+      "pc": "0x8006d27c",
+      "original_word": "0c0176c9",
+      "position": "replace original5DB24 call AFTER native delay slot updatesa3",
+      "code": "clay::ui::draw_vs_actor(rdram,ctx,&func_8005DB24);"
+    }
+  ],
+  "source_table": {
+    "cpu": "0x800DACF4",
+    "rom": "0xDB8F4",
+    "entry": "two signed16X/Y offsetsperID",
+    "donor_entries": {
+      "6": [
+        0,
+        0
+      ],
+      "11": [
+        0,
+        0
+      ],
+      "12": [
+        0,
+        0
+      ],
+      "16": [
+        0,
+        0
+      ]
+    },
+    "native_y_origin": -37
+  },
+  "actual_native_opaque_foot_y": {
+    "6": -46,
+    "11": -39,
+    "12": -40,
+    "16": -42
+  },
+  "native_grounded_reference": {
+    "ids": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      8,
+      13,
+      14,
+      15
+    ],
+    "first_frame_opaque_foot_y": [
+      -58.111,
+      -65.111,
+      -61.111,
+      -67,
+      -64.111,
+      -66.111,
+      -61,
+      -64,
+      -65.124
+    ],
+    "median": -64.111,
+    "chosen_pixel_baseline": -64,
+    "hover_character9_preserved": -45.124
+  },
+  "donor_constant_y_offsets": {
+    "6": -18,
+    "11": -25,
+    "12": -24,
+    "16": -22
+  },
+  "guard": "ExplicitSCenabled; zerooriginalreservedVStableentry; originaly\u221237; modelID6/11/12/16; actor/model exactsharedregistered5.21definition. Reject allunsupported/altered/original cases.",
+  "evidence": "tools/verify_vs_alignment.py executes originalnative loader/idleVM/spriteparser/5DB24/A6520 for64ticks\u00d7P1/P2 across10basecharacters+4donors. Checks allactualnative vertexY translate exactconstant, Z/UV/color fields byteexact and samevertexcount; no GPU visual claim",
+  "rejected_data_source": "SCROMABC34 candidate17pairtable is nativehitbox width/height (provenSCCPU06998xref) and mustnotbeimportedasVScoords"
+}
