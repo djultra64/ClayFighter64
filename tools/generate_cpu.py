@@ -170,9 +170,13 @@ def main():
             assert body.count('    clay_native_options_border(rdram,ctx);')==1
             body=body.replace('    clay_native_options_border(rdram,ctx);','    clay::main_menu::draw_border(rdram,ctx,&clay_native_options_border);')
         if name=='func_80067980':
+            offset=0x8006798C-VRAM+ROM_OFFSET;assert image[offset:offset+4].hex()=='0c02832a'
+            call='    func_800A0CA8(rdram, ctx);';assert body.count(call)==1
+            body=body.replace(call,call+'\n    clay::main_menu::observe_input(rdram);')
             assert image[0x68DD4:0x68DD8].hex()=='3c0c800e'
             assert body.count('L_800681D4:')==1
             body=body.replace('L_800681D4:','L_800681D4:\n    if(clay::main_menu::confirm_exit(rdram))goto L_800684F4;')
+            body=body.replace('    return;','    clay::main_menu::restore_selection(rdram);\n    return;')
         return body
     def native_prompt_hooks(match):
         body = match.group(0)
@@ -192,8 +196,65 @@ def main():
     def input_mode_hooks(match):
         body=match.group(0)
         name=re.match(r'RECOMP_FUNC void ([^(]+)\(',body)[1]
+        if name=='func_8006FBD0':
+            for address,expected in [(0x8006FEEC,'0c018db9'),(0x800705DC,'0c00f1c3'),(0x80070F80,'0c01b6b8')]:
+                offset=address-VRAM+ROM_OFFSET;assert image[offset:offset+4].hex()==expected
+            for old,new in [('func_800636E4','clay::training::select_fighters'),('func_8003C70C','clay::training::run_match')]:
+                call=f'    {old}(rdram, ctx);'
+                assert body.count(call)==1
+                body=body.replace(call,f'    {new}(rdram,ctx,&{old});')
+            call='    func_8006DAE0(rdram, ctx);'
+            assert body.count(call)==1
+            body=body.replace(call,call+'\n    clay::training::stage_panel_finished(rdram);\n    if(clay::training::take_stage_back()){clay::training::return_to_opponent_selection(rdram);goto L_8006FEE0;}')
+            return body
+        if name=='func_8006DAE0':
+            offset=0x8006DB14-VRAM+ROM_OFFSET;assert image[offset:offset+4].hex()=='0c01b3ef'
+            call='    func_8006CFBC(rdram, ctx);'
+            assert body.count(call)==1
+            return body.replace(call,call+'\n    clay::training::stage_panel_started(rdram);')
+        if name=='func_8006D094':
+            offset=0x8006D094-VRAM+ROM_OFFSET;assert image[offset:offset+4].hex()=='27bdff98'
+            return body.replace('    return;','    clay::training::stage_panel_draw(rdram,ctx);\n    return;')
+        if name=='func_8006D77C':
+            assert image[0x8006D77C-VRAM+ROM_OFFSET:0x8006D77C-VRAM+ROM_OFFSET+4].hex()=='27bdffd8'
+            at=body.index('\n')+1;body=body[:at]+'    clay::training::stage_panel_tick(rdram);\n'+body[at:]
+            call='    func_8006D544(rdram, ctx);'
+            assert body.count(call)==1
+            return body.replace(call,'    clay::training::stage_input(rdram,ctx,&func_8006D544);')
+        if name=='func_8006D544':
+            assert image[0x8006D54C-VRAM+ROM_OFFSET:0x8006D54C-VRAM+ROM_OFFSET+4].hex()=='0c02832a'
+            call='    func_800A0CA8(rdram, ctx);'
+            assert body.count(call)==1
+            return body.replace(call,call+'\n    clay::training::stage_input_polled(rdram);')
+        if name=='func_80052DC4':
+            address=0x800545F4;offset=address-VRAM+ROM_OFFSET
+            assert image[offset:offset+16].hex()=='3c1880108f1828c044809000c7100034'
+            at=body.index('    // 0x800545F4:')
+            return body[:at]+'    if(clay::training::snapshot().active) goto L_80054890;\n'+body[at:]
+        if name=='func_8003D940':
+            call='    func_80059B68(rdram, ctx);'
+            assert body.count(call)==1
+            body=body.replace(call,'    if(!clay::training::draw_pause(rdram,ctx)) func_80059B68(rdram,ctx);')
+            marker='    // 0x8003E9C0:'
+            start=body.index(marker);at=body.index('    func_800588A4(rdram, ctx);',start)+len('    func_800588A4(rdram, ctx);')
+            return body[:at]+'\n    clay::training::draw_hud(rdram,ctx);'+body[at:]
+        if name=='func_8005FC68':
+            offset=0x8005FC70-VRAM+ROM_OFFSET;assert image[offset:offset+4].hex()=='0c02832a'
+            call='    func_800A0CA8(rdram, ctx);'
+            assert body.count(call)==1
+            return body.replace(call,call+'\n    clay::training::selection_tick(rdram);')
+        if name=='func_80088B88':
+            assert image[0x80088B88-VRAM+ROM_OFFSET:0x80088B88-VRAM+ROM_OFFSET+4].hex()=='27bdffe8'
+            at=body.index('\n')+1
+            return body[:at]+'    clay::training::prepare_input(rdram,ctx);\n'+body[at:]
+        if name=='func_8007C338':
+            address=0x8007C830;offset=address-VRAM+ROM_OFFSET
+            assert image[offset:offset+4].hex()=='ad6e02c0'
+            marker='    // 0x8007C830:';at=body.index(marker)
+            return body[:at]+'    ctx->r14 = S32(clay::training::damage_applied(rdram,uint32_t(ctx->r11),uint32_t(ctx->r8),int32_t(ctx->r14),MEM_W(0x8C,ctx->r29)==0));\n'+body[at:]
         hooks={'func_8003C740':('27bdffc0',None,'clay::input::end_combat_input();'),
-               'func_8003ED2C':('27bdff70','clay::input::update_combat_input(rdram);','clay::input::update_combat_input(rdram);')}
+               'func_8003ED2C':('27bdff70','clay::input::update_combat_input(rdram);','clay::input::update_combat_input(rdram);'),
+               'func_80087158':('27bdff98','clay::training::observe_world(rdram,uint32_t(ctx->r4),ctx);',None)}
         if name not in hooks:return body
         expected,enter,leave=hooks[name];address=int(name[-8:],16)
         assert image[address-VRAM+ROM_OFFSET:address-VRAM+ROM_OFFSET+4].hex()==expected
@@ -201,10 +262,12 @@ def main():
             at=body.index('\n')+1;body=body[:at]+'    '+enter+'\n'+body[at:]
         if leave:body=body.replace('    return;','    '+leave+'\n    return;')
         if name=='func_8003C740':
-            assert image[0x3E27C:0x3E280].hex()=='0c0304a0'
-            marker='    // 0x8003D67C: jal';start=body.index(marker);at=body.index('    osStartThread_recomp(rdram, ctx);',start)
+            assert image[0x3E218:0x3E21C].hex()=='15c0001d'
+            marker='    // 0x8003D618: bne';assert body.count(marker)==1;at=body.index(marker)
             body=body[:at]+'    clay::input::begin_combat_input(rdram);\n'+body[at:]
         if name=='func_8003ED2C':
+            assert body.count('L_8003F0C0:')==1
+            body=body.replace('L_8003F0C0:','L_8003F0C0:\n    if(clay::training::pause_tick(rdram,ctx)) goto L_8003F6AC;')
             assert image[0x3F944:0x3F948].hex()=='3c048010'
             assert body.count('L_8003ED44:')==1
             body=body.replace('L_8003ED44:','L_8003ED44:\n    clay::input::update_combat_input(rdram);')
@@ -304,6 +367,11 @@ def main():
             assert image[pc-VRAM+ROM_OFFSET:pc-VRAM+ROM_OFFSET+4].hex()==expected
             call='clay::reserve_actor_interpolation_pool(ctx);' if name=='func_8009DB18' else 'clay::reset_actor_interpolation();'
             at=body.index('\n')+1;body=body[:at]+'    '+call+'\n'+body[at:]
+        if name=='func_80052DC4':
+            address=0x800545F4;offset=address-VRAM+ROM_OFFSET
+            assert image[offset:offset+16].hex()=='3c1880108f1828c044809000c7100034'
+            at=body.index('    // 0x800545F4:')
+            return body[:at]+'    if(clay::training::snapshot().active) goto L_80054890;\n'+body[at:]
         if name=='func_8003D940':
             assert image[0x3EE0C:0x3EE10].hex()=='3c048011'
             at=body.index('    // 0x8003E20C:');body=body[:at]+'    clay::begin_actor_interpolation_frame(rdram);\n'+body[at:]

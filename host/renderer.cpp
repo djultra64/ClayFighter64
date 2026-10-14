@@ -2,6 +2,8 @@
 // ClayTality 64 integration: djultra64.
 #include "host.h"
 #include "graphics_config.h"
+#include <filesystem>
+#include "portable_paths.h"
 #include "input_hud.h"
 #include "hle/rt64_application.h"
 #include "hle/rt64_workload_queue.h"
@@ -71,7 +73,9 @@ Context(uint8_t* rdram,ultramodern::renderer::WindowHandle window) {
         core.VI_Y_SCALE_REG = const_cast<std::uint32_t*>(&vi->VI_Y_SCALE_REG);
 
         RT64::ApplicationConfiguration config{};
-        config.appId = "claytality64";
+        config.appId = "clayfighter64";
+        config.detectDataPath = false;
+        config.dataPath = clay::portable::settings_directory(std::filesystem::current_path(),"local/cache/rt64");
         config.useConfigurationFile = false;
         app_ = std::make_unique<RT64::Application>(core, config);
         app_->userConfig.graphicsAPI = RT64::UserConfiguration::GraphicsAPI::Vulkan;

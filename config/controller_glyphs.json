@@ -8,6 +8,16 @@
   "composition": "Layers use identical 16x16 coordinates; final transparent row/column removed without resampling. PS symbols require two layers.",
   "families": {
     "xbox": {
+      "left_stick": {
+        "name": "LS click",
+        "tiles": [790],
+        "caption": "LS click"
+      },
+      "right_stick": {
+        "name": "RS click",
+        "tiles": [790],
+        "caption": "RS click"
+      },
       "south": {
         "name": "A",
         "tiles": [
@@ -94,6 +104,16 @@
       }
     },
     "playstation": {
+      "left_stick": {
+        "name": "L3",
+        "tiles": [790],
+        "caption": "L3"
+      },
+      "right_stick": {
+        "name": "R3",
+        "tiles": [790],
+        "caption": "R3"
+      },
       "south": {
         "name": "Cross",
         "tiles": [
@@ -184,6 +204,16 @@
       }
     },
     "switch": {
+      "left_stick": {
+        "name": "L stick",
+        "tiles": [790],
+        "caption": "L stick"
+      },
+      "right_stick": {
+        "name": "R stick",
+        "tiles": [790],
+        "caption": "R stick"
+      },
       "south": {
         "name": "B",
         "tiles": [

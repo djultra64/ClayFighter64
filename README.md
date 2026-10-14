@@ -6,7 +6,7 @@
 
 # ClayFighter 64
 
-**Version 1.0 — Linux and Windows x86-64.** [Download ClayFighter 64](https://github.com/djultra64/ClayFighter64/releases/latest).
+**Version 2.0 — Linux and Windows x86-64.** [Published releases](https://github.com/djultra64/ClayFighter64/releases/latest).
 
 A community PC port and fusion of **ClayFighter 63⅓** and **ClayFighter: Sculptor's Cut**, built through static recompilation with N64Recomp, N64ModernRuntime, RSPRecomp, and RT64.
 
@@ -28,7 +28,7 @@ Sculptor's Cut contributes **High Five, Lady Liberty, Lockjaw, and Zappa**, incl
 - **Preserve the game's presentation.** The native menus, clay artwork, fonts, biographies, and animations remain central. The title reads 64, and the PC options extend the original interface.
 - **Require both original games.** Each ROM supplies a different part of the fusion. The installer validates both exact USA revisions and extracts the required data locally.
 
-Version 1.0 is the release designation for this finished combination. It does not mean every possible hardware configuration or every game scenario has been tested; see the recorded validation limits below.
+Version 2.0 adds Training Mode to this combination. Release readiness depends on the recorded validation below; a version number does not establish coverage of every game scenario or hardware configuration.
 
 ## Features
 
@@ -39,6 +39,7 @@ Version 1.0 is the release designation for this finished combination. It does no
 - Keyboard and two-controller support, per-action combat remapping, and device-aware prompts.
 - Native **Options → Display**, **Game Display**, and **Button Remap**, with saved preferences.
 - Native **Exit game** entry and the updated ClayFighter 64 title announcement.
+- **Training Mode** with fighter, opponent and stage selection, native pause/options pages, practice resources, restart setup, damage/combo display, move list and Claytality practice. See [Training Mode](docs/TRAINING.md) for the implemented controls and validation limits.
 
 ## Requirements
 
@@ -51,12 +52,12 @@ No ROMs, extracted original game assets, or original game recordings are include
 
 ## Download and play
 
-1. Download the Linux or Windows **1.0** package from [Releases](https://github.com/djultra64/ClayFighter64/releases/latest), then extract the entire archive into a writable folder.
+1. Download the Linux or Windows package matching your release from [Releases](https://github.com/djultra64/ClayFighter64/releases/latest), then extract the entire archive into a writable folder.
 2. Run **Install Assets.sh** on Linux or **Install Assets.cmd** on Windows.
 3. Supply **both** USA ROM paths when prompted. The installer identifies them by their contents, so either order is accepted. It supports `.z64`, `.v64`, `.n64`, and ZIP files containing exactly one ROM.
 4. Run **Play ClayFighter 64.sh** on Linux or **Play ClayFighter 64.cmd** on Windows. First launch also offers installation if the required local data is absent.
 
-The installer creates the base ROM, combined character/portrait image, and biography data locally. Keep the generated `local/` and `probe-output/` folders when updating. Display and control preferences live in the SDL user-data directory for `djultra64/ClayTality64`; the historical folder name is retained for compatibility.
+The installer creates the base ROM, combined character/portrait image, and biography data locally. Keep the generated `local/` and `probe-output/` folders when updating. Display, control and Training preferences live in `local/settings/` inside the game folder. Keep that folder when updating or moving the portable installation.
 
 For exact ROM hashes, command-line installation, updates, and troubleshooting, see [INSTALL.md](docs/INSTALL.md).
 
@@ -77,8 +78,7 @@ Use **Auto/Xbox/PlayStation/Switch** in Button Remap, or `--family auto|xbox|pla
 
 ## Validation and limitations
 
-The latest game revision was previously validated with 31 Linux and 50 Windows native checks, including selector, biographies, input, rendering helpers, audio, and lifecycle behavior. Release packaging adds clean two-ROM installation, byte-order/ZIP handling, extracted-data parity, missing/wrong-ROM diagnostics, and packaged startup checks. See [the 1.0 validation report](docs/VALIDATION_1.0.md) for the final results.
-
+The [2.0 validation record](docs/releases/2.0-validation.md) records 45 Linux native checks, 60 Windows native checks, clean two-ROM package installs, portable launcher checks, a 31-minute Normal Training run and 100 manual Linux restarts. The Windows 100-attempt Claytality run is tracked there separately. Move eligibility and input matcher fixtures use animation stubs; their results do not establish successful playback of every finisher. Historical [1.0 results](docs/VALIDATION_1.0.md) remain scoped to that release.
 The Windows GPU validation uses an RTX 2060 on a 60 Hz display. A requested 120 fps target is not proof of physical 120 Hz presentation. Real Xbox, PlayStation, and Switch controller verification remains pending when that hardware is available. Automated checks cover recorded scenarios and do not establish exhaustive character/mode coverage.
 
 ## Build and contribute

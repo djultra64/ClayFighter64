@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Launch the verified ClayFighter 64 1.0 installation. djultra64."""
+"""Launch a ClayFighter 64 portable installation. djultra64."""
 from pathlib import Path
 import os
 import subprocess
@@ -11,7 +11,7 @@ from tools.release.import_assets import installed, main as install_main
 def main():
     arguments=sys.argv[1:]
     if '--help' not in arguments and not installed(ROOT):
-        print('ClayFighter 64 1.0 needs BOTH USA ROMs to install its fused roster.')
+        print('ClayFighter 64 needs BOTH USA ROMs to install its fused roster.')
         saved=sys.argv;sys.argv=[saved[0]]
         try:code=install_main()
         finally:sys.argv=saved

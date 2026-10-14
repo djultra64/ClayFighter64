@@ -19,7 +19,7 @@ std::string capture_status,controls_storage;
 std::array<std::string,action_count> binding_labels;
 void persist(const Mapper& mapper){if(controls_storage.empty())return;std::string error;if(!mapper.save(controls_storage,error)){capture_status="COULD NOT SAVE BINDING";fprintf(stderr,"Controls preferences: %s\n",error.c_str());}}
 std::optional<Physical> physical(SDL_GameControllerButton b){
- switch(b){case SDL_CONTROLLER_BUTTON_A:return Physical::South;case SDL_CONTROLLER_BUTTON_B:return Physical::East;case SDL_CONTROLLER_BUTTON_X:return Physical::West;case SDL_CONTROLLER_BUTTON_Y:return Physical::North;case SDL_CONTROLLER_BUTTON_START:return Physical::Start;case SDL_CONTROLLER_BUTTON_BACK:return Physical::Back;case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:return Physical::LeftShoulder;case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:return Physical::RightShoulder;case SDL_CONTROLLER_BUTTON_DPAD_UP:return Physical::DUp;case SDL_CONTROLLER_BUTTON_DPAD_DOWN:return Physical::DDown;case SDL_CONTROLLER_BUTTON_DPAD_LEFT:return Physical::DLeft;case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:return Physical::DRight;default:return {};}
+ switch(b){case SDL_CONTROLLER_BUTTON_LEFTSTICK:return Physical::LeftStick;case SDL_CONTROLLER_BUTTON_RIGHTSTICK:return Physical::RightStick;case SDL_CONTROLLER_BUTTON_A:return Physical::South;case SDL_CONTROLLER_BUTTON_B:return Physical::East;case SDL_CONTROLLER_BUTTON_X:return Physical::West;case SDL_CONTROLLER_BUTTON_Y:return Physical::North;case SDL_CONTROLLER_BUTTON_START:return Physical::Start;case SDL_CONTROLLER_BUTTON_BACK:return Physical::Back;case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:return Physical::LeftShoulder;case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:return Physical::RightShoulder;case SDL_CONTROLLER_BUTTON_DPAD_UP:return Physical::DUp;case SDL_CONTROLLER_BUTTON_DPAD_DOWN:return Physical::DDown;case SDL_CONTROLLER_BUTTON_DPAD_LEFT:return Physical::DLeft;case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:return Physical::DRight;default:return {};}
 }
 }
 void request_binding(Action action){if(size_t(action)>=action_count)return;std::lock_guard lock(settings_mutex);capture_action=action;capture_status="PRESS NEW BUTTON";}
@@ -62,6 +62,7 @@ void SdlInput::set_preferred_instances(int32_t first,int32_t second){
 void SdlInput::event(const SDL_Event& e) {
     {std::lock_guard lock(settings_mutex);if(capture_action){
         bool captured=false;
+        try{
         if(e.type==SDL_KEYDOWN&&!e.key.repeat){
             if(e.key.keysym.scancode==SDL_SCANCODE_ESCAPE){capture_action.reset();capture_status="CANCELLED";return;}
             const char* name=SDL_GetScancodeName(e.key.keysym.scancode);
@@ -72,6 +73,7 @@ void SdlInput::event(const SDL_Event& e) {
             if(e.caxis.axis==SDL_CONTROLLER_AXIS_TRIGGERLEFT){mapper_.remap(*capture_action,Physical::LeftTrigger);captured=true;}
             if(e.caxis.axis==SDL_CONTROLLER_AXIS_TRIGGERRIGHT){mapper_.remap(*capture_action,Physical::RightTrigger);captured=true;}
         }
+        }catch(const std::invalid_argument&){capture_status="BUTTON ALREADY USED BY ANOTHER ACTION";}
         if(captured){capture_action.reset();capture_status="BINDING SAVED";wait_release_=true;persist(mapper_);}
     }}
     if(std::getenv("CLAY_TRACE_INPUT_SDL") && (e.type==SDL_KEYDOWN||e.type==SDL_KEYUP)) {
@@ -144,6 +146,8 @@ std::array<State,2> SdlInput::poll_players(bool combat) {
         snapshot.buttons[size_t(Physical::RightTrigger)]=SDL_GameControllerGetAxis(pad,SDL_CONTROLLER_AXIS_TRIGGERRIGHT)>16384;
         const SDL_GameControllerButton directions[]={SDL_CONTROLLER_BUTTON_DPAD_UP,SDL_CONTROLLER_BUTTON_DPAD_DOWN,SDL_CONTROLLER_BUTTON_DPAD_LEFT,SDL_CONTROLLER_BUTTON_DPAD_RIGHT};
         for(size_t i=0;i<4;i++)snapshot.buttons[size_t(Physical::DUp)+i]=SDL_GameControllerGetButton(pad,directions[i]);
+        snapshot.buttons[size_t(Physical::LeftStick)]=SDL_GameControllerGetButton(pad,SDL_CONTROLLER_BUTTON_LEFTSTICK);
+        snapshot.buttons[size_t(Physical::RightStick)]=SDL_GameControllerGetButton(pad,SDL_CONTROLLER_BUTTON_RIGHTSTICK);
         snapshot.x=axis(SDL_GameControllerGetAxis(pad,SDL_CONTROLLER_AXIS_LEFTX));snapshot.y=-axis(SDL_GameControllerGetAxis(pad,SDL_CONTROLLER_AXIS_LEFTY));
     }
     unsigned recent=0;if(!s.keyboard_activity&&assigned_[1]>=0&&assigned_[1]==instance_)recent=1;
@@ -161,9 +165,16 @@ std::array<State,2> SdlInput::poll_players(bool combat) {
         auto local_menu=menu_mapper_;menu_states[player]=local_menu.update(menu);
     }
     {std::lock_guard lock(settings_mutex);configured_family=mapper_.manual_family();for(size_t i=0;i<action_count;i++)binding_labels[i]=mapper_.prompt(Action(i)).button_name;}
-    bool released=true;for(unsigned i=0;i<2;i++)released &= menu_states[i].buttons==0&&combat_states[i].buttons==0;
+    if(training_mode_&&previous_combat_!=combat)wait_release_=true;
+    previous_combat_=combat;
+    bool released=true;for(unsigned i=0;i<2;i++)released &= menu_states[i].buttons==0&&combat_states[i].buttons==0&&
+        !combat_states[i].training_reset&&!combat_states[i].training_pause&&combat_states[i].x==0&&combat_states[i].y==0;
     if(wait_release_&&released)wait_release_=false;
-    if(binding_capture_active()||wait_release_){for(auto& state:menu_states){state.buttons=0;state.x=state.y=0;}return menu_states;}
+    if(binding_capture_active()||wait_release_){for(auto& state:menu_states){state={};}return menu_states;}
+    for(unsigned player=0;player<2;player++){
+        menu_states[player].training_reset=combat_states[player].training_reset;
+        menu_states[player].training_pause=combat_states[player].training_pause;
+    }
     return combat?combat_states:menu_states;
 }
 State SdlInput::poll(bool combat){return poll_players(combat)[0];}

@@ -47,7 +47,22 @@ int main(){
  family(Family::Keyboard);assert(measure("PRESS { TO SELECT / } TO EXIT")==289);identical_tile(glyph('{'),155);identical_tile(glyph('}'),156);draw("PRESS { TO SELECT / } TO EXIT");assert(measure("press start")>0);assert(MEM_HU(6,gpr(S32(glyph('*'))))==31);
  combat.remap_key(Action::Primary,"Q");measure(binding_marker(Action::Primary));identical_tile(glyph('%'),85);draw(binding_marker(Action::Primary));identical_tile(dispatched.back(),85);draw(menu_marker(Action::Primary));identical_tile(dispatched.back(),155);
  for(auto[c,p]:originals){if(std::strchr("{}*^|<>",c)==nullptr)assert(glyph(char(c))==p);unsigned begin=p&0x7fffff;unsigned bytes=(MEM_BU(0,gpr(S32(p)))&1)?768:168;assert(!memcmp(mem.data()+begin,original.data()+begin,bytes));}
- for(Family f:{Family::Xbox,Family::PlayStation,Family::Switch,Family::Keyboard}){family(f);for(unsigned i=0;i<action_count;i++){auto sprites=draw(binding_marker(Action(i)));assert(sprites.back()>=0x80400000&&sprites.back()<heap);assert(MEM_BU(0,gpr(S32(sprites.back())))==0x30);}}
+ for(Family f:{Family::Xbox,Family::PlayStation,Family::Switch,Family::Keyboard}){family(f);for(unsigned i=0;i<action_count;i++){
+  auto sprites=draw(binding_marker(Action(i)));
+  auto icon=std::find_if(sprites.begin(),sprites.end(),[](uint32_t p){return p>=0x80400000&&p<heap;});
+  assert(icon!=sprites.end());assert(MEM_BU(0,gpr(S32(*icon)))==0x30);
+  if(i>=size_t(Action::TrainingReset)){
+   if(f==Family::Keyboard)identical_tile(*icon,i==size_t(Action::TrainingReset)?22:17);
+   else {
+    identical_tile(*icon,790);
+    // Preserve genuine generic press art AND the exact family-specific label.
+    write(binding_marker(Action(i)));recomp_context c{};c.f_odd=&c.f0.u32h;c.r29=gpr(S32(0x8081F000));c.r4=font;c.r5=text;
+    prepare_native_prompt_measure(rdram,&c);std::string resolved;for(unsigned j=0;j<64;j++){char ch=MEM_BU(j,c.r5);if(!ch)break;resolved+=ch;}
+    const char* expected=f==Family::Xbox?(i==size_t(Action::TrainingReset)?" LS CLICK":" RS CLICK"):f==Family::PlayStation?(i==size_t(Action::TrainingReset)?" L3":" R3"):(i==size_t(Action::TrainingReset)?" L STICK":" R STICK");
+    assert(resolved.size()==1+std::strlen(expected)&&resolved.substr(1)==expected);
+   }
+  }
+ }}
  family(Family::Switch);std::string six;for(unsigned i=0;i<6;i++)six+=menu_marker(Action(i));assert(measure(six)==90);assert(draw(six).size()==6);
  family(Family::Keyboard);
  // Existing native punctuation in another font must never be replaced.

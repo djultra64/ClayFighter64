@@ -1,18 +1,22 @@
-# ClayFighter 64 1.0 source and builds
+# ClayFighter 64 2.0 source and builds
 
-Original port work by **djultra64**. The 1.0 release distributes the host source,
+Original port work by **djultra64**. The v2.0 source distribution includes the host source,
 ROM extraction/generation scripts, configuration, tests, and the matching SDK
 sources. Generated guest CPU/RSP translations and extracted game data are
 produced locally from your own ROMs and are excluded from the public source.
 
 ## Source archives
 
-The GitHub source contains the port. The separate `clayfighter64-1.0-sdk-source.tar.gz`
+The GitHub source contains the port. The separate `clayfighter64-2.0-sdk-source.tar.gz`
 release asset contains the exact prepared N64ModernRuntime, N64Recomp, RT64 and
 spimdisasm source trees, including their nested dependencies and authentic notices.
 It also contains the SDK build records, SDL2-compat/SDL3/dbus source distributions,
-and their installed Homebrew build recipes. See `config/dependencies-1.0.json`.
+and their installed Homebrew build recipes. Windows SDL2 2.26.3 has its own
+official source archive, alongside the separate Linux SDL2-compat sources.
+See `config/dependencies-2.0.json` for source URLs and verified hashes.
 The SDK is read-only during the host build; generated repairs stay in this project.
+The SDK archive also retains the full dependency notice inventory under
+`sdk/licenses/`, including notices for its prebuilt DXC inputs.
 
 ## Private inputs and generation
 
@@ -47,8 +51,10 @@ not redistributed as independent authored port code.
 
 Build RT64 as a static library with `RT64_STATIC=ON` and
 `RT64_SDL_WINDOW_VULKAN=ON`; put its output at `sdk/rt64-build`.
-The prepared SDK includes the small CMake DXC invocation repair required for
-paths containing spaces, recorded in `RT64-SOURCE-PATCH.json`.
+The SDK preserves the original pinned RT64 source. `RT64-SOURCE-PATCH.json`
+describes the CMake DXC invocation repair for paths containing spaces; its
+modified hash is not the actual SDK CMakeLists hash. Apply the repair in a
+build-local copy when required. The dependency record states this distinction.
 
 The current Linux CMake recipe uses the project's existing Homebrew SDL include
 and library paths at `/home/linuxbrew/.linuxbrew`, alongside system GCC/Clang,
@@ -86,7 +92,9 @@ renaming the two translated OS start/stop functions in a build-local copy.
 
 ## Packaging
 
-`tools/release/package.py` records the final staging procedure used for 1.0.
+`tools/release/package.py --version 2.0` stages versioned binary and authored
+source packages. `tools/release/sdk_source.py --version 2.0` stages the matching
+prepared dependency sources. See [PACKAGING.md](PACKAGING.md).
 It consumes the latest local final binaries, the generated font decoder, the
 user-supplied title announcement and CPython 3.13.9 embeddable runtime, and
 copies applicable notices. Its artifact paths describe the release environment;

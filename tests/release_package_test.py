@@ -13,7 +13,8 @@ module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
 @unittest.skipUnless((ROOT/'probe-output/base.z64').exists() and (ROOT/'probe-output/sc.z64').exists() and (ROOT/'generated/release-decoder/font-decoder').exists(),'Requires both local ROMs and generated decoder')
 class ReleaseIntegration(unittest.TestCase):
     def setUp(self):
-        self.temp=tempfile.TemporaryDirectory(prefix='clay release paths ')
+        work=ROOT/'local/tests/release-import';work.mkdir(parents=True,exist_ok=True)
+        self.temp=tempfile.TemporaryDirectory(prefix='clay release paths ',dir=work)
         self.root=Path(self.temp.name);(self.root/'bin').mkdir()
         shutil.copy2(ROOT/'generated/release-decoder/font-decoder',self.root/'bin/font-decoder')
     def tearDown(self):self.temp.cleanup()

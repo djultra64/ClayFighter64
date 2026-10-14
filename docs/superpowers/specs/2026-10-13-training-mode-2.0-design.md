@@ -68,7 +68,7 @@ Pausa de entrenamiento: Resume / Training Options / Restart Training / Change Fi
 | Restart Setup | Centro / esquina izquierda / esquina derecha; lado de P1 izquierdo / derecho; Restart Training |
 | Claytality Practice | Elegir Claytality verificada; preparación Golpe final / Listo para ejecutar; ventana Original / extendida; distancia Automática / Manual |
 
-Predeterminado: Normal, rival quieto, sin bloqueo, recuperación 3 s, súper lleno al reiniciar, daño visible, historial apagado, centro y P1 a la izquierda. Persistir opciones y últimas selecciones en un archivo propio versionado dentro del directorio de preferencias existente; ignorar valores desconocidos/inválidos y recuperar defaults. No persistir actores, vida ni animaciones.
+Predeterminado: Normal, rival quieto, sin bloqueo, recuperación 3 s, súper lleno al reiniciar, daño visible, historial apagado, centro y P1 a la izquierda. Persistir opciones y últimas selecciones en un archivo propio versionado dentro de `local/settings/` en la carpeta del juego; ignorar valores desconocidos/inválidos y recuperar defaults. No persistir actores, vida ni animaciones.
 
 CPU utiliza la IA original y su dificultad disponible; no inventar un nuevo sistema de IA. Player 2 requiere segundo dispositivo asignado: si falta o se desconecta, pasar a Quieto y mostrar un aviso breve. En los demás comportamientos el dummy no recibe entradas físicas de P2. El comportamiento sintético debe entrar por una vía que realmente gobierne al rival; inyectar input sin desactivar la IA no basta.
 
@@ -177,3 +177,7 @@ Grabación/reproducción del dummy con múltiples slots, guardado de estados arb
 ## Aprobación y siguiente etapa
 
 El usuario aprobó el diseño mediante «Hazlo». Producir el plan técnico detallado y acordar su ejecución conforme al flujo de planificación. Esta aprobación incluye los defaults de recuperación (3 segundos después del combate), las dos preparaciones de Claytality y las herramientas incluidas en 2.0. No constituye una afirmación de implementación, validación o publicación.
+
+## Requisito adicional aprobado: instalación portátil
+
+El usuario pidió que todo se guarde en la carpeta del juego, sin user data. Linux y Windows deben almacenar preferencias, controles, opciones de entrenamiento y cachés propios dentro de la instalación. Los perfiles de prueba también deben permanecer dentro de ella. Mover la carpeta conserva los ajustes; no consultar/crear SDL_GetPrefPath ni usar una carpeta externa como fallback cuando no sea escribible.

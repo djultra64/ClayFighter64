@@ -19,7 +19,7 @@ extern "C" void func_800B3C70(uint8_t*,recomp_context*);
 extern "C" void func_800B4408(uint8_t*,recomp_context*);
 namespace clay::input {
 namespace {
-struct Icon {unsigned width=15,stride=8;std::vector<uint8_t> data;};
+struct Icon {unsigned width=15,stride=8;std::vector<uint8_t> data;std::string caption;};
 struct Bank {uint32_t begin=0;std::map<std::string,uint32_t> sprites;};
 std::map<std::string,Icon> icons;
 std::map<uint8_t*,Bank> banks;
@@ -101,9 +101,15 @@ uint32_t prepare(uint8_t*rdram,recomp_context*ctx,uint32_t font,uint32_t text,un
   if(source[i]=='\x1e'&&i+2<source.size()&&source[i+2]=='\x1f'){
    unsigned code=uint8_t(source[i+1]);bool menu=code>='a'&&code<'a'+action_count;unsigned index=code-(menu?'a':'A');
    if(index>=action_count)throw std::runtime_error("Invalid native binding icon token");
-   std::string name=menu?fixed_prompt(Action(index),view.family).button_name:binding_label(Action(index));auto it=atlas.sprites.find(icon_name(view.family,name));
+   std::string name=menu?fixed_prompt(Action(index),view.family).button_name:binding_label(Action(index));auto key=icon_name(view.family,name);auto it=atlas.sprites.find(key);
    while(extra_slot<std::size(extra)&&!marker_available(rdram,font,variant,extra[extra_slot],atlas))extra_slot++;
-   if(it!=atlas.sprites.end()&&extra_slot<std::size(extra)){char marker=extra[extra_slot++];map_font(rdram,font,variant,marker,it->second);result+=marker;}else result+=upper(name);
+   if(it!=atlas.sprites.end()&&extra_slot<std::size(extra)){
+    char marker=extra[extra_slot++];map_font(rdram,font,variant,marker,it->second);result+=marker;
+    // The licensed set has generic stick-press artwork, without L3/R3-labelled
+    // caps. Keep its pixels intact and identify the actual family-specific
+    // physical control beside it rather than borrowing a misleading label.
+    const auto& caption=icons.at(key).caption;if(!caption.empty())result+=" "+upper(caption);
+   }else result+=upper(name);
    i+=2;
   }else result+=source[i];
  }
@@ -118,7 +124,8 @@ bool load_native_prompt_assets(const std::string& config_path,const std::string&
    for(auto tile:entry.at("tiles")){char name[32];snprintf(name,sizeof(name),"/tile_%04d.png",tile.get<int>());int w=0,h=0,n=0;auto*p=stbi_load((directory+name).c_str(),&w,&h,&n,4);if(!p||w!=16||h!=16){if(p)stbi_image_free(p);throw std::runtime_error("Invalid Kenney tile" );}
     for(unsigned y=0;y<16;y++)for(unsigned x=0;x<16;x++){unsigned src=(y*16+x)*4;if(p[src+3])std::copy_n(p+src,4,image[y*width+(horizontal?column*16:0)+x].begin());}stbi_image_free(p);column++;
    }
-   loaded.emplace(family+"/"+entry.at("name").get<std::string>(),encode(image,width-1));
+   auto icon=encode(image,width-1);icon.caption=entry.value("caption",std::string{});
+   loaded.emplace(family+"/"+entry.at("name").get<std::string>(),std::move(icon));
   }
   std::lock_guard lock(icon_mutex);if(!banks.empty())throw std::runtime_error("Native icon assets already resident");icons=std::move(loaded);return true;
  }catch(const std::exception&e){error=e.what();return false;}

@@ -6,6 +6,7 @@ R=Path(__file__).resolve().parents[1];O=R/'local/sc_roster';funcs={}
 for p in (R/'generated/guest').glob('funcs_*.c'):
  for m in re.finditer(r'RECOMP_FUNC void (\w+)\([^\n]*\).*?;\}',p.read_text(),re.S):funcs[m[1]]=m[0]
 names=['func_800AFFE0','func_800B9590','func_800BD354','func_800C15F0','func_800BE590','func_800BE654','func_800BE6BC','func_800BE6C8','func_8005AB2C','func_8005ABA4','func_8005AC38','func_8005FC68','func_8005D484']
+funcs['func_8005FC68']=re.sub(r'^.*clay::training::selection_tick.*\n','',funcs['func_8005FC68'],flags=re.M)
 loader=funcs['func_800AFFE0'];loader=re.sub(r'\s*const gpr portrait_source=ctx->r4;', '',loader);loader=re.sub(r'[^\n]*clay_sc_roster_augment_portraits[^\n]*\n','',loader);loader=loader.replace('recomp_context* ctx) {','recomp_context* ctx) {\n const gpr portrait_source=ctx->r4;',1);loader=loader.replace('    return;','    clay_sc_roster_augment_portraits(rdram,ctx,portrait_source);\n    return;');funcs['func_800AFFE0']=loader
 
 for hook in json.loads((R/'config/sc_roster_hooks.json').read_text())['verified_hooks']:

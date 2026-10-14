@@ -1,5 +1,6 @@
 // Guest thread publishes mode; SDL never reads guest RDRAM concurrently. djultra64.
 #include "input_mode.h"
+#include "training_guest.h"
 #include "recomp.h"
 #include <atomic>
 #include <cstdio>
@@ -20,7 +21,7 @@ void update_combat_input(uint8_t* rdram){
   }
  }
 }
-void begin_combat_input(uint8_t* rdram){combat_loaded=true;update_combat_input(rdram);
+void begin_combat_input(uint8_t* rdram){combat_loaded=true;clay::training::begin_combat(rdram);update_combat_input(rdram);
  if(std::getenv("CLAY_TRACE_GAME"))fprintf(stderr,"{\"event\":\"combat_loaded\",\"p1\":%d,\"p2\":%d,\"attract\":%s}\n",MEM_W(0,S32(0x801028A8)),MEM_W(0,S32(0x801028B0)),MEM_W(0,S32(0x80106D58))?"true":"false");
 }
 void end_combat_input(){combat_loaded=false;active.store(false,std::memory_order_release);

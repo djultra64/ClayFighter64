@@ -15,7 +15,8 @@ class ImportTests(unittest.TestCase):
         spec=importlib.util.spec_from_file_location('clay_import',SOURCE)
         m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
         expected=bytes.fromhex('80371240')+bytes(range(12))
-        with tempfile.TemporaryDirectory(prefix='clay paths ') as d:
+        work=SOURCE.parents[2]/'local/tests/import-formats';work.mkdir(parents=True,exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix='clay paths ',dir=work) as d:
             d=Path(d)
             for suffix,data in [('z64',expected),('v64',b''.join(expected[i:i+2][::-1] for i in range(0,16,2))),('n64',b''.join(expected[i:i+4][::-1] for i in range(0,16,4)))]:
                 p=d/('test.'+suffix);p.write_bytes(data)

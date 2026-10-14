@@ -6,11 +6,11 @@
 #include <sstream>
 #include <stdexcept>
 namespace clay::input {
-static constexpr uint16_t masks[] = {0x8000,0x4000,0x1000,0x2000,0x20,0x10,8,4,2,1,0x800,0x400,0x200,0x100};
-static const char* actions[] = {"Primary action", "Secondary action", "Start", "Z trigger", "L shoulder", "R shoulder", "C up", "C down", "C left", "C right", "Move up", "Move down", "Move left", "Move right"};
-static constexpr Physical defaults[] = {Physical::South,Physical::West,Physical::Start,Physical::LeftTrigger,Physical::LeftShoulder,Physical::RightShoulder,Physical::North,Physical::RightTrigger,Physical::Back,Physical::East,Physical::DUp,Physical::DDown,Physical::DLeft,Physical::DRight};
-static const char* keys[] = {"Z","X","Return","Left Shift","Q","E","I","K","J","L","Up","Down","Left","Right"};
-static const char* physical_names[] = {"south","east","west","north","start","back","left_shoulder","right_shoulder","left_trigger","right_trigger","dpad_up","dpad_down","dpad_left","dpad_right"};
+static constexpr uint16_t masks[] = {0x8000,0x4000,0x1000,0x2000,0x20,0x10,8,4,2,1,0x800,0x400,0x200,0x100,0,0};
+static const char* actions[] = {"Primary action", "Secondary action", "Start", "Z trigger", "L shoulder", "R shoulder", "C up", "C down", "C left", "C right", "Move up", "Move down", "Move left", "Move right", "Restart training", "Training pause"};
+static constexpr Physical defaults[] = {Physical::South,Physical::West,Physical::Start,Physical::LeftTrigger,Physical::LeftShoulder,Physical::RightShoulder,Physical::North,Physical::RightTrigger,Physical::Back,Physical::East,Physical::DUp,Physical::DDown,Physical::DLeft,Physical::DRight,Physical::LeftStick,Physical::RightStick};
+static const char* keys[] = {"Z","X","Return","Left Shift","Q","E","I","K","J","L","Up","Down","Left","Right","F5","Escape"};
+static const char* physical_names[] = {"south","east","west","north","start","back","left_shoulder","right_shoulder","left_trigger","right_trigger","dpad_up","dpad_down","dpad_left","dpad_right","left_stick","right_stick"};
 const char* action_name(Action a) { return actions[size_t(a)]; }
 const char* family_name(Family f) { static const char* n[]={"auto","keyboard","xbox","playstation","switch"}; return n[size_t(f)]; }
 Family parse_family(const std::string& s) { for(int i=0;i<5;i++) if(s==family_name(Family(i))) return Family(i); throw std::invalid_argument("Unknown controller family: "+s); }
@@ -19,8 +19,8 @@ Mapper::Mapper(bool menu) {
     if(menu){bindings_[size_t(Action::Secondary)].button=Physical::East;bindings_[size_t(Action::CRight)].button=Physical::West;}
 }
 void Mapper::set_family(Family f) { if(f==Family::Keyboard) throw std::invalid_argument("Manual family must be auto/xbox/playstation/switch"); manual_=f; }
-void Mapper::remap(Action a,Physical p) { if(size_t(a)>=action_count||size_t(p)>=physical_count) throw std::invalid_argument("Invalid binding"); bindings_[size_t(a)].button=p; }
-void Mapper::remap_key(Action a,const std::string& key) { if(key.empty()||size_t(a)>=action_count) throw std::invalid_argument("Invalid keyboard binding"); bindings_[size_t(a)].key=key; }
+void Mapper::remap(Action a,Physical p) { if(size_t(a)>=action_count||size_t(p)>=physical_count) throw std::invalid_argument("Invalid binding"); for(size_t i=0;i<action_count;i++)if(i!=size_t(a)&&(size_t(a)>=14||i>=14)&&bindings_[i].button==p){if(size_t(a)>=14&&i>=14)bindings_[i].button=bindings_[size_t(a)].button;else throw std::invalid_argument("Training shortcut conflicts with another action");} bindings_[size_t(a)].button=p; }
+void Mapper::remap_key(Action a,const std::string& key) { if(key.empty()||size_t(a)>=action_count) throw std::invalid_argument("Invalid keyboard binding"); for(size_t i=0;i<action_count;i++)if(i!=size_t(a)&&(size_t(a)>=14||i>=14)&&bindings_[i].key==key){if(size_t(a)>=14&&i>=14)bindings_[i].key=bindings_[size_t(a)].key;else throw std::invalid_argument("Training shortcut conflicts with another action");} bindings_[size_t(a)].key=key; }
 const Binding& Mapper::binding(Action a) const { return bindings_.at(size_t(a)); }
 State Mapper::update(const Snapshot& s) {
     if(s.detected!=Family::Auto&&s.detected!=Family::Keyboard) detected_=s.detected;
@@ -29,6 +29,8 @@ State Mapper::update(const Snapshot& s) {
     else if(s.controller_activity) active_=detected_;
     State out; out.active=family();
     for(size_t i=0;i<action_count;i++) if(s.keys[i]||s.buttons[size_t(bindings_[i].button)]) out.buttons|=masks[i];
+    auto down=[&](Action action){auto i=size_t(action);return s.keys[i]||s.buttons[size_t(bindings_[i].button)];};
+    out.training_reset=down(Action::TrainingReset);out.training_pause=down(Action::TrainingPause);
     float kx=float(s.keys[size_t(Action::Right)])-float(s.keys[size_t(Action::Left)]);
     float ky=float(s.keys[size_t(Action::Up)])-float(s.keys[size_t(Action::Down)]);
     // Held keys don't erase a pad stick or steal the active-device prompts.
@@ -43,9 +45,9 @@ Prompt Mapper::prompt(Action a) const {
     auto b=binding(a); auto f=family(); std::string glyph,name;
     if(f==Family::Keyboard) return {a,action_name(a),"["+b.key+"]",b.key};
     size_t p=size_t(b.button);
-    const char* xbox[]={"A","B","X","Y","Menu","View","LB","RB","LT","RT","D-pad up","D-pad down","D-pad left","D-pad right"};
-    const char* ps[]={"Cross","Circle","Square","Triangle","Options","Share","L1","R1","L2","R2","D-pad up","D-pad down","D-pad left","D-pad right"};
-    const char* sw[]={"B","A","Y","X","+","-","L","R","ZL","ZR","D-pad up","D-pad down","D-pad left","D-pad right"};
+    const char* xbox[]={"A","B","X","Y","Menu","View","LB","RB","LT","RT","D-pad up","D-pad down","D-pad left","D-pad right","LS click","RS click"};
+    const char* ps[]={"Cross","Circle","Square","Triangle","Options","Share","L1","R1","L2","R2","D-pad up","D-pad down","D-pad left","D-pad right","L3","R3"};
+    const char* sw[]={"B","A","Y","X","+","-","L","R","ZL","ZR","D-pad up","D-pad down","D-pad left","D-pad right","L stick","R stick"};
     name=(f==Family::Switch?sw:f==Family::PlayStation?ps:xbox)[p];
     if(f==Family::PlayStation&&p<4) {const char* symbols[]={"×","○","□","△"};glyph=symbols[p];}
     else glyph="["+name+"]";

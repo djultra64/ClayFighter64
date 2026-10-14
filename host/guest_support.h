@@ -4,6 +4,8 @@
 #include "sc_assets.h"
 #include "native_prompts.h"
 #include "input_mode.h"
+#include "training_guest.h"
+#include "training_stage.h"
 #include "sc_preview.h"
 #include "sc_roster.h"
 #include "port_options.h"

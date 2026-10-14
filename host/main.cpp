@@ -12,6 +12,10 @@
 #include "native_prompts.h"
 #include "input_mode.h"
 #include "test_input.h"
+#include "portable_paths.h"
+#include "training_guest.h"
+#include "training_options.h"
+#include "training_stage.h"
 #include "ultramodern/ultramodern.hpp"
 #include <SDL.h>
 #ifdef _WIN32
@@ -35,10 +39,16 @@ static int sc_demo_character=-1;
 static std::string manual_family="auto";
 static void update_input(SDL_Window* window,clay::input::SdlInput& input){
  const bool combat=clay::input::combat_input_active();
+ input.set_training_mode(clay::main_menu::training_requested());
  const auto states=input.poll_players(combat);
+ clay::training::set_second_player_connected(input.connected_players()[1]);
+ static bool reset_down=false,pause_down=false;
+ if(states[0].training_reset&&!reset_down&&states[0].buttons==0)clay::training::request_restart();
+ if(states[0].training_pause&&!pause_down)clay::training::request_pause();
+ reset_down=states[0].training_reset;pause_down=states[0].training_pause;
  const auto& mapper=input.active_mapper(combat);
  clay::input::publish_hud(mapper);
- std::string title="ClayFighter 64 — ";title+=clay::input::family_name(mapper.family());
+ std::string title="ClayFighter 64 v2.0 — ";title+=clay::input::family_name(mapper.family());
  if(sc_demo_character>=0){title+=" — Prueba SC ";title+=std::to_string(sc_demo_character);}
  for(auto action:{clay::input::Action::Primary,clay::input::Action::Secondary,clay::input::Action::Start}){
   auto prompt=mapper.prompt(action);title+=" — ";title+=prompt.glyph;title+=" ";title+=prompt.action_name;
@@ -48,7 +58,13 @@ static void update_input(SDL_Window* window,clay::input::SdlInput& input){
 }
 static bool get_input(int port,uint16_t* b,float* x,float* y){
  if(port<0||port>=2)return false;
- std::lock_guard lock(input_mutex);if(!input_connected[port])return false;*b=input_states[port].buttons;*x=input_states[port].x;*y=input_states[port].y;++clay_polls;
+ std::lock_guard lock(input_mutex);
+ const bool rival=clay::training::selecting_opponent();
+ const int source=rival&&port==1?0:port;
+ if(!input_connected[source]&&!(port==1&&clay::main_menu::training_requested()))return false;
+ const bool ready=clay::training::selection_input_ready(input_states[0].buttons);
+ const auto state=(!ready||(rival&&port==0))?clay::input::State{}:input_states[source];
+ *b=state.buttons;*x=state.x;*y=state.y;clay::testing::observe_script_input(unsigned(source),state.buttons);++clay_polls;
  if(std::getenv("CLAY_TRACE_INPUT")){
   static std::array<clay::input::State,2> previous{};auto& old=previous[port];
   if(*b!=old.buttons||*x!=old.x||*y!=old.y){
@@ -59,7 +75,7 @@ static bool get_input(int port,uint16_t* b,float* x,float* y){
  return true;
 }
 static ultramodern::input::connected_device_info_t connected_device(int port){
- std::lock_guard lock(input_mutex);bool connected=port>=0&&port<2&&input_connected[port];
+ std::lock_guard lock(input_mutex);bool connected=port>=0&&port<2&&(input_connected[port]||(port==1&&clay::main_menu::training_requested()));
  return {connected?ultramodern::input::Device::Controller:ultramodern::input::Device::None,ultramodern::input::Pak::None};
 }
 RspExitReason clayfighter_audio_rsp(uint8_t*,uint32_t);
@@ -76,15 +92,30 @@ static void error(const char* text){clay_fatal(text);}
 int main(int argc,char** argv){
  std::string rom="probe-output/base.z64",controls="config/controls.cfg",sc_assets,test_input;double seconds=0;bool family_override=false,controls_override=false,hidden=false;
  std::string pref_dir;
- for(int i=1;i+1<argc;i++)if(std::string(argv[i])=="--user-data"){pref_dir=argv[++i];break;}
- if(pref_dir.empty()){if(auto* path=SDL_GetPrefPath("djultra64","ClayTality64")){pref_dir=path;SDL_free(path);}else pref_dir="local/";}
- if(pref_dir.back()!='/'&&pref_dir.back()!='\\')pref_dir+='/';
- std::error_code pref_error;std::filesystem::create_directories(pref_dir,pref_error);
- if(pref_error)fprintf(stderr,"Preferences directory unavailable: %s\n",pref_error.message().c_str());
+ try{
+  char* executable_path=SDL_GetBasePath();
+  if(!executable_path)throw std::runtime_error("Cannot locate portable game folder");
+  const std::filesystem::path executable_directory(executable_path);SDL_free(executable_path);
+  const auto root=clay::portable::installation_root(executable_directory);
+  std::filesystem::path requested;
+  for(int i=1;i+1<argc;i++)if(std::string(argv[i])=="--data-dir"||std::string(argv[i])=="--user-data"){requested=argv[++i];break;}
+  pref_dir=clay::portable::settings_directory(root,requested).string()+"/";
+  std::filesystem::current_path(root);
+#ifndef _WIN32
+  const auto cache=clay::portable::settings_directory(root,"local/cache");
+  setenv("XDG_CACHE_HOME",cache.string().c_str(),1);
+  const auto mesa=clay::portable::settings_directory(root,"local/cache/mesa");
+  setenv("MESA_SHADER_CACHE_DIR",mesa.string().c_str(),1);
+  const auto nvidia=clay::portable::settings_directory(root,"local/cache/nvidia");
+  setenv("__GL_SHADER_DISK_CACHE_PATH",nvidia.string().c_str(),1);
+#endif
+ }catch(const std::exception& e){clay_fatal(e.what());}
  std::string display_error;clay::set_graphics_storage(pref_dir+"display.cfg");
+ clay::training::initialize_storage(pref_dir+"training.cfg");
+ clay::training::initialize_stage_storage(pref_dir+"training-stage.cfg");
  if(!clay::load_graphics_options(pref_dir+"display.cfg",display_error))fprintf(stderr,"Display preferences: %s\n",display_error.c_str());
  try{
-  for(int i=1;i<argc;i++){std::string arg=argv[i];if(arg=="--rom"&&i+1<argc)rom=argv[++i];else if(arg=="--seconds"&&i+1<argc)seconds=std::stod(argv[++i]);else if(arg=="--controls"&&i+1<argc){controls=argv[++i];controls_override=true;}else if(arg=="--user-data"&&i+1<argc)++i;else if(arg=="--hidden")hidden=true;else if(arg=="--test-input"&&i+1<argc)test_input=argv[++i];else if(arg=="--sc-assets"&&i+1<argc)sc_assets=argv[++i];else if(arg=="--sc-demo-character"&&i+1<argc){std::string value=argv[++i];size_t used=0;sc_demo_character=std::stoi(value,&used);if(used!=value.size())clay_fatal("invalid_sc_demo_character");}else if(arg=="--graphics-profile"&&i+1<argc)clay::set_graphics_options(clay::graphics_profile(argv[++i]));else if(arg=="--family"&&i+1<argc){manual_family=argv[++i];family_override=true;}else if(arg=="--help"){puts("ClayFighter 64 by djultra64\n--rom PATH --seconds N --controls PATH --family auto|xbox|playstation|switch\n--graphics-profile default|original|1080p120|4k120 --hidden --user-data PATH\n--sc-assets PATH; test only: --sc-demo-character 6|11|12|16\nKeyboard defaults: arrows move; Z primary, X secondary, Enter Start, Shift Z trigger, Q/E L/R, I/J/K/L C buttons.\nBindings and fallback controller family: config/controls.cfg");return 0;}else clay_fatal("unknown_or_incomplete_argument");}
+  for(int i=1;i<argc;i++){std::string arg=argv[i];if(arg=="--rom"&&i+1<argc)rom=argv[++i];else if(arg=="--seconds"&&i+1<argc)seconds=std::stod(argv[++i]);else if(arg=="--controls"&&i+1<argc){controls=argv[++i];controls_override=true;}else if((arg=="--data-dir"||arg=="--user-data")&&i+1<argc)++i;else if(arg=="--hidden")hidden=true;else if(arg=="--test-input"&&i+1<argc)test_input=argv[++i];else if(arg=="--sc-assets"&&i+1<argc)sc_assets=argv[++i];else if(arg=="--sc-demo-character"&&i+1<argc){std::string value=argv[++i];size_t used=0;sc_demo_character=std::stoi(value,&used);if(used!=value.size())clay_fatal("invalid_sc_demo_character");}else if(arg=="--graphics-profile"&&i+1<argc)clay::set_graphics_options(clay::graphics_profile(argv[++i]));else if(arg=="--family"&&i+1<argc){manual_family=argv[++i];family_override=true;}else if(arg=="--help"){puts("ClayFighter 64 v2.0 by djultra64\n--rom PATH --seconds N --controls PATH --family auto|xbox|playstation|switch\n--graphics-profile default|original|1080p120|4k120 --hidden --data-dir RELATIVE_PATH\n--sc-assets PATH; test only: --sc-demo-character 6|11|12|16\nKeyboard defaults: arrows move; Z primary, X secondary, Enter Start, Shift Z trigger, Q/E L/R, I/J/K/L C buttons.\nPortable settings: local/settings; --data-dir must stay inside the game folder.\nBindings and fallback controller family: config/controls.cfg");return 0;}else clay_fatal("unknown_or_incomplete_argument");}
  }catch(const std::exception& e){clay_fatal(e.what());}
  std::ifstream file(rom,std::ios::binary);if(!file)clay_fatal("rom_open");clay_rom.assign(std::istreambuf_iterator<char>(file),{});if(clay_rom.size()!=0xc00000||clay_sc::sha256(clay_rom)!="357f26c6cd72559c5c05e8c2df46369624630dbcb1c02b3b6f3338f6ac79af07")clay_fatal("unsupported_original_rom");
  if(sc_assets.empty()&&sc_demo_character!=-1)clay_fatal("sc_demo_requires_assets");
@@ -108,7 +139,8 @@ int main(int argc,char** argv){
  if(!input.mapper().load(controls,controls_error))clay_fatal(controls_error.c_str());
  const auto stored_controls=pref_dir+"controls.cfg";
  if(!controls_override&&std::ifstream(stored_controls))if(!input.mapper().load(stored_controls,controls_error))clay_fatal(controls_error.c_str());
- clay::input::set_controls_storage(controls_override?controls:stored_controls);
+ // --controls imports a profile; subsequent edits always save portably.
+ clay::input::set_controls_storage(stored_controls);
  for(size_t a=0;a<clay::input::action_count;a++)if(SDL_GetScancodeFromName(input.mapper().binding(clay::input::Action(a)).key.c_str())==SDL_SCANCODE_UNKNOWN)clay_fatal("unknown_controls_key");
  if(family_override)try{input.mapper().set_family(clay::input::parse_family(manual_family));}catch(const std::exception& e){clay_fatal(e.what());}
  std::string glyph_error;
@@ -119,7 +151,7 @@ int main(int argc,char** argv){
   window_width=std::max(320,int(window_width*fit));window_height=std::max(240,int(window_height*fit));
  }
  // Fit the desktop window while retaining the selected internal render height.
- auto* window=SDL_CreateWindow("ClayFighter 64",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,window_width,window_height,SDL_WINDOW_VULKAN|SDL_WINDOW_RESIZABLE|(hidden?SDL_WINDOW_HIDDEN:0));if(!window)clay_fatal(SDL_GetError());
+ auto* window=SDL_CreateWindow("ClayFighter 64 v2.0",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,window_width,window_height,SDL_WINDOW_VULKAN|SDL_WINDOW_RESIZABLE|(hidden?SDL_WINDOW_HIDDEN:0));if(!window)clay_fatal(SDL_GetError());
  fprintf(stderr,"{\"event\":\"window_ready\",\"width\":%d,\"height\":%d,\"render_height_requested\":%u}\n",window_width,window_height,graphics_options.render_height);
  ultramodern::renderer::GraphicsConfig graphics{};graphics.api_option=ultramodern::renderer::GraphicsApi::Vulkan;ultramodern::renderer::set_graphics_config(graphics);
  ultramodern::set_callbacks({rsp_init,run_rsp},{clay_create_context},{queue_audio,remaining_audio,set_frequency}, {[]{},get_input,[](int,bool){},connected_device}, {},{count_vi,nullptr},{error},{});

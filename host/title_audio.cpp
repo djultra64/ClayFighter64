@@ -8,6 +8,8 @@
 #include <limits>
 #include <array>
 #include <atomic>
+#include <filesystem>
+#include <stdexcept>
 extern "C" void func_800C1520(uint8_t*,recomp_context*);
 namespace clay::audio {
 namespace {
@@ -24,7 +26,20 @@ class Capture {
 public:
  void frequency(uint32_t n){std::lock_guard lock(mutex);hz=n;}
  void record(std::span<int16_t>pcm){
-  std::lock_guard lock(mutex);if(!attempted){attempted=true;const char*path=std::getenv("CLAY_CAPTURE_AUDIO");if(path&&*path){file.open(path,std::ios::binary|std::ios::in|std::ios::out|std::ios::trunc);if(file){opened_hz=hz;header();}else std::fprintf(stderr,"title_audio: cannot open private capture %s\n",path);}}
+  std::lock_guard lock(mutex);if(!attempted){attempted=true;const char*path=std::getenv("CLAY_CAPTURE_AUDIO");if(path&&*path){
+   try {
+    // main sets cwd to the installation before opening audio. Diagnostic writes
+    // obey the same portability rule, including absolute paths and symlinks.
+    const auto root=std::filesystem::canonical(std::filesystem::current_path());
+    const auto requested=std::filesystem::path(path);
+    const auto destination=std::filesystem::weakly_canonical(requested.is_absolute()?requested:root/requested);
+    auto a=root.begin(),b=destination.begin();
+    for(;a!=root.end();++a,++b)if(b==destination.end()||*a!=*b)
+     throw std::invalid_argument("Audio capture must remain inside the game folder");
+    file.open(destination,std::ios::binary|std::ios::in|std::ios::out|std::ios::trunc);
+    if(file){opened_hz=hz;header();}else std::fprintf(stderr,"title_audio: cannot open private capture %s\n",path);
+   }catch(const std::exception& error){std::fprintf(stderr,"title_audio: %s\n",error.what());}
+  }}
   if(!file.is_open()||hz!=opened_hz||pcm.size()%2||uint64_t(bytes)+pcm.size()*2>128*1024*1024)return;
   std::vector<uint8_t>out(pcm.size()*2);for(size_t i=0;i<pcm.size();i++){out[i*2]=uint8_t(pcm[i]);out[i*2+1]=uint8_t(uint16_t(pcm[i])>>8);}file.write(reinterpret_cast<const char*>(out.data()),out.size());if(!file)return;bytes+=uint32_t(out.size());header();file.flush();
  }

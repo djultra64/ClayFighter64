@@ -38,5 +38,15 @@ int main(){
     Hud hud;hud.context=&labels;hud.text=[](void* context,float,float,const char* text){static_cast<std::vector<std::string>*>(context)->push_back(text);};
     draw_prompts(loaded,hud,{Action::Primary,Action::Secondary});
     assert(labels.size()==3&&labels[1]=="[B]  Primary action");
+    Mapper training_mapper;
+    Snapshot training_input;training_input.buttons[size_t(Physical::LeftStick)]=true;
+    auto training_state=training_mapper.update(training_input);
+    assert(training_state.training_reset&&training_state.buttons==0);
+    training_input.buttons.fill(false);training_input.keys[size_t(Action::TrainingPause)]=true;
+    training_state=training_mapper.update(training_input);
+    assert(training_state.training_pause&&training_state.buttons==0);
+    training_mapper.remap(Action::TrainingReset,Physical::RightStick);
+    assert(training_mapper.save(path,error));Mapper training_loaded;assert(training_loaded.load(path,error));
+    assert(training_loaded.binding(Action::TrainingReset).button==Physical::RightStick);
     std::remove(path.c_str());puts("PASS: physical layouts, last-device persistence, per-action remapping, keyboard/menu D-pad, analog bounds, config roundtrip and atomic invalid-config rejection");
 }

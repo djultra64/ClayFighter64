@@ -1,0 +1,440 @@
+{
+  "project": "ClayFighter 64",
+  "version": "2.0",
+  "author": "djultra64",
+  "dependencies": {
+    "N64ModernRuntime": {
+      "commit": "cdf5abbd5026fef5c364c676e4667c45e42b6863",
+      "repositories": [
+        {
+          "commit": "cdf5abbd5026fef5c364c676e4667c45e42b6863",
+          "path": "",
+          "repository": "https://github.com/N64Recomp/N64ModernRuntime"
+        },
+        {
+          "commit": "81213c1831fab2521a6a5459c67b63437d67e253",
+          "path": "N64Recomp",
+          "repository": "https://github.com/N64Recomp/N64Recomp"
+        },
+        {
+          "commit": "ad8b641f9682b6091ba8b9f7c8152255c1a2c803",
+          "path": "N64Recomp/lib/ELFIO",
+          "repository": "https://github.com/serge1/ELFIO"
+        },
+        {
+          "commit": "407c905e45ad75fc29bf0f9bb7c5c2fd3475976f",
+          "path": "N64Recomp/lib/fmt",
+          "repository": "https://github.com/fmtlib/fmt"
+        },
+        {
+          "commit": "e0d8003047938e2ec3697eaf8d61a84d11d17b43",
+          "path": "N64Recomp/lib/rabbitizer",
+          "repository": "https://github.com/Decompollaborate/rabbitizer"
+        },
+        {
+          "commit": "f6326087b3404efb07c6d3deed97b3c3b8098c0c",
+          "path": "N64Recomp/lib/sljit",
+          "repository": "https://github.com/zherczeg/sljit"
+        },
+        {
+          "commit": "1f7884e59165e517462f922e7b6de131bd9844f3",
+          "path": "N64Recomp/lib/tomlplusplus",
+          "repository": "https://github.com/marzer/tomlplusplus"
+        },
+        {
+          "commit": "8573fd7cd6f49b262a0ccc447f3c6acfc415e556",
+          "path": "thirdparty/miniz",
+          "repository": "https://github.com/richgel999/miniz"
+        },
+        {
+          "commit": "a124b850791db2a33f7354d2b0aa7da821cef6f5",
+          "path": "thirdparty/o1heap",
+          "repository": "https://github.com/N64Recomp/o1heap"
+        },
+        {
+          "commit": "ac3a25da3d957d9ef3e4114d9f8332d34ce83a46",
+          "path": "thirdparty/xxHash",
+          "repository": "https://github.com/Cyan4973/xxHash.git"
+        }
+      ],
+      "repository": "https://github.com/N64Recomp/N64ModernRuntime"
+    },
+    "N64Recomp": {
+      "commit": "ffb39cdad1da5de07eaaa48bd1db4a89a7986771",
+      "repositories": [
+        {
+          "commit": "ffb39cdad1da5de07eaaa48bd1db4a89a7986771",
+          "path": "",
+          "repository": "https://github.com/N64Recomp/N64Recomp"
+        },
+        {
+          "commit": "ad8b641f9682b6091ba8b9f7c8152255c1a2c803",
+          "path": "lib/ELFIO",
+          "repository": "https://github.com/serge1/ELFIO"
+        },
+        {
+          "commit": "407c905e45ad75fc29bf0f9bb7c5c2fd3475976f",
+          "path": "lib/fmt",
+          "repository": "https://github.com/fmtlib/fmt"
+        },
+        {
+          "commit": "e0d8003047938e2ec3697eaf8d61a84d11d17b43",
+          "path": "lib/rabbitizer",
+          "repository": "https://github.com/Decompollaborate/rabbitizer"
+        },
+        {
+          "commit": "f6326087b3404efb07c6d3deed97b3c3b8098c0c",
+          "path": "lib/sljit",
+          "repository": "https://github.com/zherczeg/sljit"
+        },
+        {
+          "commit": "1f7884e59165e517462f922e7b6de131bd9844f3",
+          "path": "lib/tomlplusplus",
+          "repository": "https://github.com/marzer/tomlplusplus"
+        }
+      ],
+      "repository": "https://github.com/N64Recomp/N64Recomp"
+    },
+    "rt64": {
+      "commit": "43373749dac9bbc1b653e6a02aed40a9e1783bed",
+      "repositories": [
+        {
+          "commit": "43373749dac9bbc1b653e6a02aed40a9e1783bed",
+          "path": "",
+          "repository": "https://github.com/rt64/rt64"
+        },
+        {
+          "commit": "21ca0c4319dfd5a161c5f2a0c406e8f60194ea6c",
+          "path": "src/contrib/ddspp",
+          "repository": "https://github.com/redorav/ddspp.git"
+        },
+        {
+          "commit": "cc15e715ee378a4f675b335bd1071ff105873fc8",
+          "path": "src/contrib/dxc",
+          "repository": "https://github.com/rt64/dxc-bin"
+        },
+        {
+          "commit": "6f5274c66132e8f951c400103d897582b8f21491",
+          "path": "src/contrib/hlslpp",
+          "repository": "https://github.com/redorav/hlslpp"
+        },
+        {
+          "commit": "d03941725fd0bd08c78c46e3e5b0265526e9d060",
+          "path": "src/contrib/im3d",
+          "repository": "https://github.com/john-chapman/im3d"
+        },
+        {
+          "commit": "277ae93c41314ba5f4c7444f37c4319cdf07e8cf",
+          "path": "src/contrib/imgui",
+          "repository": "https://github.com/ocornut/imgui"
+        },
+        {
+          "commit": "f156599faefe316f7dd20fe6c783bf87c8bb6fd9",
+          "path": "src/contrib/implot",
+          "repository": "https://github.com/epezent/implot"
+        },
+        {
+          "commit": "860fac3fbae94194a392c1d9857e185eda6d083e",
+          "path": "src/contrib/mupen64plus-core",
+          "repository": "https://github.com/mupen64plus/mupen64plus-core"
+        },
+        {
+          "commit": "de8111fdcb89144abc16c85650ce4e21e028bfb5",
+          "path": "src/contrib/mupen64plus-win32-deps",
+          "repository": "https://github.com/mupen64plus/mupen64plus-win32-deps"
+        },
+        {
+          "commit": "17b6e8ce219c0677f94b63636abb9296b28841ca",
+          "path": "src/contrib/nativefiledialog-extended",
+          "repository": "https://github.com/btzy/nativefiledialog-extended"
+        },
+        {
+          "commit": "d890ac899e505fb30040e037a4037cdeca68f033",
+          "path": "src/contrib/plume",
+          "repository": "https://github.com/renderbag/plume.git"
+        },
+        {
+          "commit": "9ef66bc14edd10dee0de3a545b98578363552f66",
+          "path": "src/contrib/plume/contrib/D3D12MemoryAllocator",
+          "repository": "https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator"
+        },
+        {
+          "commit": "2fa203425eb4af9dfc6b03f97ef72b0b5bcb8350",
+          "path": "src/contrib/plume/contrib/Vulkan-Headers",
+          "repository": "https://github.com/KhronosGroup/Vulkan-Headers"
+        },
+        {
+          "commit": "29b35ea4232688c0f42cdff0c10848290760a417",
+          "path": "src/contrib/plume/contrib/VulkanMemoryAllocator",
+          "repository": "https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator"
+        },
+        {
+          "commit": "be3dbd49bf77052665e96b6c7484af855e7e5f67",
+          "path": "src/contrib/plume/contrib/volk",
+          "repository": "https://github.com/zeux/volk"
+        },
+        {
+          "commit": "5d6b756ee62760f71b65d37e41a0b5a3dab90507",
+          "path": "src/contrib/re-spirv",
+          "repository": "https://github.com/rt64/re-spirv"
+        },
+        {
+          "commit": "f013f08e4455bcc1f0eed8e3dd5e2009682656d9",
+          "path": "src/contrib/re-spirv/external/SPIRV-Headers",
+          "repository": "https://github.com/KhronosGroup/SPIRV-Headers"
+        },
+        {
+          "commit": "6173e24b31f09a0c3217103a130e74c4ddec14a6",
+          "path": "src/contrib/spirv-cross",
+          "repository": "https://github.com/KhronosGroup/SPIRV-Cross.git"
+        },
+        {
+          "commit": "ae721c50eaf761660b4f90cc590453cdb0c2acd0",
+          "path": "src/contrib/stb",
+          "repository": "https://github.com/nothings/stb"
+        },
+        {
+          "commit": "1864a50c9b5cf8500d8e9e61ed92aa0dd3772750",
+          "path": "src/contrib/xxHash",
+          "repository": "https://github.com/Cyan4973/xxHash"
+        },
+        {
+          "commit": "0ff651dd876823b99fa5c5f53292be28381aee9b",
+          "path": "src/contrib/zstd",
+          "repository": "https://github.com/facebook/zstd"
+        }
+      ],
+      "repository": "https://github.com/rt64/rt64"
+    },
+    "spimdisasm": {
+      "commit": "4b5d4c68eeb9f9eae14b3bb713971433ae2c3c43",
+      "repositories": [
+        {
+          "commit": "4b5d4c68eeb9f9eae14b3bb713971433ae2c3c43",
+          "path": "",
+          "repository": "https://github.com/Decompollaborate/spimdisasm"
+        }
+      ],
+      "repository": "https://github.com/Decompollaborate/spimdisasm"
+    }
+  },
+  "linux_shared": {
+    "SDL2-compat": "2.32.70",
+    "SDL3": "3.4.12",
+    "dbus": "1.16.2"
+  },
+  "windows_python": "3.13.9",
+  "verification": {
+    "date": "2026-10-14",
+    "method": "Every vendor file from the prepared SDK SOURCE-INPUTS.json was checked against the actual deps tree. Commit provenance comes from that inventory; prepared trees do not contain Git metadata. Inventory digest is sorted relative-path TAB file-SHA256 LF, UTF-8.",
+    "source_inputs_sha256": "8501c14cd996e71636bb11891ea71d96df7bc6baa40fdac08663534a13d48580",
+    "trees": {
+      "N64ModernRuntime": {
+        "files_verified": 911,
+        "path_sha256_inventory_sha256": "95521a75ee2f88914fe498eeced923427348c73566b9aae7fe2fc87c945c28f1"
+      },
+      "N64Recomp": {
+        "files_verified": 694,
+        "path_sha256_inventory_sha256": "0087da8de1589db1b5c47e2fb39c267e6372a948068a0b2f5c3e79736d561e60"
+      },
+      "rt64": {
+        "files_verified": 8439,
+        "path_sha256_inventory_sha256": "2fa98c1c04e27d3fe6435de90d750f037ff30bfa97f2d96834847a386d2011da"
+      },
+      "spimdisasm": {
+        "files_verified": 81,
+        "path_sha256_inventory_sha256": "b9d7d5707d9dba18d80ca27209841ea3253a16f01b7b90f400760a2dc51c4fac"
+      }
+    },
+    "rt64_source_patch": {
+      "record": {
+        "source_sha256": "4d6cb49be103302c019405794995aac6b526b759f257f4786a7a2a00d4de3fa2",
+        "modified_sha256": "8ab8fc0374b6508f41347a5addc7fe1c9a1f8348aa6149c5871354cab727ff06",
+        "change": "Use cmake -E env for the Linux x64 DXC invocation so paths with spaces work; original pinned sources unchanged."
+      },
+      "actual_cmakelists_sha256": "4d6cb49be103302c019405794995aac6b526b759f257f4786a7a2a00d4de3fa2",
+      "applied_to_sdk_source": false
+    },
+    "binary_correspondence_verified": true,
+    "note": "Prepared source identity is verified. Exact final Linux/Windows binary correspondence and v2.0 clean rebuild remain pending.",
+    "selected_source_and_installer_archives": {
+      "sdl2-compat-2.32.70.tar.gz": {
+        "bytes": 2823672,
+        "sha256": "998fa62557eb46ffe7e5c3e2c123bc332f7df9d9f593b3ceed88ed1158428a44"
+      },
+      "SDL3-3.4.12.tar.gz": {
+        "bytes": 15629574,
+        "sha256": "f07b958a9ac5020fb7a44cadb957f658b2149c3c8abb4f63145fac9303249db7"
+      },
+      "dbus-1.16.2.tar.xz": {
+        "bytes": 1115644,
+        "sha256": "0ba2a1a4b16afe7bceb2c07e9ce99a8c2c3508e5dec290dbb643384bd6beb7e2"
+      },
+      "python-3.13.9-embed-amd64.zip": {
+        "bytes": 10926675,
+        "sha256": "91d828c2da3a029b41699e918674a0cb379c02cf20dab9c501306885f837402a"
+      },
+      "SDL2-2.26.3.tar.gz": {
+        "bytes": 8084159,
+        "sha256": "c661205a553b7d252425f4b751ff13209e5e020b876bbfa1598494af61790057",
+        "source_url": "https://www.libsdl.org/release/SDL2-2.26.3.tar.gz",
+        "version_header_verified": true
+      }
+    },
+    "observed_linux_build": {
+      "rt64_build_source": {
+        "role": "sdk/rt64-source (build-local copy)",
+        "configuration": "Release"
+      },
+      "link_libraries": {
+        "rt64-build/rt64.a": "1b8469213402b0a8853c9e73eb086cbe0c5dc69b8fa83d4e561472fb6f3c9a47",
+        "rt64-build/src/contrib/re-spirv/libre-spirv.a": "c3f786c37b04635d1f2a77ed13fe08978eb5487756510781bc7e1176b78f0cdd",
+        "rt64-build/src/contrib/nativefiledialog-extended/src/libnfd.a": "ef26663f9984b1e7be5e58c69f2f9aadae0e98cd66a110ab063db25792d6deb0",
+        "rt64-build/src/contrib/zstd/build/cmake/lib/libzstd.a": "e8285c4ff910e633c31fad5e01fa838cbac5dd715040ce5d22445556f83b95ba",
+        "rt64-build/src/contrib/plume/libplume.a": "57f9007d5aad39cc203c3dad5b44cabb53b9ab49987bcff7db83101cddd849fc",
+        "build/ultramodern/libultramodern.a": "be85fa49bea843033ffbdd42ca83ee2cf950f786b9840a79de0e96d2f1a19823",
+        "libSDL2-2.0.so.0": {
+          "sha256": "7007aa58af77bcd583a250b86f172485079ea2bed121b99125c90a3afa378b7b",
+          "target_role": "SDL2-compat 2.32.70"
+        },
+        "libSDL3.so.0": {
+          "sha256": "52d6eedd22be1f37e85229f48ddc33e4cca1c53e54fa0ba0de4080e7d7c082ef",
+          "target_role": "SDL3 3.4.12"
+        },
+        "libdbus-1.so.3": {
+          "sha256": "858cf6b6218212c9aba12d1c5394bb73ef76da5de61bee9fa755e6761e836ee4",
+          "target_role": "dbus 1.16.2"
+        }
+      },
+      "rt64_build_source_verification": {
+        "files_checked": 8439,
+        "missing_files": [],
+        "differences": [
+          {
+            "path": "CMakeLists.txt",
+            "actual_sha256": "8ab8fc0374b6508f41347a5addc7fe1c9a1f8348aa6149c5871354cab727ff06",
+            "pinned_sha256": "4d6cb49be103302c019405794995aac6b526b759f257f4786a7a2a00d4de3fa2"
+          }
+        ]
+      }
+    },
+    "observed_windows_build": {
+      "libraries": [
+        {
+          "file": "dxcompiler.dll",
+          "bytes": 20484608,
+          "sha256": "15304A82C8A61DB615A83961D8967A5C468AE7CE77B86D8E9B3DEC60F7AE2166",
+          "version": "1.7.0.4147"
+        },
+        {
+          "file": "dxil.dll",
+          "bytes": 1370000,
+          "sha256": "2C70D034D38B06C6A1161EFB9246CCE296BE248FF52EFF6C1B587CE150E5F36D",
+          "version": "101.7.2212.14"
+        },
+        {
+          "file": "SDL2.dll",
+          "bytes": 2509824,
+          "sha256": "0DD1EA6A6BF86A01A9EF0CFF4247C446760F955E276E874A9DB8E51AB8AFE99F",
+          "version": "2, 26, 3, 0"
+        }
+      ],
+      "git_revision_verified": true,
+      "source_roles": {
+        "runtime": "Tetrisphere prepared deps/N64ModernRuntime",
+        "rt64": "Tetrisphere prepared deps/rt64",
+        "rt64_build": "Tetrisphere prepared build-windows-final",
+        "sdl": "RT64 win32-deps/SDL2-2.26.3"
+      },
+      "note": "DLL snapshot only; Windows game binary is rebuilding. Exact final binary identity is deliberately not recorded here.",
+      "source_comparison": {
+        "rt64": {
+          "expected_files": 8439,
+          "matched_files": 8439,
+          "missing_files": [],
+          "different_files": [],
+          "additional_files_count": 1817,
+          "git_metadata": true
+        },
+        "N64ModernRuntime": {
+          "expected_files": 911,
+          "matched_files": 911,
+          "missing_files": [],
+          "different_files": [],
+          "additional_files_count": 294,
+          "git_metadata": true
+        }
+      },
+      "git_revision_method": "Read detached .git/HEAD by authorized SSH; no Git executable available. Both 40-character commits match the pinned inventory, and all recorded source files match by SHA-256.",
+      "source_commits": {
+        "rt64": "43373749dac9bbc1b653e6a02aed40a9e1783bed",
+        "N64ModernRuntime": "cdf5abbd5026fef5c364c676e4667c45e42b6863"
+      },
+      "additional_files_note": "Additional upstream files contain no .cpp/.c/.h/.hpp/.py/.cmake files outside the prepared SDK inventory."
+    },
+    "dependency_source_correspondence_verified": true,
+    "candidate_binary_snapshot": {
+      "status": "frozen host candidate; final soak and release documentation pending",
+      "linux": {
+        "file": "clayfighter64",
+        "sha256": "8343303ac04645f369d3672e4a796db2fba06a0b0cf4bd34772e1317d282ed3d",
+        "cmake_recipe_sha256": "5ef6e069c318db270a152b898ccb8674e5479d50140e7001976616333dcfc4c2",
+        "host_source_inventory_sha256": "c78d06ec9ad57533d8a6b6c41b4316d0c58a624e92ec4b34b7b7b75b14086e3a",
+        "host_files": 66,
+        "private_generated_inventory_sha256": "b9725e0952330306149d2f8c45fb54979df44c3669393ec26c8070481e820ea2",
+        "private_generated_files": 97,
+        "cmake_snapshot_note": "Refreshed after a test fixture --sdk-root argument change; executable and frozen host source hashes remain unchanged."
+      },
+      "windows": {
+        "file": "clayfighter64.exe",
+        "sha256": "c22fc84248d1e2cf4d8f22777597a53d11dbd9c3ae5392121ba3937934a20dbb",
+        "cmake_recipe_sha256": "dc819e34fc4afc3a211bea0d8323c62c4f4c5328b9dee5822cbc053c45cc4ebd",
+        "host_source_inventory_sha256": "c78d06ec9ad57533d8a6b6c41b4316d0c58a624e92ec4b34b7b7b75b14086e3a",
+        "host_files": 66,
+        "private_generated_inventory_sha256": "b9725e0952330306149d2f8c45fb54979df44c3669393ec26c8070481e820ea2",
+        "private_generated_files": 97,
+        "rescued_binary_matches_remote": true,
+        "host_sources_match_linux": true
+      },
+      "windows_dlls": {
+        "SDL2.dll": "0dd1ea6a6bf86a01a9ef0cff4247c446760f955e276e874a9db8e51ab8afe99f",
+        "concrt140.dll": "2405355f0a58067b258f8df33c327e3a3d716eaac5a3a5aebb757842d85bd376",
+        "dxcompiler.dll": "15304a82c8a61db615a83961d8967a5c468ae7ce77b86d8e9b3dec60f7ae2166",
+        "dxil.dll": "2c70d034d38b06c6a1161efb9246cce296be248ff52eff6c1b587ce150e5f36d",
+        "msvcp140.dll": "0f885b509a685d2bbfa652fed26b5fb31d88fbdab0a978c641d1c7b8aa460aa9",
+        "msvcp140_1.dll": "bfad5aef4c63a669e3c140655cdfdf395b6c979b400a447bd5dcb65ed8826c3d",
+        "msvcp140_2.dll": "3ea06f0ee098b4823cb79599df3780e7f23cce52c19aac31d2a0d47efe33a5e9",
+        "msvcp140_atomic_wait.dll": "640b2aefced484d0368eea5bdd06addd0658a3a70a49256e560d6923b404a479",
+        "msvcp140_codecvt_ids.dll": "f2069a52880ec885ee7f0511186100eb7fada0411a2b4948fafea7735b878a18",
+        "vccorlib140.dll": "19839407c3fdbc824e5bce189bf68ddf8097f12ec28b757797ffa0415c144ddd",
+        "vcruntime140.dll": "d5e4d9a3e835fa679450145d6a7d94e36573a509317111904d9b3712c30d9066",
+        "vcruntime140_1.dll": "1f2d41c4aa5db0bc33ebf7b66d72943a817d7ce6cbe880502a9403823633093f",
+        "vcruntime140_threads.dll": "219915cf20822f34d5e7c1fdd4e21ae7f3396881096c51036225fb8f84b47afa"
+      },
+      "inventory_method": "Sorted relative-path TAB SHA256 LF in UTF-8; .cpp/.c/.h/.hpp/.json/.toml inputs. Private generated translations remain excluded from public archives."
+    },
+    "sdk_notice_inventory": "sdk/licenses includes preserved release dependency notices, including prebuilt DXC, Microsoft redistribution and SDL notices; source revisions retain authentic upstream authors."
+  },
+  "windows_shared": {
+    "SDL2": "2.26.3",
+    "DXC_dxcompiler_file_version": "1.7.0.4147",
+    "DXC_dxil_file_version": "101.7.2212.14"
+  },
+  "windows_shared_source": {
+    "SDL2": {
+      "version": "2.26.3",
+      "archive": "SDL2-2.26.3.tar.gz",
+      "source_url": "https://www.libsdl.org/release/SDL2-2.26.3.tar.gz",
+      "sha256": "c661205a553b7d252425f4b751ff13209e5e020b876bbfa1598494af61790057",
+      "license": "zlib",
+      "sdk_source_member": "sdk/shared-source/SDL2-2.26.3.tar.gz",
+      "official_binary_verification": {
+        "development_archive_url": "https://www.libsdl.org/release/SDL2-devel-2.26.3-VC.zip",
+        "development_archive_sha256": "3b561bfcd7676d42f2b84ebde12d7433d176035ed28335c4fb9e554ef2764ec5",
+        "member": "SDL2-2.26.3/lib/x64/SDL2.dll",
+        "dll_sha256": "0dd1ea6a6bf86a01a9ef0cff4247c446760f955e276e874a9db8e51ab8afe99f",
+        "shipped_dll_matches_official": true
+      }
+    }
+  }
+}

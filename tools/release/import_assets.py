@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ClayFighter 64 1.0 two-ROM installer and asset extractor. Work by djultra64."""
+"""ClayFighter 64 two-ROM portable installer. Work by djultra64."""
 import argparse
 import hashlib
 import json
@@ -27,6 +27,13 @@ REQUIRED = ('ClayFighter 64 is a fusion of ClayFighter 63 1/3 and Sculptor\'s Cu
 
 def sha(data):
     return hashlib.sha256(data).hexdigest()
+
+def portable_path(root, relative):
+    root = Path(root).resolve()
+    destination = root / relative
+    if not destination.resolve().is_relative_to(root):
+        raise ValueError('Imported files must remain inside the game folder.')
+    return destination
 
 def load_rom(path):
     path = Path(path)
@@ -97,7 +104,9 @@ def install(root, paths):
     image, _ = build(base, donor)
     if sha(image) != ASSET_SHA: raise ValueError('Extracted asset verification failed.')
     decoder = root / 'bin' / ('font-decoder.exe' if os.name == 'nt' else 'font-decoder')
-    with tempfile.TemporaryDirectory(prefix='clayfighter64-import-') as work:
+    work_root = portable_path(root, 'local/import-work')
+    work_root.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix='clayfighter64-import-', dir=work_root) as work:
         work = Path(work)
         (work/'base.z64').write_bytes(base)
         (work/'packet.bin').write_bytes(base[0xB68EEC:0xB68EEC+0x2B9B])
@@ -108,14 +117,14 @@ def install(root, paths):
                'local/sc_roster/asset-image-roster.z64': image,
                'local/sc_bios/bios.bin': bios}
     for relative, data in outputs.items():
-        destination = root / relative
+        destination = portable_path(root, relative)
         destination.parent.mkdir(parents=True, exist_ok=True)
-        temp = destination.with_name(destination.name + '.importing')
+        temp = portable_path(root, relative + '.importing')
         temp.write_bytes(data)
         temp.replace(destination)
-    manifest = {'project':'ClayFighter 64', 'version':'1.0', 'author':'djultra64',
+    manifest = {'project':'ClayFighter 64', 'asset_schema':1, 'author':'djultra64',
                 'files': {name:sha(data) for name,data in outputs.items()}}
-    (root/'local/import-manifest.json').write_text(json.dumps(manifest, indent=2)+'\n')
+    portable_path(root, 'local/import-manifest.json').write_text(json.dumps(manifest, indent=2)+'\n')
     create_shortcut(root)
     print('Both USA ROMs verified. Characters, portraits and biographies extracted locally.\nInstallation complete. You can now run Play ClayFighter 64.')
 
@@ -123,16 +132,17 @@ def create_shortcut(root):
     """Create a local launcher with the supplied square artwork."""
     try:
         if os.name == 'nt':
+            portable_path(root, 'ClayFighter 64.lnk')
             env = os.environ.copy(); env['CLAY_RELEASE_ROOT'] = str(root)
             script = "$r=$env:CLAY_RELEASE_ROOT;$s=(New-Object -ComObject WScript.Shell).CreateShortcut((Join-Path $r 'ClayFighter 64.lnk'));$s.TargetPath=(Join-Path $r 'Play ClayFighter 64.cmd');$s.WorkingDirectory=$r;$s.IconLocation=(Join-Path $r 'assets\\branding\\clayfighter64.ico');$s.Save()"
             subprocess.run(['powershell.exe','-NoProfile','-NonInteractive','-Command',script], env=env, check=True, timeout=15)
         else:
             # Desktop-entry escaping is separate from shell quoting.
             escaped = str(root/'Play ClayFighter 64.sh').replace('\\','\\\\').replace('"','\\"').replace('`','\\`').replace('$','\\$')
-            desktop = root/'ClayFighter 64.desktop'
+            desktop = portable_path(root, 'ClayFighter 64.desktop')
             desktop.write_text('[Desktop Entry]\nType=Application\nName=ClayFighter 64\nExec="'+escaped+'"\nIcon='+str(root/'assets/branding/clayfighter64-icon.png')+'\nTerminal=true\nCategories=Game;\n')
             desktop.chmod(0o755)
-    except (OSError, subprocess.SubprocessError) as error:
+    except (OSError, ValueError, subprocess.SubprocessError) as error:
         print(f'Local shortcut unavailable: {error}. Use the Play launcher directly.')
 
 

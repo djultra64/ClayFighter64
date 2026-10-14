@@ -10,9 +10,9 @@ union SDL_Event;
 namespace clay::input {
 enum class Family { Auto, Keyboard, Xbox, PlayStation, Switch };
 enum class Action { Primary, Secondary, Start, Trigger, LeftShoulder, RightShoulder,
-    CUp, CDown, CLeft, CRight, Up, Down, Left, Right, Count };
+    CUp, CDown, CLeft, CRight, Up, Down, Left, Right, TrainingReset, TrainingPause, Count };
 enum class Physical { South, East, West, North, Start, Back, LeftShoulder, RightShoulder,
-    LeftTrigger, RightTrigger, DUp, DDown, DLeft, DRight, Count };
+    LeftTrigger, RightTrigger, DUp, DDown, DLeft, DRight, LeftStick, RightStick, Count };
 constexpr size_t action_count = size_t(Action::Count), physical_count = size_t(Physical::Count);
 struct Binding { Physical button; std::string key; };
 struct Snapshot {
@@ -22,7 +22,8 @@ struct Snapshot {
     Family detected = Family::Xbox;
     bool keyboard_activity = false, controller_activity = false;
 };
-struct State { uint16_t buttons = 0; float x = 0, y = 0; Family active = Family::Keyboard; };
+struct State { uint16_t buttons = 0; float x = 0, y = 0; Family active = Family::Keyboard;
+    bool training_reset=false,training_pause=false; };
 struct Prompt { Action action; std::string action_name, glyph, button_name; };
 class Mapper {
     std::array<Binding, action_count> bindings_;
@@ -54,7 +55,7 @@ class SdlInput {
     std::vector<_SDL_GameController*> pads_;
     int32_t instance_ = -1;
     bool keyboard_activity_ = false, pad_activity_ = false;
-    bool wait_release_ = false;
+    bool wait_release_ = false,training_mode_=false,previous_combat_=false;
     struct Activity {float x=0,y=0;std::array<bool,2> trigger_down{};};
     std::unordered_map<int32_t,Activity> activity_;
     std::array<int32_t,2> preferred_{{-1,-1}}, assigned_{{-1,-1}};
@@ -65,6 +66,7 @@ public:
     Mapper& mapper() { return mapper_; }
     const Mapper& active_mapper(bool combat) const { return combat?mapper_:menu_mapper_; }
     void event(const SDL_Event& event);
+    void set_training_mode(bool active){training_mode_=active;}
     void set_preferred_instances(int32_t player_one,int32_t player_two=-1);
     std::array<State,2> poll_players(bool combat=false);
     std::array<bool,2> connected_players() const { return connected_; }
