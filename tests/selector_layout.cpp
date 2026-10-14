@@ -16,6 +16,7 @@ extern "C" void func_800A6520(uint8_t*,recomp_context*);
 extern "C" void do_break(uint32_t){std::abort();}
 extern "C" void switch_error(const char*,uint32_t,uint32_t){std::abort();}
 void clay_sc_draw_preview(uint8_t*r,recomp_context*c,bool,bool,recomp_func_t*f){f(r,c);}
+namespace clay::training {bool selecting_fighters(){return false;}}
 static float received_x;
 static void actor(uint8_t*,recomp_context*c){received_x=float(int32_t(c->r6));}
 static void sprite(uint8_t*,recomp_context*c){received_x=std::bit_cast<float>(int32_t(c->r6));}

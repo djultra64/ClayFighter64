@@ -15,7 +15,7 @@ Other regions, revisions, translations, and modified ROMs are unsupported. `.z64
 
 ## Linux
 
-Extract `clayfighter64-1.0-linux-x86_64.tar.gz` and open a terminal in its folder:
+Extract `clayfighter64-2.0-linux-x86_64.tar.gz` and open a terminal in its folder:
 
 ```sh
 ./'Install Assets.sh'
@@ -32,7 +32,7 @@ Linux requires Python 3.10+, X11 or XWayland, Vulkan drivers, glibc 2.38+, libst
 
 ## Windows
 
-Extract `clayfighter64-1.0-windows-x86_64.zip`, then double-click **Install Assets.cmd**. Paste the two ROM paths when requested, then open **Play ClayFighter 64.cmd**. The Python runtime is included; you do not need to install Python.
+Extract `clayfighter64-2.0-windows-x86_64.zip`, then double-click **Install Assets.cmd**. Paste the two ROM paths when requested, then open **Play ClayFighter 64.cmd**. The Python runtime is included; you do not need to install Python.
 
 From a command prompt you can also pass both paths:
 
@@ -48,7 +48,8 @@ The extractor creates `probe-output/base.z64`, `local/sc_roster/asset-image-rost
 
 To update, retain these three generated files and replace the program, scripts, and bundled libraries. Keep your backup ROMs. If a generated file is absent or corrupt, Play opens the installer again; supply both ROMs to regenerate it.
 
-Display, control and training settings stay in `local/settings/` inside the portable game folder. Keep `local/` when updating or moving the game. `--data-dir RELATIVE_PATH` selects an isolated profile within the game folder; paths outside it are rejected. `--controls PATH` imports controls, but subsequent edits save inside the game folder. Installation does not change your original ROMs or physical display configuration.
+Original game options (including Music Level, FX Level, Spillits, difficulty and
+display toggles), display, control and training settings stay in `local/settings/` inside the portable game folder. Keep `local/` when updating or moving the game. `--data-dir RELATIVE_PATH` selects an isolated profile within the game folder; paths outside it are rejected. `--controls PATH` imports controls, but subsequent edits save inside the game folder. Installation does not change your original ROMs or physical display configuration.
 
 ## Optional title announcement
 

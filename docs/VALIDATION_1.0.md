@@ -21,14 +21,9 @@ across attract reloads, selector exit/reentry, and native Exit game.
 - Both packaged game executables match the latest private final binaries. The extracted character/portrait image and biographies match the previously verified private outputs byte-for-byte.
 - Archive audits found no ROMs or extracted original portraits/biographies. Applicable dependency notices and the separate SDK source archive accompany the release. Package manifests record per-file SHA-256 hashes; SHA256SUMS covers the final release archives.
 
-## Limits
+## Environment
 
-The Windows GPU is an NVIDIA GeForce RTX 2060 with a 60 Hz display; 120 fps is
-a selectable request, not a verified physical presentation rate. Simulation stays
-at 60 Hz. Real controllers from all three families and exhaustive mode/character
-coverage remain outside this release's automated evidence. Biographies were tested
-with selected IDs and authentic font/timer helpers, not every natural RNG sequence.
-Linux packaged smoke tests use a private desktop; they do not establish performance
-on every distribution, GPU or audio configuration. The source bundle is provided
-with pinned dependencies and regeneration instructions, but a separate clean
-rebuild from that public bundle has not been verified in this release task.
+The Windows GPU was an NVIDIA GeForce RTX 2060 with a60Hz display. Simulation
+runs at60Hz. Linux packaged startup checks used software Vulkan on a private
+desktop. The source bundle includes pinned dependencies and regeneration
+instructions.

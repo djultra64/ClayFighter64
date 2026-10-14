@@ -35,7 +35,7 @@ add_executable(claytality64 host/main.cpp host/main_menu.cpp host/sc_bios.cpp ho
  "${RUNTIME}/librecomp/src/ultra_translation.cpp"
  "${RUNTIME}/librecomp/src/cont.cpp" "${RUNTIME}/librecomp/src/vi.cpp" ${GUEST})
 target_compile_options(claytality64 PRIVATE -mssse3 -msse4.1 -g)
-target_sources(claytality64 PRIVATE host/portable_paths.cpp)
+target_sources(claytality64 PRIVATE host/portable_paths.cpp host/native_preferences.cpp)
 target_sources(claytality64 PRIVATE host/training_guest.cpp)
 target_sources(claytality64 PRIVATE host/training_session.cpp)
 target_sources(claytality64 PRIVATE host/training_preferences.cpp host/move_list.cpp host/training_options.cpp host/training_hud.cpp host/training_stage.cpp host/training_position.cpp)
@@ -178,3 +178,14 @@ set_tests_properties(captured_title_audio_detection PROPERTIES WORKING_DIRECTORY
 
 add_test(NAME native_main_menu_exit COMMAND "${Python3_EXECUTABLE}" "${CMAKE_SOURCE_DIR}/tools/verify_main_menu.py" --sdk-root "${CLAY_SDK_ROOT}")
 set_tests_properties(native_main_menu_exit PROPERTIES WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}" TIMEOUT 60)
+
+add_test(NAME training_native_cursor COMMAND "${Python3_EXECUTABLE}" "${CMAKE_SOURCE_DIR}/tools/verify_training_cursor.py" --sdk-root "${CLAY_SDK_ROOT}")
+set_tests_properties(training_native_cursor PROPERTIES WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}" TIMEOUT 60)
+
+add_executable(native_preferences_test tests/native_preferences.cpp host/native_preferences.cpp)
+target_include_directories(native_preferences_test PRIVATE host "${RUNTIME}/N64Recomp/include")
+target_compile_options(native_preferences_test PRIVATE -UNDEBUG)
+add_test(NAME native_options_persistence COMMAND native_preferences_test "${CMAKE_BINARY_DIR}/native-options-test.cfg")
+
+add_test(NAME native_options_original_defaults COMMAND "${Python3_EXECUTABLE}" "${CMAKE_SOURCE_DIR}/tools/verify_native_preferences.py" --sdk-root "${CLAY_SDK_ROOT}")
+set_tests_properties(native_options_original_defaults PROPERTIES WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}" TIMEOUT 60)

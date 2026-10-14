@@ -17,6 +17,8 @@ def main():
                     '--prepare-only',str(destination)],check=True,cwd=ROOT)
     subprocess.run([sys.executable,str(ROOT/'tools/verify_main_menu.py'),'--sdk-root',str(args.sdk_root),
                     '--prepare-only',str(ROOT/'generated/windows_main_menu_guest.cpp')],check=True,cwd=ROOT)
+    subprocess.run([sys.executable,str(ROOT/'tools/verify_native_preferences.py'),'--sdk-root',str(args.sdk_root),
+                    '--prepare-only',str(ROOT/'generated/windows_native_preferences_defaults.cpp')],check=True,cwd=ROOT)
     for name in ['stage','selector','position']:
         subprocess.run([sys.executable,str(ROOT/f'tools/verify_training_{name}.py'),'--sdk-root',str(args.sdk_root),
                         '--prepare-only',str(ROOT/f'generated/windows_training_{name}_guest.cpp')],check=True,cwd=ROOT)

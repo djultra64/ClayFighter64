@@ -70,8 +70,7 @@ cmake --build build --target claytality64 -j4
 Targeted native fixture tests additionally need the locally generated probe
 inputs used by their preparation scripts. Run the applicable `tools/verify_*.py`
 scripts and `ctest --test-dir build --output-on-failure` with your local ROM data.
-The public source archive is not a claim of a separately verified clean rebuild
-on every environment. The published binaries derive from the recorded final builds.
+The published binaries derive from the recorded final builds.
 
 ## Windows host
 

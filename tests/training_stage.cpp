@@ -1,7 +1,7 @@
 // Execute the original stage input handler with Training hooks. djultra64.
 #include "training_stage.h"
 #include "training_menu_ui.h"
-namespace clay::training {void draw_training_lines(uint8_t*,recomp_context*,const std::vector<std::string>&,int,int,unsigned,uint32_t,uint32_t){}}
+namespace clay::training {void draw_training_lines(uint8_t*,recomp_context*,const std::vector<std::string>&,int,int,unsigned,uint32_t,uint32_t,int,int,bool){}}
 namespace clay::input {std::string menu_marker(Action){return {};}}
 #include "main_menu.h"
 #include "test_input.h"

@@ -285,6 +285,12 @@ def main():
         return body
     def selector_preview_hooks(match):
         body=match.group(0)
+        if body.startswith('RECOMP_FUNC void func_800636E4('):
+            address=0x80063CE8
+            assert struct.unpack_from('>I',image,address-VRAM+ROM_OFFSET)[0]==0x0C0178DF
+            call='    func_8005E37C(rdram, ctx);'
+            assert body.count(call)==1
+            return body.replace(call,'    clay::selector::draw_fighters(rdram,ctx,&func_8005E37C);')
         if not body.startswith('RECOMP_FUNC void func_8005E37C('):return body
         for address,right,sprite in [(0x8005F4FC,False,False),(0x8005F8C0,True,False),(0x8005F6B0,False,True),(0x8005FA78,True,True)]:
             function='func_800A6520' if sprite else 'func_8005DB24'
@@ -308,6 +314,18 @@ def main():
     def port_options_hooks(match):
         body=match.group(0)
         name=re.match(r'RECOMP_FUNC void ([^(]+)\(',body)[1]
+        # Verified complete original Options allocation/defaults and menu-owner
+        # update boundary. Persistence never reads live guest RAM from SDL.
+        native_preference_returns = {
+            'func_8005A918': (0x8005AAF8, 'after_initialize'),
+            'func_80067980': (0x8006B00C, 'options_changed'),
+            'func_8009B408': (0x8009B50C, 'audio_ready'),
+        }
+        if name in native_preference_returns:
+            pc, hook = native_preference_returns[name]
+            assert struct.unpack_from('>I',image,pc-VRAM+ROM_OFFSET)[0] == 0x03E00008
+            assert body.count('    return;') == 1
+            body=body.replace('    return;', f'    clay::native_preferences::{hook}(rdram,ctx);\n    return;')
         if name=='func_80066DC0':
             assert image[0x679C0:0x679C4].hex()=='27bdff50'
             assert struct.unpack_from('>I',image,0x80066E48-VRAM+ROM_OFFSET)[0]==0x0C016C7A

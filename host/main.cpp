@@ -1,3 +1,4 @@
+#include "native_preferences.h"
 // ClayFighter 64 native integration by djultra64.
 #include "host.h"
 #include "funcs.h"
@@ -111,6 +112,7 @@ int main(int argc,char** argv){
 #endif
  }catch(const std::exception& e){clay_fatal(e.what());}
  std::string display_error;clay::set_graphics_storage(pref_dir+"display.cfg");
+ clay::native_preferences::initialize_storage(pref_dir+"native-options.cfg");
  clay::training::initialize_storage(pref_dir+"training.cfg");
  clay::training::initialize_stage_storage(pref_dir+"training-stage.cfg");
  if(!clay::load_graphics_options(pref_dir+"display.cfg",display_error))fprintf(stderr,"Display preferences: %s\n",display_error.c_str());

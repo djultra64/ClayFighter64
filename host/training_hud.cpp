@@ -2,6 +2,8 @@
 #include "training_menu_ui.h"
 #include "native_prompts.h"
 #include "ui_background.h"
+#include "graphics_config.h"
+#include <cmath>
 #include <algorithm>
 #include <array>
 #include <bit>
@@ -55,6 +57,11 @@ std::string readable_literals(const std::string& source){
     return out;
 }
 }
+int training_left_edge(){
+    const auto graphics=clay::graphics_options();
+    const double aspect=graphics.widescreen?std::max(4.0/3.0,graphics.aspect()):4.0/3.0;
+    return int(std::lround(-240.0*aspect+32.0));
+}
 void draw_training_pause_background(uint8_t* rdram,recomp_context* ctx){
     const auto width=word(rdram,0x8010cfd0),height=word(rdram,0x8010cfd4),sp=uint32_t(ctx->r29);
     if(width<160||width>1280||height<120||height>960||remaining(rdram)<128||sp<0x80000100u||sp>0x80800000u||(sp&3))return;
@@ -73,7 +80,7 @@ void draw_training_pause_background(uint8_t* rdram,recomp_context* ctx){
     clay::ui::draw_fullscreen_fill(rdram,&local,&func_800A4D9C);
     for(unsigned i=0;i<4;i++)MEM_W(0,S32(rectangle+i*4))=prior[i];
 }
-void draw_training_lines(uint8_t* rdram,recomp_context* ctx,const std::vector<std::string>& lines,int first_y,int step,unsigned max_width,uint32_t scratch,uint32_t font_override){
+void draw_training_lines(uint8_t* rdram,recomp_context* ctx,const std::vector<std::string>& lines,int first_y,int step,unsigned max_width,uint32_t scratch,uint32_t font_override,int left_x,int font_height,bool left_aligned){
     const auto font=font_override?font_override:word(rdram,0x801028d0);
     if(!valid(font,0x28)||font>=0x80800000u||!valid(scratch,0x10000)||scratch<0x80800000u||remaining(rdram)<320||remaining_matrices(rdram)<4)return;
     const auto viewport_width=word(rdram,0x8010cfd0),viewport_height=word(rdram,0x8010cfd4);
@@ -106,9 +113,10 @@ void draw_training_lines(uint8_t* rdram,recomp_context* ctx,const std::vector<st
     const auto reference=word(rdram,map+('A'-33)*4);
     unsigned reference_height=valid(reference,16)?MEM_HU(0,S32(reference+8)):29;
     if(!reference_height||reference_height>256)reference_height=29;
+    const int reference_bearing=valid(reference,16)?MEM_H(0,S32(reference+12)):0;
     // The stage selector uses its15px menu font and its own CPU reservation.
     // Keep its single footer at8native pixels even if the caller's step is32.
-    const float target_height=(scratch==0x80870000u?16.f:step>=32?24.f:16.f)*layout_scale;
+    const float target_height=(font_height?float(font_height):scratch==0x80870000u?16.f:step>=32?24.f:16.f)*layout_scale;
     int y=first_y;
     for(const auto& source:lines){
         auto s=readable_literals(input::native_prompt_text(source));
@@ -123,7 +131,7 @@ void draw_training_lines(uint8_t* rdram,recomp_context* ctx,const std::vector<st
         local.r4=S32(font);local.r5=S32(text);input::prepare_native_prompt_measure(rdram,&local);
         s.clear();for(unsigned i=0;i<255;i++){char ch=MEM_BU(0,S32(uint32_t(local.r5)+i));if(!ch)break;s+=ch;}
         if(remaining(rdram)<reserve+s.size()*commands_per_glyph+32||remaining_matrices(rdram)<3){y-=step;continue;}
-        std::vector<float> advances,scales;float width=0;
+        std::vector<float> advances,scales;std::vector<int> bearings;float width=0;
         for(unsigned char ch:s){
             unsigned lookup=ch;
             if(MEM_HU(0,S32(font+0x26))==2&&lookup>='a'&&lookup<='z')lookup-=32;
@@ -135,16 +143,17 @@ void draw_training_lines(uint8_t* rdram,recomp_context* ctx,const std::vector<st
             local.r4=S32(font);local.r5=S32(text);func_80071738(rdram,&local);
             float advance=std::max(0,int(local.r2))*glyph_scale;
             advances.push_back(advance);scales.push_back(glyph_scale);width+=advance;
+            bearings.push_back(valid(glyph,16)?MEM_H(0,S32(glyph+12)):0);
         }
         if(width<=0){y-=step;continue;}
-        float fit=std::min(1.f,float(max_width)*layout_scale/width),pen=-width*fit/2.f;
+        float fit=std::min(1.f,float(max_width)*layout_scale/width),pen=left_aligned?0.f:-width*fit/2.f;
         const float model_scale=target_height/float(reference_height);
         // Native fight matrix pool has128 slots. One matrix per caption fits;
-        // allocating one per byte would exhaust it when opening Move List.
+        // allocating one per byte would exhaust it in long option pages.
         local.r4=S32(matrix);local.r5=std::bit_cast<uint32_t>(model_scale*fit);local.r6=std::bit_cast<uint32_t>(model_scale);local.r7=std::bit_cast<uint32_t>(1.f);func_800B0328(rdram,&local);
         // B09DC multiplies Translation * currentScale (B0A10), so its native
         // row-vector translation is scaled too. Compensate before composition.
-        local.r4=S32(matrix);local.r5=0;local.r6=std::bit_cast<uint32_t>(float(y)*layout_scale/model_scale);local.r7=0;func_800B09DC(rdram,&local);
+        local.r4=S32(matrix);local.r5=std::bit_cast<uint32_t>(left_aligned?float(left_x)*layout_scale/(model_scale*fit):0.f);local.r6=std::bit_cast<uint32_t>(float(y)*layout_scale/model_scale);local.r7=0;func_800B09DC(rdram,&local);
         local.r4=S32(0x80110898);local.r5=S32(matrix);func_800A1B98(rdram,&local);
         for(unsigned i=0;i<s.size();++i){
             if(s[i]!=' '){
@@ -156,6 +165,11 @@ void draw_training_lines(uint8_t* rdram,recomp_context* ctx,const std::vector<st
                 for(unsigned j=0;j<6;j++)MEM_H(0,S32(font+0x10+j*2))=0;
                 MEM_H(0,S32(font+0x10))=int(pen/(model_scale*fit));
                 MEM_H(0,S32(font+0x16))=MEM_HU(0,S32(font+0x10));
+                //71070 gives loaded letters a height-1 vertical bearing; prompt
+                // sprites retain their own bearing. A6520 adds bearing*ratio to
+                // the placement, so align that sum with the reference glyph.
+                const int baseline=int(std::lround(float(reference_bearing)-float(bearings[i])*ratio));
+                MEM_H(0,S32(font+0x12))=baseline;MEM_H(0,S32(font+0x18))=baseline;
                 MEM_BU(0,S32(text))=uint8_t(s[i]);MEM_BU(0,S32(text+1))=0;
                 local.r4=S32(font);local.r5=0;local.r6=0;local.r7=S32(orient);
                 MEM_W(0x10,local.r29)=S32(transform);MEM_W(0x14,local.r29)=0;MEM_W(0x18,local.r29)=S32(text);
@@ -169,26 +183,33 @@ void draw_training_lines(uint8_t* rdram,recomp_context* ctx,const std::vector<st
 }
 void draw_hud(uint8_t* rdram,recomp_context* ctx){
     auto s=snapshot();if(!s.active||word(rdram,0x8010849c))return;
-    std::vector<std::string> lines={"TRAINING TIME INFINITE"};
-    if(s.options.opponent==Opponent::Player2&&!s.second_player_connected)lines.push_back("Player 2 disconnected: Standing");
-    if(s.options.damage_display)lines.push_back("Hit "+std::to_string(s.damage.last)+(s.damage.chip?" (guard)":"")+" / Combo "+std::to_string(s.damage.combo)+" / Hits "+std::to_string(s.damage.hits));
-    if(s.options.preset==Preset::Claytalities)lines.push_back("Attempts "+std::to_string(s.attempts)+" / Completed "+std::to_string(s.successes));
-    // Commands resolve native attack permutation, current host mapping, device
-    // family and relative forward/back on every draw; no stale button caption.
-    if(s.options.pinned_display&&s.moves&&s.pinned_move>=0&&unsigned(s.pinned_move)<s.moves->size()){
-        const auto& m=s.moves->at(unsigned(s.pinned_move));
-        lines.push_back(m.name+": "+move_command(m,s.attacks,s.facing_right));
-        if(!m.requirements.empty())lines.push_back(m.requirements);
+    std::vector<std::string> stats;
+    if(s.options.damage_display){
+        stats.push_back("Damage "+std::to_string(s.damage.last)+(s.damage.chip?" guard":""));
+        stats.push_back("Combo "+std::to_string(s.damage.combo));
+        stats.push_back("Hits "+std::to_string(s.damage.hits));
     }
-    // History sits near the bottom, separately from bars and the pinned command.
-    draw_training_lines(rdram,ctx,lines,108,24,560,0x80860000);
+    if(s.options.preset==Preset::Claytalities){
+        stats.push_back("Attempts "+std::to_string(s.attempts));
+        stats.push_back("Completed "+std::to_string(s.successes));
+    }
+    if(s.options.opponent==Opponent::Player2&&!s.second_player_connected)stats.push_back("Player 2 disconnected");
+    draw_training_lines(rdram,ctx,stats,110,22,260,0x80860000,0,training_left_edge(),16,true);
     if(s.options.input_history){
         std::vector<std::string> history;
-        const size_t start=s.history.size()>12?s.history.size()-12:0;
-        for(size_t i=start;i<s.history.size();i+=2){
-            std::string row=s.history[i];if(i+1<s.history.size())row+="    |    "+s.history[i+1];history.push_back(row);
+        const size_t end=std::min(size_t(12),s.history.size());
+        for(size_t i=0;i<end;++i){
+            auto row=s.history[i];
+            const auto suffix=row.rfind(" ticks");
+            if(suffix!=std::string::npos)row.erase(suffix);
+            const auto duration=row.rfind(' ');
+            if(duration!=std::string::npos)row=row.substr(duration+1)+"  "+row.substr(0,duration);
+            if(auto neutral=row.find("Neutral");neutral!=std::string::npos)row.replace(neutral,7,"N");
+            // Simultaneous inputs stay adjacent; duration uses a plain frame count.
+            for(auto at=row.find(" and ");at!=std::string::npos;at=row.find(" and "))row.replace(at,5," ");
+            history.push_back(std::move(row));
         }
-        if(!history.empty())draw_training_lines(rdram,ctx,history,-62,22,560,0x80860000);
+        draw_training_lines(rdram,ctx,history,110-int(stats.size())*22-12,17,220,0x80860000,0,training_left_edge(),14,true);
     }
 }
 }

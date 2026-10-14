@@ -2,6 +2,7 @@
 #include "selector_layout.h"
 #include "graphics_config.h"
 #include "sc_preview.h"
+#include "training_guest.h"
 #include <bit>
 #include <cmath>
 namespace clay::selector {
@@ -13,6 +14,17 @@ bool valid(uint32_t p,unsigned n){return p>=0x80000000u&&uint64_t(p)+n<=0x808000
 // The existing native background extension anchors its interior at160 and its
 // outer wall at346. Gears/panels retain their original rotations and sliding X.
 float mechanism_offset(){return float(346*expansion());}
+}
+void draw_fighters(uint8_t*rdram,recomp_context*c,recomp_func_t*f){
+ const uint32_t state=MEM_W(0,S32(0x800ddd30));
+ if(!clay::training::selecting_fighters()||!valid(state,0xb8)){f(rdram,c);return;}
+ // The versus selector's mode zero accepts input, but its draw routine hides
+ // unconfirmed cursor sprites unless native mode 9E is two. Use that native
+ // draw branch without changing input, confirmation, or animation state.
+ const int16_t mode=MEM_H(0,S32(state+0x9e));
+ struct Restore {uint8_t* rdram;uint32_t state;int16_t mode;~Restore(){MEM_H(0,S32(state+0x9e))=mode;}} restore{rdram,state,mode};
+ MEM_H(0,S32(state+0x9e))=2;
+ f(rdram,c);
 }
 void translate_mechanism(uint8_t*r,recomp_context*c,bool right,recomp_func_t*f){
  const float offset=mechanism_offset();if(offset)c->r5=bits(value(c->r5)+(right?offset:-offset));f(r,c);

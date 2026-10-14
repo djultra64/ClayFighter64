@@ -64,6 +64,31 @@ int main(){
   }
  }}
  family(Family::Switch);std::string six;for(unsigned i=0;i<6;i++)six+=menu_marker(Action(i));assert(measure(six)==90);assert(draw(six).size()==6);
+ // Long motions must reuse aliases for repeated physical glyphs rather than
+ // exhausting the six available slots and reverting to spelled-out controls.
+ std::string repeated;for(unsigned i=0;i<12;i++)repeated+=menu_marker(Action(i%6));
+ assert(measure(repeated)==180);assert(draw(repeated).size()==12);
+ // The combat font has its own percent glyph and a different set of free
+ // punctuation slots. Exercise more than six distinct controls in that font.
+ const uint32_t combat_font=0x80308000,combat_map=0x80308100,combat_bundle=0x80210000;
+ std::ifstream combat_file("local/sc_roster/combat-font.bin",std::ios::binary);
+ std::vector<uint8_t> combat_bytes((std::istreambuf_iterator<char>(combat_file)),{});
+ assert(combat_bytes.size()>16);
+ auto combat_u32=[&](size_t o){return(uint32_t(combat_bytes[o])<<24)|(uint32_t(combat_bytes[o+1])<<16)|(uint32_t(combat_bytes[o+2])<<8)|combat_bytes[o+3];};
+ for(unsigned i=0;i<combat_bytes.size();++i)MEM_BU(i+12,gpr(S32(combat_bundle)))=combat_bytes[i];
+ const size_t combat_chars=combat_u32(0)-12;
+ for(unsigned i=1;combat_bytes[combat_chars+i-1]!='\\';++i){
+  unsigned ch=combat_bytes[combat_chars+i-1];MEM_W((ch-33)*4,gpr(S32(combat_map)))=S32(combat_bundle+combat_u32(i*8));
+ }
+ MEM_W(4,gpr(S32(combat_font)))=S32(combat_map);MEM_H(0x26,gpr(S32(combat_font)))=2;
+ const uint32_t native_percent=MEM_W(('%'-33)*4,gpr(S32(combat_map)));
+ std::string all_controls;for(unsigned i=0;i<14;++i)all_controls+=menu_marker(Action(i));
+ write(all_controls);recomp_context combat_ctx{};combat_ctx.f_odd=&combat_ctx.f0.u32h;combat_ctx.r29=S32(0x8081f000);combat_ctx.r4=S32(combat_font);combat_ctx.r5=text;
+ prepare_native_prompt_measure(rdram,&combat_ctx);
+ std::string resolved;for(unsigned i=0;i<100;++i){auto ch=MEM_BU(i,combat_ctx.r5);if(!ch)break;resolved+=char(ch);}
+ assert(resolved.size()==14); // Each input resolved to exactly one genuine glyph.
+ assert(uint32_t(MEM_W(('%'-33)*4,gpr(S32(combat_map))))==native_percent);
+ restore_native_prompt_font(rdram,combat_font);
  family(Family::Keyboard);
  // Existing native punctuation in another font must never be replaced.
  MEM_W(('%'-33)*4,map)=int32_t(originals.front().second);measure(binding_marker(Action::Primary));assert(glyph('%')==originals.front().second);identical_tile(glyph('&'),85);

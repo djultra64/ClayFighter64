@@ -17,7 +17,7 @@ struct Options {
     Position position=Position::Center;
     unsigned recovery_ticks=180;
     int last_character=-1,last_opponent=-1;
-    bool right_side=false,damage_display=true,input_history=false,pinned_display=true,
+    bool right_side=false,damage_display=true,input_history=false,
          extended_window=false,direct_finisher=false,automatic_distance=true;
 };
 struct FrameState {

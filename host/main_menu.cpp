@@ -49,7 +49,7 @@ void draw_border(uint8_t* rdram,recomp_context* ctx,recomp_func_t* original){
  if(!p||word(rdram,p+12)!=0||uint32_t(ctx->r4)!=0x800dad80){original(rdram,ctx);return;}
  // Original rectangle's fill, alpha, edge renderer and animation survive.
  const uint32_t rectangle=uint32_t(ctx->r29)-0x80;
- constexpr uint32_t bounds[]={96,110,224,224};
+ constexpr uint32_t bounds[]={64,110,256,224};
  for(unsigned i=0;i<4;i++)MEM_W(0,gpr(S32(rectangle+i*4)))=bounds[i];
  const gpr sp=ctx->r29;ctx->r4=gpr(S32(rectangle));ctx->r29=ADD32(sp,-0x100);
  original(rdram,ctx);ctx->r29=sp;

@@ -28,10 +28,11 @@ std::mutex icon_mutex;
 std::atomic<unsigned> next_bucket=0;
 constexpr char standard[]={'{','}','*','^','|','<','>'};
 constexpr Action actions[]={Action::Primary,Action::Secondary,Action::Start,Action::CUp,Action::CDown,Action::CLeft,Action::CRight};
-// Original62-glyph uppercase font has no entries at these six positions.
+// Candidate punctuation slots are borrowed only when the active font has no
+// original glyph there. Combat and menu fonts have different free entries.
 // Each text call binds these map slots to immutable guest sprites. GPU texture
 // commands keep their own sprite addresses when the next row changes the map.
-constexpr char extra[]={'%','&','+','=','\\','`'};
+constexpr char extra[]={'%','&','+','=','\\','`',':',';','/','(',')','[',']','_','~'};
 bool range(uint32_t p,size_t n,size_t limit){return(p&0xE0000000u)==0x80000000u&&uint64_t(p&0x1FFFFFFFu)+n<=limit;}
 bool guest(uint32_t p,size_t n){return range(p,n,0x800000);}
 bool cpu(uint32_t p,size_t n){return range(p,n,0x900000);}
@@ -95,16 +96,20 @@ std::string transform(const std::string& source){if(upper(source)=="PRESS START"
 uint32_t prepare(uint8_t*rdram,recomp_context*ctx,uint32_t font,uint32_t text,unsigned variant){
  auto source=read_text(rdram,text);if(source.empty())return text;source=transform(source);
  if(source.find_first_of("{}*^|<>")==std::string::npos&&source.find('\x1e')==std::string::npos)return source==read_text(rdram,text)?text:scratch(rdram,source);
- auto view=native_prompt_snapshot();if(icons.empty())return text;auto atlas=bank(rdram,ctx);std::lock_guard lock(icon_mutex);std::string result;unsigned extra_slot=0;
+ auto view=native_prompt_snapshot();if(icons.empty())return text;auto atlas=bank(rdram,ctx);std::lock_guard lock(icon_mutex);std::string result;unsigned extra_slot=0;std::map<std::string,char> caption_aliases;
  for(char marker:standard){size_t i=std::find(std::begin(standard),std::end(standard),marker)-std::begin(standard);auto p=view.prompts.size()==action_count?view.prompts[size_t(actions[i])]:fixed_prompt(actions[i],view.family);auto it=atlas.sprites.find(icon_name(view.family,p.button_name));if(it!=atlas.sprites.end())map_font(rdram,font,variant,marker,it->second);}
  for(unsigned i=0;i<source.size();i++){
   if(source[i]=='\x1e'&&i+2<source.size()&&source[i+2]=='\x1f'){
    unsigned code=uint8_t(source[i+1]);bool menu=code>='a'&&code<'a'+action_count;unsigned index=code-(menu?'a':'A');
    if(index>=action_count)throw std::runtime_error("Invalid native binding icon token");
    std::string name=menu?fixed_prompt(Action(index),view.family).button_name:binding_label(Action(index));auto key=icon_name(view.family,name);auto it=atlas.sprites.find(key);
+   if(auto existing=caption_aliases.find(key);it!=atlas.sprites.end()&&existing!=caption_aliases.end()){
+    result+=existing->second;const auto& caption=icons.at(key).caption;
+    if(!caption.empty())result+=" "+upper(caption);i+=2;continue;
+   }
    while(extra_slot<std::size(extra)&&!marker_available(rdram,font,variant,extra[extra_slot],atlas))extra_slot++;
    if(it!=atlas.sprites.end()&&extra_slot<std::size(extra)){
-    char marker=extra[extra_slot++];map_font(rdram,font,variant,marker,it->second);result+=marker;
+    char marker=extra[extra_slot++];caption_aliases.emplace(key,marker);map_font(rdram,font,variant,marker,it->second);result+=marker;
     // The licensed set has generic stick-press artwork, without L3/R3-labelled
     // caps. Keep its pixels intact and identify the actual family-specific
     // physical control beside it rather than borrowing a misleading label.

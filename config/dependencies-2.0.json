@@ -374,25 +374,22 @@
     },
     "dependency_source_correspondence_verified": true,
     "candidate_binary_snapshot": {
-      "status": "frozen host candidate; final soak and release documentation pending",
+      "status": "Final ClayFighter 64 2.0 Linux and Windows builds",
       "linux": {
         "file": "clayfighter64",
-        "sha256": "8343303ac04645f369d3672e4a796db2fba06a0b0cf4bd34772e1317d282ed3d",
-        "cmake_recipe_sha256": "5ef6e069c318db270a152b898ccb8674e5479d50140e7001976616333dcfc4c2",
-        "host_source_inventory_sha256": "c78d06ec9ad57533d8a6b6c41b4316d0c58a624e92ec4b34b7b7b75b14086e3a",
-        "host_files": 66,
-        "private_generated_inventory_sha256": "b9725e0952330306149d2f8c45fb54979df44c3669393ec26c8070481e820ea2",
-        "private_generated_files": 97,
-        "cmake_snapshot_note": "Refreshed after a test fixture --sdk-root argument change; executable and frozen host source hashes remain unchanged."
+        "sha256": "165ab8347f34e95f57de81f8e6165f7208c04f35a7ab100050e9e7ced472c4d5",
+        "cmake_recipe_sha256": "61d2010613c47e1dc225ccd9395afd7d96d964b547ad6637a169872789be7327",
+        "host_source_inventory_sha256": "02754e0b80a7ae38f7c31fb6aeb70820062a4fab60c00537c2ee8ba4f7b4b0f7",
+        "host_files": 69,
+        "inventory_method": "Sorted relative path, tab, file SHA256, newline"
       },
       "windows": {
         "file": "clayfighter64.exe",
-        "sha256": "c22fc84248d1e2cf4d8f22777597a53d11dbd9c3ae5392121ba3937934a20dbb",
-        "cmake_recipe_sha256": "dc819e34fc4afc3a211bea0d8323c62c4f4c5328b9dee5822cbc053c45cc4ebd",
-        "host_source_inventory_sha256": "c78d06ec9ad57533d8a6b6c41b4316d0c58a624e92ec4b34b7b7b75b14086e3a",
-        "host_files": 66,
-        "private_generated_inventory_sha256": "b9725e0952330306149d2f8c45fb54979df44c3669393ec26c8070481e820ea2",
-        "private_generated_files": 97,
+        "sha256": "a6d1bea129324250d53615b82c60d37036128ce6a82bb24817b91cccd6d5da98",
+        "cmake_recipe_sha256": "c1299f54e27ab0a8e4578cdf580ed4cf83990f5d6aa1df5a39a1b0dc45ed609b",
+        "host_source_inventory_sha256": "02754e0b80a7ae38f7c31fb6aeb70820062a4fab60c00537c2ee8ba4f7b4b0f7",
+        "host_files": 69,
+        "inventory_method": "Sorted relative path, tab, file SHA256, newline",
         "rescued_binary_matches_remote": true,
         "host_sources_match_linux": true
       },

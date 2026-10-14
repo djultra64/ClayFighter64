@@ -46,6 +46,7 @@ std::string mask_command(uint16_t mask,const std::array<input::Action,6>& attack
     if((mask&0x8000) && ((mask&0x7fff)&((mask&0x7fff)-1)))result="Any of ("+result+")";
     return result;
 }
+
 }
 
 const char* category_name(MoveCategory category) {

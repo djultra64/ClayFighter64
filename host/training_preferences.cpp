@@ -26,7 +26,7 @@ bool load_options(const std::filesystem::path& path,Options& options,std::string
     const unsigned recovery=value("recovery_ticks",180,300);
     options.recovery_ticks=recovery==0||recovery==60||recovery==180||recovery==300?recovery:180;
     options.right_side=value("right_side",0,1);options.damage_display=value("damage_display",1,1);
-    options.pinned_display=value("pinned_display",1,1);options.input_history=value("input_history",0,1);options.extended_window=value("extended_window",0,1);
+    options.input_history=value("input_history",0,1);options.extended_window=value("extended_window",0,1);
     options.direct_finisher=value("direct_finisher",0,1);options.automatic_distance=value("automatic_distance",1,1);
     return true;
 }
@@ -41,7 +41,7 @@ bool save_options(const std::filesystem::path& path,const Options& options,std::
                 <<"\nguard "<<int(options.guard)<<"\nsuper "<<int(options.super)
                 <<"\nposition "<<int(options.position)<<"\nrecovery_ticks "<<options.recovery_ticks
                 <<"\nright_side "<<options.right_side<<"\ndamage_display "<<options.damage_display
-                <<"\npinned_display "<<options.pinned_display<<"\ninput_history "<<options.input_history<<"\nextended_window "<<options.extended_window
+                <<"\ninput_history "<<options.input_history<<"\nextended_window "<<options.extended_window
                 <<"\ndirect_finisher "<<options.direct_finisher<<"\nautomatic_distance "<<options.automatic_distance<<'\n';
             output.flush();if(!output)throw std::runtime_error("Cannot write Training settings");
         }

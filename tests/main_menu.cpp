@@ -12,7 +12,7 @@
 bool main_menu_baseline=false;
 static unsigned border_calls=0;
 static void check_border(uint8_t*rdram,recomp_context*ctx){
- ++border_calls;const unsigned expected[]={96,110,224,224};
+ ++border_calls;const unsigned expected[]={64,110,256,224};
  for(unsigned i=0;i<4;i++)assert(MEM_W(i*4,ctx->r4)==expected[i]);
 }
 extern "C" {

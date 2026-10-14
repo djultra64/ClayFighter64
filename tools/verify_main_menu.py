@@ -10,6 +10,8 @@ assert '    if(clay::main_menu::confirm_exit(rdram))goto L_800684F4;' in body,'R
 assert body.count('clay::main_menu::observe_input(rdram);')==1,'Main-menu release observation must run once after the native input aggregation; duplicate calls consume a held-button gate'
 assert 'func_800A0CA8(rdram, ctx);\n    clay::main_menu::observe_input(rdram);' in body,'Observe main-menu input immediately after the original aggregation'
 body=re.sub(r'^.*clay::port::update_native_options.*\n','',body,flags=re.M)
+# This fixture isolates menu navigation; portable saves have their own tests.
+body=re.sub(r'^.*clay::native_preferences::options_changed.*\n','',body,flags=re.M)
 body=re.sub(r'^.*clay::main_menu::confirm_exit.*\n','',body,flags=re.M)
 body=re.sub(r'^.*clay::main_menu::restore_selection.*\n','',body,flags=re.M)
 assert body.count('L_800681D4:')==1

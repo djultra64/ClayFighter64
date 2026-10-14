@@ -9,6 +9,7 @@
 #include "sc_preview.h"
 #include "sc_roster.h"
 #include "port_options.h"
+#include "native_preferences.h"
 #include "interpolation.h"
 #include "sprite_seams.h"
 #include "ui_background.h"
