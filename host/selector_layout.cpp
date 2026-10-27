@@ -5,6 +5,7 @@
 #include "training_guest.h"
 #include <bit>
 #include <cmath>
+extern "C" void func_80071738(uint8_t*,recomp_context*);
 namespace clay::selector {
 namespace {
 double expansion(){const auto o=graphics_options();const double s=o.widescreen?o.aspect()/(4.0/3.0):1.0;return s>=1&&s<=8.0/3.0?s-1:0;}
@@ -52,6 +53,24 @@ void draw_preview(uint8_t*r,recomp_context*c,bool right,bool sprite,recomp_func_
  const float offset=float(160*expansion());
  if(offset){if(sprite)c->r6=bits(value(c->r6)+(right?offset:-offset));else c->r6=ADD32(c->r6,int(std::lround(right?offset:-offset)));}
  clay_sc_draw_preview(r,c,right,sprite,f);
+}
+void draw_player2_prompt(uint8_t*rdram,recomp_context*c,recomp_func_t*f){
+ const uint32_t font=uint32_t(c->r4),sp=uint32_t(c->r29),scale=uint32_t(c->r7);
+ if(!valid(font,0x28)||!valid(sp,0x1c)||!valid(scale,4)||!valid(sp-0x100,0x100)){f(rdram,c);return;}
+ const uint32_t text=uint32_t(MEM_W(0x18,c->r29));
+ if(!valid(text,1)){f(rdram,c);return;}
+ const float sx=-value(MEM_W(0,S32(scale)));
+ if(!std::isfinite(sx)||sx<=0||sx>8){f(rdram,c);return;}
+ recomp_context measure=*c;measure.f_odd=&measure.f0.u32h;measure.r29=ADD32(c->r29,-0x80);measure.r4=S32(font);measure.r5=S32(text);
+ func_80071738(rdram,&measure);
+ const int width=int32_t(measure.r2);
+ if(width<=0||width>1024){f(rdram,c);return;}
+ const float outer=303+float(std::lround(143*expansion()*346.0/186.0));
+ const int16_t original_x=MEM_H(0x10,S32(font)),original_origin=MEM_H(0x16,S32(font));
+ const int16_t x=int16_t(std::lround((outer+104)*.5f-width*sx*.5f));
+ MEM_H(0x10,S32(font))=x;MEM_H(0x16,S32(font))=x;
+ f(rdram,c);
+ MEM_H(0x10,S32(font))=original_x;MEM_H(0x16,S32(font))=original_origin;
 }
 void draw_name(uint8_t*rdram,recomp_context*c,bool right,recomp_func_t*f){
  if(expansion()){

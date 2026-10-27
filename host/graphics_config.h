@@ -8,7 +8,7 @@ struct GraphicsOptions {
  unsigned width=1280,height=720;
  unsigned render_height=720;
  bool widescreen=true;
- unsigned refresh=120; // Zero preserves the original presentation rate.
+ unsigned refresh=60; // Zero preserves the original presentation rate.
  TextureFilter filter=TextureFilter::Original;
  bool fullscreen=false;
  unsigned msaa=0;

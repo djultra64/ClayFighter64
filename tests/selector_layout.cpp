@@ -18,6 +18,9 @@ extern "C" void switch_error(const char*,uint32_t,uint32_t){std::abort();}
 void clay_sc_draw_preview(uint8_t*r,recomp_context*c,bool,bool,recomp_func_t*f){f(r,c);}
 namespace clay::training {bool selecting_fighters(){return false;}}
 static float received_x;
+static unsigned prompt_width=0;
+extern "C" void func_80071738(uint8_t*,recomp_context*c){c->r2=prompt_width;}
+static void prompt(uint8_t*rdram,recomp_context*c){received_x=MEM_H(0x10,c->r4);}
 static void actor(uint8_t*,recomp_context*c){received_x=float(int32_t(c->r6));}
 static void sprite(uint8_t*,recomp_context*c){received_x=std::bit_cast<float>(int32_t(c->r6));}
 static int32_t bits(float x){return std::bit_cast<int32_t>(x);}
@@ -43,6 +46,15 @@ int main(int argc,char**argv){
    for(unsigned i=0;i<12;i++)assert(MEM_W(int(i*4),S32(matrix))==bits(i%5==0?1.f:0.f));
    c.r6=S32(right?234:-234);clay::selector::draw_preview(rdram,&c,right,false,actor);assert(received_x==(right?234:-234)+std::lround((right?1:-1)*160*expansion));
    c.r6=S32(bits(right?220:-220));clay::selector::draw_preview(rdram,&c,right,true,sprite);assert(std::abs(received_x-((right?220:-220)+(right?1:-1)*160*expansion))<.001);cases++;
+  }
+  for(unsigned measured:{40u,70u,100u}){
+   constexpr uint32_t font=0x80190000,text=0x80191000,scale=0x80192000;
+   prompt_width=measured;MEM_H(0x10,S32(font))=102;MEM_H(0x16,S32(font))=102;
+   MEM_W(0,S32(scale))=bits(-1.9f);recomp_context c{};c.f_odd=&c.f0.u32h;c.r29=S32(sp);c.r4=S32(font);c.r7=S32(scale);MEM_W(0x18,c.r29)=S32(text);
+   clay::selector::draw_player2_prompt(rdram,&c,prompt);
+   const float outer=303+std::lround(143*expansion*346/186);
+   assert(std::abs(received_x+measured*1.9f*.5f-(outer+104)*.5f)<=1.f);
+   assert(MEM_H(0x10,S32(font))==102&&MEM_H(0x16,S32(font))==102);
   }
   printf("selector_fixture panels\n");
   for(unsigned slot=0;slot<4;slot++)for(int phase:{0,13,53,70,100}){

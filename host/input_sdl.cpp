@@ -8,21 +8,28 @@
 #include <optional>
 #include <algorithm>
 #include <stdexcept>
+#include <filesystem>
 namespace clay::input {
 namespace {
 std::mutex settings_mutex;
 std::optional<Action> capture_action;
+unsigned editing_player=0,confirm_player=0;
+int32_t editing_device=-1,confirm_device=-1;
+bool editing=false;
 std::optional<Family> requested_family;
 Family configured_family=Family::Auto;
 bool reset_requested=false;
 std::string capture_status,controls_storage;
 std::array<std::string,action_count> binding_labels;
-void persist(const Mapper& mapper){if(controls_storage.empty())return;std::string error;if(!mapper.save(controls_storage,error)){capture_status="COULD NOT SAVE BINDING";fprintf(stderr,"Controls preferences: %s\n",error.c_str());}}
+void persist(const Mapper& mapper,unsigned player){if(controls_storage.empty())return;std::string error;auto path=std::filesystem::path(controls_storage);if(player==1)path=path.parent_path()/"controls-p2.cfg";if(!mapper.save(path.string(),error)){capture_status="COULD NOT SAVE BINDING";fprintf(stderr,"Controls preferences: %s\n",error.c_str());}}
 std::optional<Physical> physical(SDL_GameControllerButton b){
  switch(b){case SDL_CONTROLLER_BUTTON_LEFTSTICK:return Physical::LeftStick;case SDL_CONTROLLER_BUTTON_RIGHTSTICK:return Physical::RightStick;case SDL_CONTROLLER_BUTTON_A:return Physical::South;case SDL_CONTROLLER_BUTTON_B:return Physical::East;case SDL_CONTROLLER_BUTTON_X:return Physical::West;case SDL_CONTROLLER_BUTTON_Y:return Physical::North;case SDL_CONTROLLER_BUTTON_START:return Physical::Start;case SDL_CONTROLLER_BUTTON_BACK:return Physical::Back;case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:return Physical::LeftShoulder;case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:return Physical::RightShoulder;case SDL_CONTROLLER_BUTTON_DPAD_UP:return Physical::DUp;case SDL_CONTROLLER_BUTTON_DPAD_DOWN:return Physical::DDown;case SDL_CONTROLLER_BUTTON_DPAD_LEFT:return Physical::DLeft;case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:return Physical::DRight;default:return {};}
 }
 }
-void request_binding(Action action){if(size_t(action)>=action_count)return;std::lock_guard lock(settings_mutex);capture_action=action;capture_status="PRESS NEW BUTTON";}
+void begin_binding_edit(){std::lock_guard lock(settings_mutex);if(!editing){editing=true;editing_player=confirm_player;editing_device=confirm_device;}}
+void end_binding_edit(){std::lock_guard lock(settings_mutex);editing=false;capture_action.reset();}
+unsigned binding_player(){std::lock_guard lock(settings_mutex);return editing?editing_player:0;}
+void request_binding(Action action){if(size_t(action)>=action_count)return;std::lock_guard lock(settings_mutex);if(!editing){editing_player=confirm_player;editing_device=confirm_device;}capture_action=action;capture_status="PRESS NEW BUTTON";}
 bool binding_capture_active(){std::lock_guard lock(settings_mutex);return capture_action.has_value();}
 std::string binding_label(Action action){std::lock_guard lock(settings_mutex);return binding_labels.at(size_t(action));}
 std::string binding_capture_status(){std::lock_guard lock(settings_mutex);return capture_status;}
@@ -62,25 +69,29 @@ void SdlInput::set_preferred_instances(int32_t first,int32_t second){
 void SdlInput::event(const SDL_Event& e) {
     {std::lock_guard lock(settings_mutex);if(capture_action){
         bool captured=false;
+        auto& target=editing_player==0?mapper_:second_mapper_;
         try{
-        if(e.type==SDL_KEYDOWN&&!e.key.repeat){
-            if(e.key.keysym.scancode==SDL_SCANCODE_ESCAPE){capture_action.reset();capture_status="CANCELLED";return;}
+        if(e.type==SDL_KEYDOWN&&!e.key.repeat&&e.key.keysym.scancode==SDL_SCANCODE_ESCAPE){capture_action.reset();capture_status="CANCELLED";return;}
+        if(e.type==SDL_KEYDOWN&&!e.key.repeat&&editing_device<0){
             const char* name=SDL_GetScancodeName(e.key.keysym.scancode);
-            if(name&&*name){mapper_.remap_key(*capture_action,name);captured=true;}
-        } else if(e.type==SDL_CONTROLLERBUTTONDOWN){
-            auto button=physical(SDL_GameControllerButton(e.cbutton.button));if(button){mapper_.remap(*capture_action,*button);captured=true;}
-        } else if(e.type==SDL_CONTROLLERAXISMOTION&&e.caxis.value>16384){
-            if(e.caxis.axis==SDL_CONTROLLER_AXIS_TRIGGERLEFT){mapper_.remap(*capture_action,Physical::LeftTrigger);captured=true;}
-            if(e.caxis.axis==SDL_CONTROLLER_AXIS_TRIGGERRIGHT){mapper_.remap(*capture_action,Physical::RightTrigger);captured=true;}
+            if(name&&*name){target.remap_key(*capture_action,name);captured=true;}
+        } else if(e.type==SDL_CONTROLLERBUTTONDOWN&&e.cbutton.which==editing_device){
+            auto button=physical(SDL_GameControllerButton(e.cbutton.button));if(button){target.remap(*capture_action,*button);captured=true;}
+        } else if(e.type==SDL_CONTROLLERAXISMOTION&&e.caxis.which==editing_device&&e.caxis.value>16384){
+            if(e.caxis.axis==SDL_CONTROLLER_AXIS_TRIGGERLEFT){target.remap(*capture_action,Physical::LeftTrigger);captured=true;}
+            if(e.caxis.axis==SDL_CONTROLLER_AXIS_TRIGGERRIGHT){target.remap(*capture_action,Physical::RightTrigger);captured=true;}
         }
         }catch(const std::invalid_argument&){capture_status="BUTTON ALREADY USED BY ANOTHER ACTION";}
-        if(captured){capture_action.reset();capture_status="BINDING SAVED";wait_release_=true;persist(mapper_);}
+        if(captured){capture_action.reset();capture_status="BINDING SAVED";wait_release_=true;persist(target,editing_player);}
     }}
     if(std::getenv("CLAY_TRACE_INPUT_SDL") && (e.type==SDL_KEYDOWN||e.type==SDL_KEYUP)) {
         auto* focus=SDL_GetKeyboardFocus();
         fprintf(stderr,"{\"event\":\"sdl_key\",\"down\":%s,\"scan\":%d,\"repeat\":%u,\"window\":%u,\"focus_window\":%u}\n",e.type==SDL_KEYDOWN?"true":"false",int(e.key.keysym.scancode),unsigned(e.key.repeat),e.key.windowID,focus?SDL_GetWindowID(focus):0);
     }
     if(e.type==SDL_KEYDOWN&&!e.key.repeat){
+        if(e.key.keysym.scancode==SDL_GetScancodeFromName(menu_mapper_.binding(Action::Primary).key.c_str())){
+            std::lock_guard lock(settings_mutex);confirm_player=0;confirm_device=-1;
+        }
         for(size_t i=0;i<action_count;i++)if(e.key.keysym.scancode==SDL_GetScancodeFromName(mapper_.binding(Action(i)).key.c_str())||e.key.keysym.scancode==SDL_GetScancodeFromName(menu_mapper_.binding(Action(i)).key.c_str())){keyboard_activity_=true;pad_activity_=false;break;}
     }
     bool meaningful=e.type==SDL_CONTROLLERBUTTONDOWN;
@@ -88,7 +99,7 @@ void SdlInput::event(const SDL_Event& e) {
         auto& history=activity_[e.caxis.which];
         if(e.caxis.axis==SDL_CONTROLLER_AXIS_LEFTX||e.caxis.axis==SDL_CONTROLLER_AXIS_LEFTY){
             float v=axis(e.caxis.value);float& previous=e.caxis.axis==SDL_CONTROLLER_AXIS_LEFTX?history.x:history.y;
-            meaningful=std::abs(v)>0.2f&&std::abs(v-previous)>0.1f;
+            meaningful=std::abs(v)>0.5f&&std::abs(v-previous)>0.1f;
             if(meaningful||v==0)previous=v;
         } else if(e.caxis.axis==SDL_CONTROLLER_AXIS_TRIGGERLEFT||e.caxis.axis==SDL_CONTROLLER_AXIS_TRIGGERRIGHT) {
             size_t trigger=e.caxis.axis==SDL_CONTROLLER_AXIS_TRIGGERLEFT?0:1;
@@ -98,19 +109,31 @@ void SdlInput::event(const SDL_Event& e) {
     }
     if(meaningful){
         Sint32 id=e.type==SDL_CONTROLLERBUTTONDOWN?e.cbutton.which:e.caxis.which;
+        find_controller();
+        bool available=false;
+        for(auto* p:pads_)if(SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(p))==id)available=true;
+        if(available && id!=assigned_[0] && id!=assigned_[1]) {
+            for(unsigned player=0;player<2;player++)
+                if(assigned_[player]<0 && (preferred_[player]<0 || preferred_[player]==id)) {assigned_[player]=id;break;}
+        }
         if(id!=instance_){
             find_controller();
             for(auto* next:pads_)if(SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(next))==id){pad_=next;instance_=id;break;}
         }
         if(id==instance_){pad_activity_=true;keyboard_activity_=false;}
+        if(e.type==SDL_CONTROLLERBUTTONDOWN && e.cbutton.button==SDL_CONTROLLER_BUTTON_A){
+            for(unsigned player=0;player<2;player++)if(assigned_[player]==id){
+                std::lock_guard lock(settings_mutex);confirm_player=player;confirm_device=id;break;
+            }
+        }
     }
 }
 std::array<State,2> SdlInput::poll_players(bool combat) {
     {std::lock_guard lock(settings_mutex);
-     if(reset_requested){auto family=mapper_.manual_family();mapper_=Mapper{};mapper_.set_family(family);reset_requested=false;persist(mapper_);}
-     if(requested_family){mapper_.set_family(*requested_family);requested_family.reset();persist(mapper_);}
+     auto& edited=editing_player==0?mapper_:second_mapper_;
+     if(reset_requested){auto family=edited.manual_family();edited=Mapper{};edited.set_family(family);reset_requested=false;persist(edited,editing_player);}
+     if(requested_family){edited.set_family(*requested_family);requested_family.reset();persist(edited,editing_player);}
     }
-    menu_mapper_.set_family(mapper_.manual_family());
     find_controller();Snapshot s;s.keyboard_activity=keyboard_activity_;s.controller_activity=pad_activity_;
     keyboard_activity_=pad_activity_=false;
     int num_keys=0;const Uint8* keys=SDL_GetKeyboardState(&num_keys);
@@ -134,8 +157,10 @@ std::array<State,2> SdlInput::poll_players(bool combat) {
     auto controller=[&](int32_t id)->SDL_GameController*{for(auto* p:pads_)if(SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(p))==id)return p;return nullptr;};
     for(unsigned i=0;i<2;i++)if(assigned_[i]>=0&&!controller(assigned_[i]))assigned_[i]=-1;
     for(unsigned i=0;i<2;i++)if(preferred_[i]>=0&&controller(preferred_[i]))assigned_[i]=preferred_[i];
-    for(auto* pad:pads_){int32_t id=SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(pad));if(id==assigned_[0]||id==assigned_[1])continue;for(unsigned i=0;i<2;i++)if(assigned_[i]<0&&preferred_[i]<0){assigned_[i]=id;break;}}
-    connected_={true,controller(assigned_[1])!=nullptr};
+    // The guest queries controller presence during startup. Advertise a
+    // connected second pad before it is claimed by its first input, or the
+    // original game never polls that port in its menus.
+    connected_={true,controller(assigned_[1])!=nullptr || (preferred_[1]<0 && pads_.size()>=2)};
     std::array<Snapshot,2> snapshots{};snapshots[0]=s;
     for(unsigned player=0;player<2;player++)if(auto* pad=controller(assigned_[player])){
         auto& snapshot=snapshots[player];snapshot.detected=detect(pad);
@@ -151,11 +176,12 @@ std::array<State,2> SdlInput::poll_players(bool combat) {
         snapshot.x=axis(SDL_GameControllerGetAxis(pad,SDL_CONTROLLER_AXIS_LEFTX));snapshot.y=-axis(SDL_GameControllerGetAxis(pad,SDL_CONTROLLER_AXIS_LEFTY));
     }
     unsigned recent=0;if(!s.keyboard_activity&&assigned_[1]>=0&&assigned_[1]==instance_)recent=1;
+    menu_mapper_.set_family((recent==0?mapper_:second_mapper_).manual_family());
     Snapshot recent_snapshot=snapshots[recent];recent_snapshot.keyboard_activity=s.keyboard_activity;recent_snapshot.controller_activity=s.controller_activity;
-    mapper_.update(recent_snapshot);
+    if(recent==0)mapper_.update(recent_snapshot);else second_mapper_.update(recent_snapshot);
     std::array<State,2> combat_states{},menu_states{};
     for(unsigned player=0;player<2;player++){
-        auto local=mapper_;combat_states[player]=local.update(snapshots[player]);
+        auto local=player==0?mapper_:second_mapper_;combat_states[player]=local.update(snapshots[player]);
         auto menu=snapshots[player];
         for(size_t i=0;i<action_count;i++){
             auto key=SDL_GetScancodeFromName(menu_mapper_.binding(Action(i)).key.c_str());
@@ -163,8 +189,15 @@ std::array<State,2> SdlInput::poll_players(bool combat) {
         }
         if(player==recent)menu_mapper_.update(menu);
         auto local_menu=menu_mapper_;menu_states[player]=local_menu.update(menu);
+        // Menu navigation accepts both the physical D-pad and the left stick.
+        // Combat still receives the original analog input without extra buttons.
+        constexpr float menu_threshold=0.5f;
+        if(menu.x < -menu_threshold)menu_states[player].buttons |= 0x0200;
+        if(menu.x >  menu_threshold)menu_states[player].buttons |= 0x0100;
+        if(menu.y >  menu_threshold)menu_states[player].buttons |= 0x0800;
+        if(menu.y < -menu_threshold)menu_states[player].buttons |= 0x0400;
     }
-    {std::lock_guard lock(settings_mutex);configured_family=mapper_.manual_family();for(size_t i=0;i<action_count;i++)binding_labels[i]=mapper_.prompt(Action(i)).button_name;}
+    {std::lock_guard lock(settings_mutex);const auto& edited=editing_player==0?mapper_:second_mapper_;configured_family=edited.manual_family();for(size_t i=0;i<action_count;i++)binding_labels[i]=edited.prompt(Action(i)).button_name;}
     if(training_mode_&&previous_combat_!=combat)wait_release_=true;
     previous_combat_=combat;
     bool released=true;for(unsigned i=0;i<2;i++)released &= menu_states[i].buttons==0&&combat_states[i].buttons==0&&
@@ -176,6 +209,12 @@ std::array<State,2> SdlInput::poll_players(bool combat) {
         menu_states[player].training_pause=combat_states[player].training_pause;
     }
     return combat?combat_states:menu_states;
+}
+const Mapper& SdlInput::active_mapper(bool combat) const {
+    std::lock_guard lock(settings_mutex);
+    if(editing)return editing_player==0?mapper_:second_mapper_;
+    if(!combat)return menu_mapper_;
+    return assigned_[1]>=0&&instance_==assigned_[1]?second_mapper_:mapper_;
 }
 State SdlInput::poll(bool combat){return poll_players(combat)[0];}
 }

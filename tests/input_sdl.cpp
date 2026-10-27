@@ -48,6 +48,7 @@ int main(){
         SDL_JoystickSetVirtualButton(pad,SDL_CONTROLLER_BUTTON_X,1);SDL_PumpEvents();
         assert(!(input.poll(false).buttons&0x4000));assert(input.poll(true).buttons&0x4000);
         SDL_JoystickSetVirtualButton(pad,SDL_CONTROLLER_BUTTON_X,0);SDL_PumpEvents();
+        SDL_Event confirm{};confirm.type=SDL_CONTROLLERBUTTONDOWN;confirm.cbutton.which=SDL_JoystickGetDeviceInstanceID(index);confirm.cbutton.button=SDL_CONTROLLER_BUTTON_A;input.event(confirm);begin_binding_edit();
         request_binding(Action::Primary);assert(binding_capture_active());
         SDL_Event capture{};capture.type=SDL_CONTROLLERBUTTONDOWN;capture.cbutton.which=SDL_JoystickGetDeviceInstanceID(index);capture.cbutton.button=SDL_CONTROLLER_BUTTON_Y;
         SDL_JoystickSetVirtualButton(pad,SDL_CONTROLLER_BUTTON_Y,1);SDL_PumpEvents();input.event(capture);
@@ -55,7 +56,17 @@ int main(){
         assert(input.poll(false).buttons==0&&input.poll(true).buttons==0); // binding press must not operate the menu
         SDL_JoystickSetVirtualButton(pad,SDL_CONTROLLER_BUTTON_Y,0);SDL_PumpEvents();input.poll(false);
         SDL_JoystickSetVirtualButton(pad,SDL_CONTROLLER_BUTTON_Y,1);SDL_PumpEvents();assert(input.poll(true).buttons&0x8000);
-        SDL_JoystickSetVirtualButton(pad,SDL_CONTROLLER_BUTTON_Y,0);SDL_JoystickClose(pad);
+        SDL_JoystickSetVirtualButton(pad,SDL_CONTROLLER_BUTTON_Y,0);end_binding_edit();SDL_JoystickClose(pad);
+    }
+    {
+        SdlInput input;input.set_preferred_instances(SDL_JoystickGetDeviceInstanceID(index));input.poll();
+        auto* pad=SDL_JoystickOpen(index);assert(pad);
+        SDL_JoystickSetVirtualAxis(pad,SDL_CONTROLLER_AXIS_LEFTY,-24000);SDL_PumpEvents();
+        assert(input.poll(false).buttons&0x0800); // Left stick navigates menus like Up.
+        assert(!(input.poll(true).buttons&0x0800)); // Combat keeps the analog stick analog.
+        SDL_JoystickSetVirtualAxis(pad,SDL_CONTROLLER_AXIS_LEFTY,0);SDL_PumpEvents();
+        assert(!(input.poll(false).buttons&0x0800));
+        SDL_JoystickClose(pad);
     }
     {
         SdlInput input;input.set_preferred_instances(SDL_JoystickGetDeviceInstanceID(index));input.poll();

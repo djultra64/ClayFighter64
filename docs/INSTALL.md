@@ -15,7 +15,7 @@ Other regions, revisions, translations, and modified ROMs are unsupported. `.z64
 
 ## Linux
 
-Extract `clayfighter64-2.1-linux-x86_64.tar.gz` and open a terminal in its folder:
+Extract `clayfighter64-2.1.1-linux-x86_64.tar.gz` and open a terminal in its folder:
 
 ```sh
 ./'Install Assets.sh'
@@ -34,7 +34,7 @@ Linux requires Python 3.10+, X11 or XWayland, Vulkan drivers, glibc 2.38+, libst
 
 ## Windows
 
-Extract `clayfighter64-2.1-windows-x86_64.zip`, then double-click **Install Assets.vbs**. The installer searches the game folder and `ROMs` folders inside or beside it. If either verified ROM is missing, select it with the graphical Browse button, then open **Play ClayFighter 64.vbs**. The Python runtime is included; you do not need to install Python.
+Extract `clayfighter64-2.1.1-windows-x86_64.zip`, then double-click **Install Assets.vbs**. The installer searches the game folder and `ROMs` folders inside or beside it. If either verified ROM is missing, select it with the graphical Browse button, then open **Play ClayFighter 64.vbs**. The Python runtime is included; you do not need to install Python.
 
 From a command prompt you can also pass both paths:
 
@@ -60,3 +60,5 @@ The package includes the latest user-supplied replacement announcement, stored a
 ## Help
 
 The installer explains the two-ROM requirement in its prompt, `--help`, and failure messages. Run `python3 tools/release/import_assets.py --check` on Linux (or `python\python.exe tools\release\import_assets.py --check` on Windows) to verify installed game data.
+
+The first controller used becomes player 1 and the next becomes player 2. Open Button Remap with the controller whose bindings you want to change. Each player has a separate portable profile; existing controls are used as the starting point for player 2 until it is customized.

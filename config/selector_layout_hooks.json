@@ -46,6 +46,11 @@
       "pc": "0x8005fa78",
       "original_word": "0c029948",
       "scope": "right fallback preview"
+    },
+    {
+      "pc": "0x8005ec24",
+      "original_word": "0c01c647",
+      "scope": "Player 2 Press Start prompt centered in the actual right box using the active glyph width"
     }
   ],
   "native_geometry": {
@@ -72,7 +77,8 @@
     "door_closed_phase": 70,
     "original_open_aperture": 136,
     "original_closed_overlap": 4,
-    "additional_aperture": "Perpanel186*aspectExpansion*max(0,1-nativePhase/70); CLOSED endpoint unchanged"
+    "additional_aperture": "Perpanel186*aspectExpansion*max(0,1-nativePhase/70); CLOSED endpoint unchanged",
+    "player2_prompt": "Measured current text and controller glyph centered in the black box for both 4:3 and widescreen."
   },
   "validation": "Native288originalgeometrycasesPASS, original51widebitmapanchorsRED; private16:9 actual2PHighFive6/Lockjaw12 selector\u2192VS\u2192combat38secPASS exit0 gfx2221/polls4040. Seeanalysis/selector_layout_evidence.json"
 }

@@ -10,6 +10,8 @@ void translate_mechanism(uint8_t*,recomp_context*,bool right,recomp_func_t*);
 void translate_panel(uint8_t*,recomp_context*,unsigned native_slot,recomp_func_t*);
 // Retains the existing SC preview scale and all native animation coordinates.
 void draw_preview(uint8_t*,recomp_context*,bool right,bool sprite,recomp_func_t*);
+// Center the second player prompt using its current device-specific glyph width.
+void draw_player2_prompt(uint8_t*,recomp_context*,recomp_func_t*);
 // Original name bitmaps, centered in the widened native black name boxes.
 void draw_name(uint8_t*,recomp_context*,bool right,recomp_func_t*);
 }

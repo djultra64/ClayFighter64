@@ -48,18 +48,32 @@ uint32_t word(uint8_t* rdram,uint32_t p){return uint32_t(MEM_W(0,S32(p)));}
 uint32_t state(uint8_t* rdram){uint32_t p=word(rdram,0x800ddd3c);return valid(p,0x1a80)?p:0;}
 unsigned menu_id(uint8_t* rdram){auto p=state(rdram);return p?word(rdram,p+12):0;}
 bool stable(uint8_t* rdram,uint32_t p){return word(rdram,p+12)==word(rdram,p+16)&&word(rdram,p+0x1a64)==0&&word(rdram,p)==0;}
-constexpr std::array<input::Action,14> actions={input::Action::Primary,input::Action::Secondary,input::Action::CUp,input::Action::CDown,input::Action::CLeft,input::Action::CRight,input::Action::Trigger,input::Action::LeftShoulder,input::Action::RightShoulder,input::Action::Start,input::Action::Up,input::Action::Down,input::Action::Left,input::Action::Right};
+constexpr std::array<input::Action,11> actions={input::Action::Primary,input::Action::Secondary,input::Action::CUp,input::Action::CDown,input::Action::CLeft,input::Action::CRight,input::Action::Start,input::Action::Up,input::Action::Down,input::Action::Left,input::Action::Right};
 // N64 A/B/C buttons are punch/kick actions, retaining original logical slots.
 constexpr std::array<const char*,6> native_moves={"Wobbly Punch","Fair Punch","Brutal Punch","Wobbly Kick","Fair Kick","Brutal Kick"};
 // Original 5A2A0 iterates config halfword PAIRS and ROM800DDD64 masks:
 // CUp8,CLeft2,B4000,CRight1,CDown4,A8000. Config is the current saved permutation.
 constexpr std::array<unsigned,6> native_slot={5,2,0,4,1,3};
 std::string action_label(uint8_t* rdram,size_t i){
- if(i>=6)return std::array<const char*,8>{"N64 Z","L shoulder","R shoulder","Pause","Up","Down","Left","Right"}[i-6];
+ if(i>=6)return std::array<const char*,5>{"Pause","Up","Down","Left","Right"}[i-6];
  auto config=word(rdram,0x800ddd58);if(!valid(config,0x20))return "Unconfigured action";
  unsigned move=MEM_HU(0,S32(config+8+native_slot[i]*4));
  return move<native_moves.size()?native_moves[move]:"Invalid native action";
 }
+// The native game can permute its six moves. Keep punches in the left
+// column and kicks in the right column while remapping the actual action.
+size_t action_for_row(uint8_t* rdram,size_t row){
+ if(row>=6)return row;
+ constexpr std::array<unsigned,6> desired={0,3,1,4,2,5};
+ auto config=word(rdram,0x800ddd58);
+ if(valid(config,0x20)){
+  for(size_t i=0;i<6;i++)
+   if(MEM_HU(0,S32(config+8+native_slot[i]*4))==desired[row])return i;
+ }
+ return row;
+}
+// Visual rows alternate columns: attacks, directions, pause and management.
+constexpr std::array<unsigned,13> control_rows={0,1,2,3,4,5,7,6,8,11,9,12,10};
 constexpr std::array<input::Family,4> families={input::Family::Auto,input::Family::Xbox,input::Family::PlayStation,input::Family::Switch};
 constexpr std::array<unsigned,5> resolutions={480,720,1080,1440,2160};
 constexpr std::array<unsigned,3> rates={0,60,120};
@@ -69,7 +83,8 @@ OptionsView view(uint8_t* rdram,unsigned menu);
 void change(uint8_t* rdram,unsigned menu,unsigned row,int direction){
  if(std::getenv("CLAY_TRACE_GAME"))fprintf(stderr,"{\"event\":\"native_options_change\",\"menu\":%u,\"row\":%u,\"direction\":%d}\n",menu,row,direction);
  if(menu==2){
-  if(row<actions.size()){input::request_binding(actions[row]);status="Release, then press a key or button";}
+  row=control_rows.at(row);
+  if(row<actions.size()){input::request_binding(actions[action_for_row(rdram,row)]);status="Release, then press a key or button";}
   else if(row==actions.size()){input::set_controller_family(cycle(input::controller_family(),families,direction));status="Family saved";}
   else {input::reset_combat_bindings();status="Combat bindings reset";}
   return;
@@ -85,7 +100,7 @@ void change(uint8_t* rdram,unsigned menu,unsigned row,int direction){
 }
 OptionsView view(uint8_t* rdram,unsigned menu){
  OptionsView v;v.selected=cursor[menu];v.status=status;
- if(menu==2){v.title="BUTTON REMAP";for(size_t i=0;i<actions.size();i++)v.rows.push_back(action_label(rdram,i)+": "+input::binding_marker(actions[i]));v.rows.push_back(std::string("Controller: ")+input::family_name(input::controller_family()));v.rows.push_back("Reset bindings");if(input::binding_capture_active())v.status=input::binding_capture_status();}
+ if(menu==2){v.title=std::string("BUTTON REMAP - PLAYER ")+std::to_string(input::binding_player()+1);for(unsigned row:control_rows){if(row<actions.size()){auto action=action_for_row(rdram,row);v.rows.push_back(action_label(rdram,action)+": "+input::binding_marker(actions[action]));}else if(row==actions.size())v.rows.push_back(std::string("Controller: ")+input::family_name(input::controller_family()));else v.rows.push_back("Reset bindings");}if(input::binding_capture_active())v.status=input::binding_capture_status();}
  else {v.title="DISPLAY";auto o=graphics_options();v.rows={std::string("Aspect: ")+(o.widescreen?"16:9":"4:3"),"Resolution: "+std::to_string(o.render_height)+"p",std::string("Filter: ")+(o.filter==TextureFilter::Original?"Original":o.filter==TextureFilter::Nearest?"Nearest":"Linear"),"FPS: "+(o.refresh?std::to_string(o.refresh):"Original"),std::string("Fullscreen: ")+(o.fullscreen?"On":"Off"),"MSAA: "+(o.msaa?std::to_string(o.msaa)+"x":"Off")};
  if(legacy_display){v.title="GAME DISPLAY";v.rows.clear();uint32_t config=word(rdram,0x800ddd58);constexpr const char* names[]={"Stun meter","Super meter","Health meter","Character picture"};for(unsigned i=0;i<4;i++)v.rows.push_back(std::string(names[i])+": "+(valid(config,0x28)&&MEM_HU(0,S32(config+0x20+i*2))?"On":"Off"));}
  else v.rows.push_back("Game display");}
@@ -103,14 +118,16 @@ OptionsView options_view(uint8_t* rdram,unsigned menu){std::lock_guard lock(mute
 bool update_native_options(uint8_t* rdram,recomp_context*){
  auto p=state(rdram);unsigned menu=menu_id(rdram);
  if(std::getenv("CLAY_TRACE_GAME")&&p){
-  uint32_t target=word(rdram,p+16),row=word(rdram,p+0x18),buttons=word(rdram,0x80118cb4)|word(rdram,0x80118cc4);bool ready=stable(rdram,p);
+  uint32_t target=word(rdram,p+16),row=word(rdram,p+0x18),buttons=word(rdram,0x80118cb4)|word(rdram,0x80118cc4)|word(rdram,0x80118ccc)|word(rdram,0x80118cdc);bool ready=stable(rdram,p);
   static std::array<uint32_t,6> prior{~0u,~0u,~0u,~0u,~0u,~0u};
   std::array<uint32_t,6> current{menu,target,row,uint32_t(ready),buttons,menu<cursor.size()?cursor[menu]:0};
   if(current!=prior){prior=current;fprintf(stderr,"{\"event\":\"native_options_state\",\"menu\":%u,\"target\":%u,\"native_row\":%u,\"port_row\":%u,\"stable\":%s,\"buttons\":%u,\"capture\":%s}\n",menu,target,row,current[5],ready?"true":"false",buttons,input::binding_capture_active()?"true":"false");}
  }
+ if(menu!=2)input::end_binding_edit();
  if(!p||(menu!=2&&menu!=3)||!stable(rdram,p)){std::lock_guard lock(mutex);last_menu=0;return false;}
+ if(menu==2)input::begin_binding_edit();
  std::lock_guard lock(mutex);if(last_menu!=menu){cursor[menu]=0;status.clear();last_menu=menu;legacy_display=false;}
- uint32_t buttons=word(rdram,0x80118cb4)|word(rdram,0x80118cc4);
+ uint32_t buttons=word(rdram,0x80118cb4)|word(rdram,0x80118cc4)|word(rdram,0x80118ccc)|word(rdram,0x80118cdc);
  // Capture consumes the next physical press in SDL; menu navigation is fixed.
  if(input::binding_capture_active()){was_capture=true;return true;}
  if(was_capture){was_capture=false;status=input::binding_capture_status();return true;}
@@ -216,7 +233,7 @@ bool draw_native_options(uint8_t* rdram,recomp_context* ctx){
   line(i+1,row,i%2==0?-170:170,66-int(i/2)*32,0,290);
  }
  if(glyphs(footer)<=budget)line(17,footer,0,-204,0,600);
- if(!v.status.empty()&&used+glyphs(v.status)<=budget)line(18,v.status,0,-180,0,600);
+ if(!v.status.empty()&&used+glyphs(v.status)<=budget)line(18,v.status,0,-158,0,600);
  if(std::getenv("CLAY_TRACE_GAME")){
   static std::string previous;
   std::string current=std::to_string(menu)+":"+std::to_string(v.selected)+":"+v.status+":"+std::to_string(shown.size());

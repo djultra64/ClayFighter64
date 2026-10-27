@@ -6,7 +6,7 @@
 
 # ClayFighter 64
 
-**Version 2.1 — Linux and Windows x86-64.** [Published releases](https://github.com/djultra64/ClayFighter64/releases/latest).
+**Version 2.1.1 — Linux and Windows x86-64.** [Published releases](https://github.com/djultra64/ClayFighter64/releases/latest).
 
 A community PC port and fusion of **ClayFighter 63⅓** and **ClayFighter: Sculptor's Cut**, built through static recompilation with N64Recomp, N64ModernRuntime, RSPRecomp, and RT64.
 
@@ -72,7 +72,7 @@ Actions map to physical button positions. Names and glyphs follow the last activ
 | Secondary / back | B (east) | Circle (east) | A (east) | X |
 | Start / pause | Menu / Start | Options | + | Enter |
 
-Other keyboard defaults: **Shift** for Z trigger, **Q/E** for L/R, and **I/K/J/L** for C up/down/left/right. **Options → Button Remap** changes combat actions; menu and pause navigation retain their defaults. Two controllers route to P1/P2 independently; keyboard remains on P1.
+Other keyboard defaults: **Shift** for Z trigger, **Q/E** for L/R, and **I/K/J/L** for C up/down/left/right. **Options → Button Remap** changes combat actions; menu and pause navigation retain their defaults. The first controller used becomes P1; the next becomes P2. The controller that opens Button Remap edits its own player profile, saved independently; keyboard remains on P1.
 
 Use **Auto/Xbox/PlayStation/Switch** in Button Remap, or `--family auto|xbox|playstation|switch`, when automatic detection is ambiguous. Saved remapping overrides combat defaults.
 

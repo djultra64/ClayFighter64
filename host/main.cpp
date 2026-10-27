@@ -49,7 +49,7 @@ static void update_input(SDL_Window* window,clay::input::SdlInput& input){
  reset_down=states[0].training_reset;pause_down=states[0].training_pause;
  const auto& mapper=input.active_mapper(combat);
  clay::input::publish_hud(mapper);
- std::string title="ClayFighter 64 v2.0 — ";title+=clay::input::family_name(mapper.family());
+ std::string title="ClayFighter 64 v2.1 — ";title+=clay::input::family_name(mapper.family());
  if(sc_demo_character>=0){title+=" — Prueba SC ";title+=std::to_string(sc_demo_character);}
  for(auto action:{clay::input::Action::Primary,clay::input::Action::Secondary,clay::input::Action::Start}){
   auto prompt=mapper.prompt(action);title+=" — ";title+=prompt.glyph;title+=" ";title+=prompt.action_name;
@@ -117,7 +117,7 @@ int main(int argc,char** argv){
  clay::training::initialize_stage_storage(pref_dir+"training-stage.cfg");
  if(!clay::load_graphics_options(pref_dir+"display.cfg",display_error))fprintf(stderr,"Display preferences: %s\n",display_error.c_str());
  try{
-  for(int i=1;i<argc;i++){std::string arg=argv[i];if(arg=="--rom"&&i+1<argc)rom=argv[++i];else if(arg=="--seconds"&&i+1<argc)seconds=std::stod(argv[++i]);else if(arg=="--controls"&&i+1<argc){controls=argv[++i];controls_override=true;}else if((arg=="--data-dir"||arg=="--user-data")&&i+1<argc)++i;else if(arg=="--hidden")hidden=true;else if(arg=="--test-input"&&i+1<argc)test_input=argv[++i];else if(arg=="--sc-assets"&&i+1<argc)sc_assets=argv[++i];else if(arg=="--sc-demo-character"&&i+1<argc){std::string value=argv[++i];size_t used=0;sc_demo_character=std::stoi(value,&used);if(used!=value.size())clay_fatal("invalid_sc_demo_character");}else if(arg=="--graphics-profile"&&i+1<argc)clay::set_graphics_options(clay::graphics_profile(argv[++i]));else if(arg=="--family"&&i+1<argc){manual_family=argv[++i];family_override=true;}else if(arg=="--help"){puts("ClayFighter 64 v2.0 by djultra64\n--rom PATH --seconds N --controls PATH --family auto|xbox|playstation|switch\n--graphics-profile default|original|1080p120|4k120 --hidden --data-dir RELATIVE_PATH\n--sc-assets PATH; test only: --sc-demo-character 6|11|12|16\nKeyboard defaults: arrows move; Z primary, X secondary, Enter Start, Shift Z trigger, Q/E L/R, I/J/K/L C buttons.\nPortable settings: local/settings; --data-dir must stay inside the game folder.\nBindings and fallback controller family: config/controls.cfg");return 0;}else clay_fatal("unknown_or_incomplete_argument");}
+  for(int i=1;i<argc;i++){std::string arg=argv[i];if(arg=="--rom"&&i+1<argc)rom=argv[++i];else if(arg=="--seconds"&&i+1<argc)seconds=std::stod(argv[++i]);else if(arg=="--controls"&&i+1<argc){controls=argv[++i];controls_override=true;}else if((arg=="--data-dir"||arg=="--user-data")&&i+1<argc)++i;else if(arg=="--hidden")hidden=true;else if(arg=="--test-input"&&i+1<argc)test_input=argv[++i];else if(arg=="--sc-assets"&&i+1<argc)sc_assets=argv[++i];else if(arg=="--sc-demo-character"&&i+1<argc){std::string value=argv[++i];size_t used=0;sc_demo_character=std::stoi(value,&used);if(used!=value.size())clay_fatal("invalid_sc_demo_character");}else if(arg=="--graphics-profile"&&i+1<argc)clay::set_graphics_options(clay::graphics_profile(argv[++i]));else if(arg=="--family"&&i+1<argc){manual_family=argv[++i];family_override=true;}else if(arg=="--help"){puts("ClayFighter 64 v2.1 by djultra64\n--rom PATH --seconds N --controls PATH --family auto|xbox|playstation|switch\n--graphics-profile default|original|1080p120|4k120 --hidden --data-dir RELATIVE_PATH\n--sc-assets PATH; test only: --sc-demo-character 6|11|12|16\nKeyboard defaults: arrows move; Z primary, X secondary, Enter Start, Shift Z trigger, Q/E L/R, I/J/K/L C buttons.\nPortable settings: local/settings; --data-dir must stay inside the game folder.\nBindings and fallback controller family: config/controls.cfg");return 0;}else clay_fatal("unknown_or_incomplete_argument");}
  }catch(const std::exception& e){clay_fatal(e.what());}
  std::ifstream file(rom,std::ios::binary);if(!file)clay_fatal("rom_open");clay_rom.assign(std::istreambuf_iterator<char>(file),{});if(clay_rom.size()!=0xc00000||clay_sc::sha256(clay_rom)!="357f26c6cd72559c5c05e8c2df46369624630dbcb1c02b3b6f3338f6ac79af07")clay_fatal("unsupported_original_rom");
  if(sc_assets.empty()&&sc_demo_character!=-1)clay_fatal("sc_demo_requires_assets");
@@ -137,14 +137,18 @@ int main(int argc,char** argv){
  clay::input::configure_sdl();if(!test_input.empty())SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS,"1");if(SDL_Init(SDL_INIT_VIDEO|SDL_INIT_GAMECONTROLLER|SDL_INIT_AUDIO))clay_fatal(SDL_GetError());
  std::unique_ptr<clay::testing::InputScript> scripted_input;
  if(!test_input.empty())try{scripted_input=std::make_unique<clay::testing::InputScript>(test_input);}catch(const std::exception& e){clay_fatal(e.what());}
- clay::input::SdlInput input;if(scripted_input)input.set_preferred_instances(scripted_input->instance_id(),scripted_input->instance_id(1));std::string controls_error;
+ clay::input::SdlInput input;if(scripted_input&&!std::getenv("CLAY_TEST_UNASSIGNED_PADS"))input.set_preferred_instances(scripted_input->instance_id(),scripted_input->instance_id(1));std::string controls_error;
  if(!input.mapper().load(controls,controls_error))clay_fatal(controls_error.c_str());
  const auto stored_controls=pref_dir+"controls.cfg";
  if(!controls_override&&std::ifstream(stored_controls))if(!input.mapper().load(stored_controls,controls_error))clay_fatal(controls_error.c_str());
+ // Preserve the existing profile for P1 and use it as the P2 starting point.
+ input.mapper(1)=input.mapper(0);
+ const auto second_controls=pref_dir+"controls-p2.cfg";
+ if(!controls_override&&std::ifstream(second_controls))if(!input.mapper(1).load(second_controls,controls_error))clay_fatal(controls_error.c_str());
  // --controls imports a profile; subsequent edits always save portably.
  clay::input::set_controls_storage(stored_controls);
  for(size_t a=0;a<clay::input::action_count;a++)if(SDL_GetScancodeFromName(input.mapper().binding(clay::input::Action(a)).key.c_str())==SDL_SCANCODE_UNKNOWN)clay_fatal("unknown_controls_key");
- if(family_override)try{input.mapper().set_family(clay::input::parse_family(manual_family));}catch(const std::exception& e){clay_fatal(e.what());}
+ if(family_override)try{input.mapper().set_family(clay::input::parse_family(manual_family));input.mapper(1).set_family(clay::input::parse_family(manual_family));}catch(const std::exception& e){clay_fatal(e.what());}
  std::string glyph_error;
  if(!clay::input::load_native_prompt_assets("config/controller_glyphs.json","assets/kenney-input-prompts-pixel/Tiles",glyph_error))clay_fatal(glyph_error.c_str());
  int window_width=int(graphics_options.width),window_height=int(graphics_options.height);SDL_Rect usable{};
@@ -153,7 +157,7 @@ int main(int argc,char** argv){
   window_width=std::max(320,int(window_width*fit));window_height=std::max(240,int(window_height*fit));
  }
  // Fit the desktop window while retaining the selected internal render height.
- auto* window=SDL_CreateWindow("ClayFighter 64 v2.0",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,window_width,window_height,SDL_WINDOW_VULKAN|SDL_WINDOW_RESIZABLE|(hidden?SDL_WINDOW_HIDDEN:0));if(!window)clay_fatal(SDL_GetError());
+ auto* window=SDL_CreateWindow("ClayFighter 64 v2.1",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,window_width,window_height,SDL_WINDOW_VULKAN|SDL_WINDOW_RESIZABLE|(hidden?SDL_WINDOW_HIDDEN:0));if(!window)clay_fatal(SDL_GetError());
  fprintf(stderr,"{\"event\":\"window_ready\",\"width\":%d,\"height\":%d,\"render_height_requested\":%u}\n",window_width,window_height,graphics_options.render_height);
  ultramodern::renderer::GraphicsConfig graphics{};graphics.api_option=ultramodern::renderer::GraphicsApi::Vulkan;ultramodern::renderer::set_graphics_config(graphics);
  ultramodern::set_callbacks({rsp_init,run_rsp},{clay_create_context},{queue_audio,remaining_audio,set_frequency}, {[]{},get_input,[](int,bool){},connected_device}, {},{count_vi,nullptr},{error},{});

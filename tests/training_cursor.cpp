@@ -4,6 +4,7 @@
 #include <bit>
 #include <cstdio>
 #include <vector>
+extern "C" void func_80071738(uint8_t*,recomp_context*){}
 extern "C" void native_cursor_draw(uint8_t*,recomp_context*);
 namespace {bool training_active=false;struct Draw{uint32_t sprite;float x,y;};std::vector<Draw> draws;constexpr uint32_t state=0x80200000,bank=0x80300000,stack=0x807fe000;}
 namespace clay::training {bool selecting_fighters(){return training_active;}}

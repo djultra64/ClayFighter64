@@ -22,6 +22,9 @@ extern "C" void native_animation_seeded(uint8_t*rdram){
 }
 static float first_glyph_x=0;
 namespace clay::input {
+void begin_binding_edit(){}
+void end_binding_edit(){}
+unsigned binding_player(){return 0;}
 void request_binding(Action a){requested=a;capturing=true;}
 bool binding_capture_active(){return capturing;}
 std::string binding_label(Action){return "Z / Cross";}
@@ -55,10 +58,32 @@ int main(int argc,char**argv){
  settle();
  auto press=[&](unsigned bits){MEM_W(0,S32(0x80118cb4))=bits;assert(clay::port::update_native_options(rdram,&ctx));MEM_W(0,S32(0x80118cb4))=0;};
  auto v=clay::port::options_view(rdram,3);assert(v.rows.size()==7);assert(v.rows.front()=="Aspect: 16:9");assert(v.rows[6]=="Game display");
+ // Either player's edge input can navigate Display without changing the other port.
+ MEM_W(0,S32(0x80118ccc))=0x0100;assert(clay::port::update_native_options(rdram,&ctx));
+ MEM_W(0,S32(0x80118ccc))=0;assert(clay::port::options_view(rdram,3).selected==1);
+ MEM_W(0,S32(0x80118cdc))=0x0200;assert(clay::port::update_native_options(rdram,&ctx));
+ MEM_W(0,S32(0x80118cdc))=0;assert(clay::port::options_view(rdram,3).selected==0);
  press(0x0100);assert(clay::port::options_view(rdram,3).selected==1);assert(clay::graphics_options().widescreen);press(0x0200);assert(clay::port::options_view(rdram,3).selected==0);press(0x8000);assert(!clay::graphics_options().widescreen);press(0x0100);press(0x8000);assert(clay::graphics_options().render_height==1080);assert(clay::graphics_options().width==1440);
  press(0x0200);for(unsigned i=0;i<3;i++)press(0x400);press(0x8000);auto game_display=clay::port::options_view(rdram,3);assert(game_display.title=="GAME DISPLAY"&&game_display.rows.size()==4);assert(game_display.rows[0].starts_with("Stun meter"));settle();press(0x8000);assert(MEM_HU(0x20,config)==1);assert(MEM_HU(0x22,config)==0);press(0x4000);assert(MEM_W(16,st)==3);assert(clay::port::options_view(rdram,3).rows.size()==7);assert(clay::port::options_view(rdram,3).selected==6);settle();
  press(0x4000);assert(MEM_W(16,st)==1);assert(!clay::port::update_native_options(rdram,&ctx));
- MEM_W(12,st)=2;MEM_W(16,st)=2;settle();auto controls=clay::port::options_view(rdram,2);assert(controls.rows[0].starts_with("Wobbly Kick"));assert(controls.rows[1].starts_with("Wobbly Punch"));assert(controls.rows[2].starts_with("Brutal Punch"));assert(controls.rows[3].starts_with("Fair Kick"));assert(controls.rows[4].starts_with("Fair Punch"));assert(controls.rows[5].starts_with("Brutal Kick"));MEM_H(0x1c,config)=1;assert(clay::port::options_view(rdram,2).rows[0].starts_with("Fair Punch"));press(0x8000);assert(capturing&&requested==clay::input::Action::Primary);press(0x4000);assert(MEM_W(16,st)==2);capturing=false;press(0x4000);assert(MEM_W(16,st)==2);assert(clay::port::options_view(rdram,2).status=="Press a key or button");press(0x4000);assert(MEM_W(16,st)==1);
+ MEM_W(12,st)=2;MEM_W(16,st)=2;settle();auto controls=clay::port::options_view(rdram,2);assert(controls.rows.size()==13);assert(controls.rows[0].starts_with("Wobbly Punch"));assert(controls.rows[1].starts_with("Wobbly Kick"));assert(controls.rows[2].starts_with("Fair Punch"));assert(controls.rows[3].starts_with("Fair Kick"));assert(controls.rows[4].starts_with("Brutal Punch"));assert(controls.rows[5].starts_with("Brutal Kick"));
+ press(0x0400);assert(clay::port::options_view(rdram,2).selected==2);
+ press(0x0100);assert(clay::port::options_view(rdram,2).selected==3);
+ press(0x0400);assert(clay::port::options_view(rdram,2).selected==5);
+ assert(controls.rows[6].starts_with("Up"));assert(controls.rows[7].starts_with("Pause"));
+ assert(controls.rows[8].starts_with("Down"));assert(controls.rows[9].starts_with("Controller"));
+ assert(controls.rows[10].starts_with("Left"));assert(controls.rows[11].starts_with("Reset"));
+ assert(controls.rows[12].starts_with("Right"));
+ press(0x0400);assert(clay::port::options_view(rdram,2).selected==7);
+ press(0x0200);assert(clay::port::options_view(rdram,2).selected==6);
+ press(0x0800);assert(clay::port::options_view(rdram,2).selected==4);
+ press(0x0800);press(0x0800);assert(clay::port::options_view(rdram,2).selected==0);
+ // Reordering follows the original game's stored move permutation.
+ MEM_H(0x0c,config)=0;MEM_H(0x10,config)=1;
+ assert(clay::port::options_view(rdram,2).rows[0].starts_with("Wobbly Punch"));
+ press(0x8000);assert(capturing&&requested==clay::input::Action::CLeft);
+ capturing=false;press(0);MEM_H(0x0c,config)=1;MEM_H(0x10,config)=0;
+ press(0x8000);assert(capturing&&requested==clay::input::Action::Secondary);press(0x4000);assert(MEM_W(16,st)==2);capturing=false;press(0x4000);assert(MEM_W(16,st)==2);assert(clay::port::options_view(rdram,2).status=="Press a key or button");press(0x4000);assert(MEM_W(16,st)==1);
  MEM_W(12,st)=3;MEM_W(16,st)=3;ctx.r4=123;ctx.r29=S32(0x807fe000);settle();matrices=0;draws=0;assert(clay::port::draw_native_options(rdram,&ctx));assert(native_letter_draws>100&&native_exit_draws>100&&native_seeds>10);assert(matrices==1);assert(first_glyph_x<0);assert(ctx.r4==123&&ctx.r29==S32(0x807fe000));assert(MEM_HU(0x10,font)==42);
  MEM_W(0,st)=1;MEM_W(16,st)=1;assert(clay::port::draw_native_options(rdram,&ctx));MEM_W(12,st)=1;assert(!clay::port::draw_native_options(rdram,&ctx));
  unsigned previous_seeds=native_seeds;MEM_W(12,st)=3;MEM_W(16,st)=3;MEM_W(0,st)=0;assert(clay::port::draw_native_options(rdram,&ctx));assert(native_seeds>previous_seeds);settle();

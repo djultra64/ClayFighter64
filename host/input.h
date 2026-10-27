@@ -50,6 +50,7 @@ const char* action_name(Action action);
 void configure_sdl();
 class SdlInput {
     Mapper mapper_;
+    Mapper second_mapper_;
     Mapper menu_mapper_{true};
     _SDL_GameController* pad_ = nullptr;
     std::vector<_SDL_GameController*> pads_;
@@ -63,8 +64,8 @@ class SdlInput {
     void find_controller();
 public:
     ~SdlInput();
-    Mapper& mapper() { return mapper_; }
-    const Mapper& active_mapper(bool combat) const { return combat?mapper_:menu_mapper_; }
+    Mapper& mapper(unsigned player=0) { return player==0?mapper_:second_mapper_; }
+    const Mapper& active_mapper(bool combat) const;
     void event(const SDL_Event& event);
     void set_training_mode(bool active){training_mode_=active;}
     void set_preferred_instances(int32_t player_one,int32_t player_two=-1);
@@ -73,6 +74,9 @@ public:
     State poll(bool combat = false);
 };
 // Native Options queues requests; SDL remains on its main thread.
+void begin_binding_edit();
+void end_binding_edit();
+unsigned binding_player();
 void request_binding(Action action);
 bool binding_capture_active();
 std::string binding_label(Action action);

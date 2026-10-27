@@ -6,6 +6,7 @@
 static void require(bool pass,const char* reason){if(!pass)throw std::runtime_error(reason);}
 int main(){try{
  auto first=clay::graphics_options();
+ require(first.refresh==60,"First launch must default to 60 FPS");
  require(first.widescreen&&std::abs(first.aspect()-16.0/9.0)<1e-8,"First launch must use 16:9");
  auto uhd=clay::graphics_profile("4k120");
  require(uhd.width==3840&&uhd.height==2160&&uhd.refresh==120&&uhd.widescreen,"UHD output and presentation preset");

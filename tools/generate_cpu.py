@@ -310,6 +310,10 @@ def main():
             if helper=='translate_panel':right='unsigned(MEM_W(0x40,ctx->r29))'
             needle='    '+function+'(rdram, ctx);'
             body=body[:at]+body[at:].replace(needle,f'    clay::selector::{helper}(rdram,ctx,{right},&{function});',1)
+        address=0x8005EC24
+        assert struct.unpack_from('>I',image,address-VRAM+ROM_OFFSET)[0]==0x0C01C647
+        at=body.index('    func_8007191C(rdram, ctx);',body.index(f'    // 0x{address:08X}: jal'))
+        body=body[:at]+body[at:].replace('    func_8007191C(rdram, ctx);','    clay::selector::draw_player2_prompt(rdram,ctx,&func_8007191C);',1)
         return body
     def port_options_hooks(match):
         body=match.group(0)
