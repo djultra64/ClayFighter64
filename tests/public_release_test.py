@@ -64,7 +64,7 @@ class PublicReleaseTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'Private state'):package.write_manifest(staged,'Linux x86-64','2.0')
     def test_both_platform_packages_and_source_archive_with_stub_inputs(self):
         for name in ['README.md','LICENSE','NOTICE','CREDITS.md','docs/INSTALL.md','docs/BUILD.md',
-                     'tools/release/import_assets.py','tools/release/launch.py','tools/port_assets.py',
+                     'tools/release/import_assets.py','tools/release/install_assets_gui.ps1','tools/release/launch.py','tools/port_assets.py',
                      'tools/sc_import_assets.py','assets/branding/icon.png','config/controls.cfg',
                      'licenses/ThirdParty/LICENSE','local/audio/title64.s16le','build/claytality64',
                      'generated/release-decoder/font-decoder','local/releases/windows/claytality64.exe',
@@ -95,6 +95,9 @@ class PublicReleaseTests(unittest.TestCase):
             self.assertFalse((staged/'docs/VALIDATION_1.0.md').exists())
         self.assertTrue((out/(linux.name+'.tar.gz')).is_file())
         self.assertTrue((out/(windows.name+'.zip')).is_file())
+        self.assertTrue((windows/'tools/release/install_assets_gui.ps1').is_file())
+        for name in ['Install Assets.vbs', 'Play ClayFighter 64.vbs']:
+            self.assertIn('pythonw.exe', (windows/name).read_text())
         self.assertTrue((out/'clayfighter64-2.0-source.tar.gz').is_file())
         self.assertEqual(len((out/'SHA256SUMS').read_text().splitlines()),3)
         with zipfile.ZipFile(out/(windows.name+'.zip')) as archive:

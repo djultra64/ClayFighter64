@@ -1,4 +1,4 @@
-# ClayFighter 64 1.0 installation
+# ClayFighter 64 installation
 
 Project work by **djultra64**.
 
@@ -11,16 +11,18 @@ ClayFighter 64 combines the 63⅓ gameplay foundation with the four additional S
 | ClayFighter 63⅓ (USA) | `357f26c6cd72559c5c05e8c2df46369624630dbcb1c02b3b6f3338f6ac79af07` |
 | ClayFighter: Sculptor's Cut (USA) | `9ccebc317b7ee892be3bdc0d1c8ae46687995908ed51ebd58d6855e5e25abd7f` |
 
-Other regions, revisions, translations, and modified ROMs are unsupported. `.z64`, byte-swapped `.v64`, word-swapped `.n64`, and ZIP archives containing exactly one of those files are supported. Paths may contain spaces. ROM identity is checked before any persistent game data is written.
+Other regions, revisions, translations, and modified ROMs are unsupported. `.z64`, byte-swapped `.v64`, word-swapped `.n64`, `.c64`, `.c`, and ZIP archives containing exactly one ROM are supported. Paths may contain spaces. ROM identity is checked before any persistent game data is written.
 
 ## Linux
 
-Extract `clayfighter64-2.0-linux-x86_64.tar.gz` and open a terminal in its folder:
+Extract `clayfighter64-2.1-linux-x86_64.tar.gz` and open a terminal in its folder:
 
 ```sh
 ./'Install Assets.sh'
 ./'Play ClayFighter 64.sh'
 ```
+
+The installer searches the game folder and `ROMs` folders inside or beside it. If a ROM is missing, Zenity or KDialog opens a graphical file selector when available; otherwise, enter the missing path in the terminal.
 
 You can provide both paths directly, in either order:
 
@@ -32,7 +34,7 @@ Linux requires Python 3.10+, X11 or XWayland, Vulkan drivers, glibc 2.38+, libst
 
 ## Windows
 
-Extract `clayfighter64-2.0-windows-x86_64.zip`, then double-click **Install Assets.cmd**. Paste the two ROM paths when requested, then open **Play ClayFighter 64.cmd**. The Python runtime is included; you do not need to install Python.
+Extract `clayfighter64-2.1-windows-x86_64.zip`, then double-click **Install Assets.vbs**. The installer searches the game folder and `ROMs` folders inside or beside it. If either verified ROM is missing, select it with the graphical Browse button, then open **Play ClayFighter 64.vbs**. The Python runtime is included; you do not need to install Python.
 
 From a command prompt you can also pass both paths:
 

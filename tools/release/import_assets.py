@@ -6,6 +6,7 @@ import json
 import os
 from pathlib import Path
 import re
+import shutil
 import struct
 import subprocess
 import sys
@@ -16,13 +17,14 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 BASE_SHA = '357f26c6cd72559c5c05e8c2df46369624630dbcb1c02b3b6f3338f6ac79af07'
 SC_SHA = '9ccebc317b7ee892be3bdc0d1c8ae46687995908ed51ebd58d6855e5e25abd7f'
+ROM_SUFFIXES = ('.z64', '.v64', '.n64', '.c64', '.c')
 ASSET_SHA = '26ccae86b452d4bacadf429e0b241751aeef58a41d676e7d6173974414dafd7d'
 BIO_SHA = 'd7f85d9be2dd4614923c1c0af0e6b3b27170f02e715edbebca2d4e4e7627bae3'
 REQUIRED = ('ClayFighter 64 is a fusion of ClayFighter 63 1/3 and Sculptor\'s Cut.\n'
             'Installation requires BOTH of your own USA ROMs:\n'
             '  1. ClayFighter 63 1/3 (USA)\n'
             '  2. ClayFighter: Sculptor\'s Cut (USA)\n'
-            'Supported formats: .z64, .v64, .n64, or ZIP containing exactly one ROM.\n'
+            'Supported formats: .z64, .v64, .n64, .c64, .c, or ZIP containing exactly one ROM.\n'
             'No ROMs or extracted original game assets are included or downloaded.')
 
 def sha(data):
@@ -40,9 +42,9 @@ def load_rom(path):
     if path.suffix.lower() == '.zip':
         with zipfile.ZipFile(path) as archive:
             entries = [i for i in archive.infolist() if not i.is_dir() and
-                       Path(i.filename).suffix.lower() in ('.z64', '.v64', '.n64')]
+                       Path(i.filename).suffix.lower() in ROM_SUFFIXES]
             if len(entries) != 1:
-                raise ValueError('ZIP must contain exactly one ROM (.z64, .v64, .n64).')
+                raise ValueError('ZIP must contain exactly one supported ROM.')
             if entries[0].file_size > 32 * 1024 * 1024:
                 raise ValueError('ROM is too large for a supported USA revision.')
             data = archive.read(entries[0])
@@ -59,6 +61,81 @@ def load_rom(path):
     if data[:4] != bytes.fromhex('80371240'):
         raise ValueError('Invalid N64 ROM header; select your own supported USA ROM.')
     return data
+
+def discover_roms(root):
+    """Find supported ROMs in the installation and adjacent ROMs folders."""
+    root = Path(root)
+    directories = [root]
+    for parent in (root, root.parent):
+        try:
+            directories.extend(p for p in parent.iterdir() if p.is_dir() and p.name.casefold() == 'roms')
+        except OSError:
+            continue
+    found = {}
+    for directory in directories:
+        try:
+            candidates = [p for p in directory.iterdir() if p.is_file() and p.suffix.lower() in (*ROM_SUFFIXES, '.zip')]
+        except OSError:
+            continue
+        # Prefer likely filenames, but accept any file verified by its content.
+        candidates.sort(key=lambda p: ('clay' not in p.stem.casefold(), p.name.casefold()))
+        for path in candidates:
+            try:
+                digest = sha(load_rom(path))
+            except (OSError, ValueError, zipfile.BadZipFile, RuntimeError):
+                continue
+            if digest in (BASE_SHA, SC_SHA):
+                found.setdefault(digest, path)
+            if len(found) == 2:
+                return found
+    return found
+
+
+def linux_dialog(found):
+    """Select missing ROMs with the desktop's native file picker."""
+    zenity = shutil.which('zenity')
+    kdialog = shutil.which('kdialog')
+    if not zenity and not kdialog:
+        return None
+    paths = []
+    for digest, label in ((BASE_SHA, 'ClayFighter 63 1/3 (USA)'),
+                          (SC_SHA, "ClayFighter: Sculptor's Cut (USA)")):
+        if digest in found:
+            paths.append(found[digest])
+            continue
+        title = 'Select ' + label + ' ROM'
+        if zenity:
+            command = [zenity, '--file-selection', '--title=' + title,
+                       '--file-filter=N64 ROMs and ZIP archives | *.z64 *.v64 *.n64 *.c64 *.c *.zip *.Z64 *.V64 *.N64 *.C64 *.C *.ZIP',
+                       '--file-filter=All files | *']
+        else:
+            command = [kdialog, '--title', title, '--getopenfilename', '.',
+                       'N64 ROMs and ZIP archives (*.z64 *.v64 *.n64 *.c64 *.c *.zip *.Z64 *.V64 *.N64 *.C64 *.C *.ZIP)']
+        result = subprocess.run(command, capture_output=True, text=True)
+        if result.returncode != 0 or not result.stdout.strip():
+            return []
+        paths.append(Path(result.stdout.rstrip('\r\n')))
+    return paths
+
+
+def windows_dialog(found):
+    script = ROOT / 'tools/release/install_assets_gui.ps1'
+    env = os.environ.copy()
+    env['CLAY_BASE_ROM'] = str(found.get(BASE_SHA, ''))
+    env['CLAY_SC_ROM'] = str(found.get(SC_SHA, ''))
+    result = subprocess.run(['powershell.exe', '-NoProfile', '-STA', '-ExecutionPolicy', 'Bypass',
+                             '-File', str(script)], env=env, capture_output=True, encoding='utf-8', check=True,
+                            creationflags=0x08000000)
+    return [Path(p) for p in json.loads(result.stdout)] if result.stdout.strip() else []
+
+
+def windows_message(message, error=False):
+    env = os.environ.copy()
+    env['CLAY_INSTALL_MESSAGE'] = message
+    env['CLAY_INSTALL_ICON'] = 'Error' if error else 'Information'
+    subprocess.run(['powershell.exe', '-NoProfile', '-STA', '-Command',
+                    'Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show($env:CLAY_INSTALL_MESSAGE, "ClayFighter 64", "OK", $env:CLAY_INSTALL_ICON) | Out-Null'],
+                   env=env, check=False, creationflags=0x08000000)
 
 def build_bios(base, donor, font):
     u32 = lambda o: struct.unpack_from('>I', font, o)[0]
@@ -110,7 +187,7 @@ def install(root, paths):
         work = Path(work)
         (work/'base.z64').write_bytes(base)
         (work/'packet.bin').write_bytes(base[0xB68EEC:0xB68EEC+0x2B9B])
-        subprocess.run([str(decoder), str(work/'base.z64'), str(work/'packet.bin'), str(work/'font.bin')], check=True, timeout=30)
+        subprocess.run([str(decoder), str(work/'base.z64'), str(work/'packet.bin'), str(work/'font.bin')], check=True, timeout=30, creationflags=0x08000000 if os.name == 'nt' else 0)
         bios = build_bios(base, donor, (work/'font.bin').read_bytes())
     if sha(bios) != BIO_SHA: raise ValueError('Extracted biography verification failed.')
     outputs = {'probe-output/base.z64': base,
@@ -134,8 +211,8 @@ def create_shortcut(root):
         if os.name == 'nt':
             portable_path(root, 'ClayFighter 64.lnk')
             env = os.environ.copy(); env['CLAY_RELEASE_ROOT'] = str(root)
-            script = "$r=$env:CLAY_RELEASE_ROOT;$s=(New-Object -ComObject WScript.Shell).CreateShortcut((Join-Path $r 'ClayFighter 64.lnk'));$s.TargetPath=(Join-Path $r 'Play ClayFighter 64.cmd');$s.WorkingDirectory=$r;$s.IconLocation=(Join-Path $r 'assets\\branding\\clayfighter64.ico');$s.Save()"
-            subprocess.run(['powershell.exe','-NoProfile','-NonInteractive','-Command',script], env=env, check=True, timeout=15)
+            script = "$r=$env:CLAY_RELEASE_ROOT;$s=(New-Object -ComObject WScript.Shell).CreateShortcut((Join-Path $r 'ClayFighter 64.lnk'));$s.TargetPath=(Join-Path $r 'Play ClayFighter 64.vbs');$s.WorkingDirectory=$r;$s.IconLocation=(Join-Path $r 'assets\\branding\\clayfighter64.ico');$s.Save()"
+            subprocess.run(['powershell.exe','-NoProfile','-NonInteractive','-Command',script], env=env, check=True, timeout=15, creationflags=0x08000000)
         else:
             # Desktop-entry escaping is separate from shell quoting.
             escaped = str(root/'Play ClayFighter 64.sh').replace('\\','\\\\').replace('"','\\"').replace('`','\\`').replace('$','\\$')
@@ -163,17 +240,36 @@ def main():
     paths = args.roms
     if not paths:
         if installed(args.root):
-            print('Local assets already verified. Run Play ClayFighter 64 to start.'); return 0
+            print('Local assets already verified. Run Play ClayFighter 64 to start.')
+            if os.name == 'nt': windows_message('Local assets are already installed and verified.')
+            return 0
         try:
-            paths = [Path(input(label).strip().strip('"')) for label in
-                     ['Path to ClayFighter 63 1/3 USA ROM: ', "Path to Sculptor's Cut USA ROM: "]]
+            found = discover_roms(args.root)
+            if len(found) == 2:
+                paths = [found[BASE_SHA], found[SC_SHA]]
+            elif os.name == 'nt':
+                paths = windows_dialog(found)
+            else:
+                paths = linux_dialog(found) if (os.environ.get('DISPLAY') or os.environ.get('WAYLAND_DISPLAY')) else None
+                if paths is None:
+                    paths = []
+                    for digest, label in ((BASE_SHA, 'Path to ClayFighter 63 1/3 USA ROM: '),
+                                          (SC_SHA, "Path to Sculptor's Cut USA ROM: ")):
+                        paths.append(found[digest] if digest in found else Path(input(label).strip().strip('"')))
+        except (OSError, ValueError, subprocess.SubprocessError) as error:
+            print(f'Installation failed: {error}', file=sys.stderr); return 1
         except (EOFError, KeyboardInterrupt):
             print('\nInstallation cancelled. BOTH ROMs are required.', file=sys.stderr); return 1
+        if not paths:
+            print('Installation cancelled.', file=sys.stderr); return 1
     try:
         if len(paths) != 2: raise ValueError('Provide exactly two ROM paths: 63 1/3 USA AND Sculptor\'s Cut USA.')
         install(args.root.resolve(), paths)
     except (OSError, ValueError, zipfile.BadZipFile, subprocess.SubprocessError) as error:
-        print(f'Installation failed: {error}', file=sys.stderr); return 1
+        print(f'Installation failed: {error}', file=sys.stderr)
+        if os.name == 'nt' and not args.roms: windows_message(f'Installation failed: {error}', True)
+        return 1
+    if os.name == 'nt' and not args.roms: windows_message('Installation complete. You can now run Play ClayFighter 64.')
     return 0
 
 if __name__ == '__main__': sys.exit(main())

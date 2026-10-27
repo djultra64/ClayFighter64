@@ -26,7 +26,7 @@ def common(platform, version='1.0', validation=None):
     if target.exists():raise SystemExit(f'Refusing to overwrite staging directory: {target}')
     target.mkdir(parents=True)
     for name in ['README.md','LICENSE','NOTICE','CREDITS.md','docs/INSTALL.md','docs/BUILD.md',
-                 'tools/release/import_assets.py','tools/release/launch.py','tools/port_assets.py','tools/sc_import_assets.py']:
+                 'tools/release/import_assets.py','tools/release/install_assets_gui.ps1','tools/release/launch.py','tools/port_assets.py','tools/sc_import_assets.py']:
         copy(ROOT/name,target/name)
     for name in ['docs/TRAINING.md','docs/PACKAGING.md','docs/VALIDATION_1.0.md']:
         if (ROOT/name).is_file():copy(ROOT/name,target/name)
@@ -93,9 +93,20 @@ def prepare_windows(windows):
     with zipfile.ZipFile(ROOT/'local/python-3.13.9-embed-amd64.zip') as archive:
         archive.extractall(windows/'python')
     copy(windows/'python/LICENSE.txt',windows/'licenses/Python/LICENSE.txt')
+    write_windows_launchers(windows)
+
+def write_windows_launchers(windows):
     for name,script in [('Install Assets.cmd','import_assets.py'),('Play ClayFighter 64.cmd','launch.py')]:
         text='@echo off\r\ncd /d "%~dp0"\r\n"python\\python.exe" "tools\\release\\'+script+'" %*\r\nset "clay_exit=%ERRORLEVEL%"\r\nif not "%clay_exit%"=="0" pause\r\nexit /b %clay_exit%\r\n'
         (windows/name).write_bytes(text.encode())
+
+    for name, script in [('Install Assets.vbs','import_assets.py'), ('Play ClayFighter 64.vbs','launch.py')]:
+        text = ('Set shell = CreateObject("WScript.Shell")\r\n'
+                'Set files = CreateObject("Scripting.FileSystemObject")\r\n'
+                'root = files.GetParentFolderName(WScript.ScriptFullName)\r\n'
+                'shell.CurrentDirectory = root\r\n'
+                'shell.Run Chr(34) & root & "\\python\\pythonw.exe" & Chr(34) & " " & Chr(34) & root & "\\tools\\release\\'+script+'" & Chr(34), 0, False\r\n')
+        (windows/name).write_bytes(text.encode('utf-8'))
 
 def public_owner(info):
     info.uid=0;info.gid=0;info.uname="djultra64";info.gname=""

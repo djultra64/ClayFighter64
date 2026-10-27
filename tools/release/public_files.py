@@ -5,7 +5,7 @@ import hashlib
 import re
 
 PRIVATE_PARTS = {'analysis', 'local', 'probe-output', 'generated', 'build', '.git', '__pycache__', '.pytest_cache'}
-ROM_SUFFIXES = {'.z64', '.v64', '.n64', '.rom'}
+ROM_SUFFIXES = {'.z64', '.v64', '.n64', '.c64', '.rom'}
 ROM_HEADERS = {bytes.fromhex(x) for x in ('80371240', '37804012', '40123780')}
 SOURCE_DIRS = ('host', 'include', 'tools', 'tests', 'config', 'assets', 'licenses', 'docs')
 SOURCE_FILES = ('CMakeLists.txt', 'README.md', 'LICENSE', 'NOTICE', 'CREDITS.md', '.gitignore')

@@ -6,7 +6,7 @@
 
 # ClayFighter 64
 
-**Version 2.0 — Linux and Windows x86-64.** [Published releases](https://github.com/djultra64/ClayFighter64/releases/latest).
+**Version 2.1 — Linux and Windows x86-64.** [Published releases](https://github.com/djultra64/ClayFighter64/releases/latest).
 
 A community PC port and fusion of **ClayFighter 63⅓** and **ClayFighter: Sculptor's Cut**, built through static recompilation with N64Recomp, N64ModernRuntime, RSPRecomp, and RT64.
 
@@ -28,7 +28,7 @@ Sculptor's Cut contributes **High Five, Lady Liberty, Lockjaw, and Zappa**, incl
 - **Preserve the game's presentation.** The native menus, clay artwork, fonts, biographies, and animations remain central. The title reads 64, and the PC options extend the original interface.
 - **Require both original games.** Each ROM supplies a different part of the fusion. The installer validates both exact USA revisions and extracts the required data locally.
 
-Version 2.0 adds Training Mode and portable persistence for the original game options.
+Version 2.1 improves ROM installation and starts the Windows game without a console window. Version 2.0 adds Training Mode and portable persistence for the original game options.
 
 ## Features
 
@@ -53,9 +53,9 @@ No ROMs, extracted original game assets, or original game recordings are include
 ## Download and play
 
 1. Download the Linux or Windows package matching your release from [Releases](https://github.com/djultra64/ClayFighter64/releases/latest), then extract the entire archive into a writable folder.
-2. Run **Install Assets.sh** on Linux or **Install Assets.cmd** on Windows.
-3. Supply **both** USA ROM paths when prompted. The installer identifies them by their contents, so either order is accepted. It supports `.z64`, `.v64`, `.n64`, and ZIP files containing exactly one ROM.
-4. Run **Play ClayFighter 64.sh** on Linux or **Play ClayFighter 64.cmd** on Windows. First launch also offers installation if the required local data is absent.
+2. Run **Install Assets.sh** on Linux or **Install Assets.vbs** on Windows.
+3. The installer searches the game folder and nearby `ROMs` folders first; if needed, use the graphical file selector to choose missing files. Linux uses Zenity or KDialog when available, and otherwise prompts in the terminal. ROMs are verified by their contents. Supported formats are `.z64`, `.v64`, `.n64`, `.c64`, `.c`, and ZIP files containing exactly one ROM.
+4. Run **Play ClayFighter 64.sh** on Linux or **Play ClayFighter 64.vbs** on Windows. First launch also offers installation if the required local data is absent.
 
 The installer creates the base ROM, combined character/portrait image, and biography data locally. Keep the generated `local/` and `probe-output/` folders when updating. Original game options (Music/FX levels, Spillits, difficulty and the other native options), display, control and Training preferences live in `local/settings/` inside the game folder. Keep that folder when updating or moving the portable installation.
 
